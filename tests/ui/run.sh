@@ -86,6 +86,48 @@ wait_for "From German · detected" "" 20
 shot 03_german_word 1.5
 expect "butterfly" "(?i)butterfly"
 
+# 3b. Examples (Tatoeba) and conjugation (built in)
+back        # keyboard
+tap "Examples"
+wait_for "Sentences from Tatoeba (tatoeba.org)" "" 25
+shot 03b_examples_german 1
+expect "butterfly|Butterfly" "(?i)butterfly"
+back
+open_app
+type_text "habe"
+wait_for "Conjugation" "" 20
+back
+shot 03c_habe_result 1
+tap "Conjugation"
+sleep 1
+shot 03d_conjugation_german 1
+expect "hast" "^hast$"
+expect "Präsens"
+expect "habe gehabt" "^habe gehabt$"
+tap "English: have" || true
+shot 03e_conjugation_english 1
+expect "has" "^has$"
+expect "will have" "^will have$"
+tap "Persian: داشتن" "^Persian: " || true
+shot 03f_conjugation_persian 1
+expect "دارم" "^دارم$"
+adb shell input swipe 540 1400 540 400 300; sleep 0.8
+shot 03g_conjugation_persian_scrolled 1
+back
+adb shell "am start -a android.intent.action.PROCESS_TEXT -t text/plain --es android.intent.extra.PROCESS_TEXT 'رفتن' -n $PKG/.MainActivity" > /dev/null
+wait_for "Conjugation" "" 20
+tap "Conjugation"
+sleep 1
+shot 03h_conjugation_from_persian 1
+expect "می‌روم" "^می.روم$"
+tap "English: go" || true
+expect "went" "^went$"
+back
+tap "Examples"
+wait_for "Sentences from Tatoeba (tatoeba.org)|No examples found for this word." "^(Sentences from Tatoeba|No examples found)" 25
+shot 03i_examples_persian 1
+back
+
 # 4. Ambiguous word: auto vs forced German ("Gift" = poison in German)
 clear_field
 type_text "Gift"
@@ -189,6 +231,11 @@ open_app
 type_text "Freundschaft"
 wait_for "From German · detected" "" 20
 shot 20_dark_result 1.5
+back
+expect_not "Conjugation"          # a noun has no conjugation button
+tap "Examples" && { wait_for "Sentences from Tatoeba (tatoeba.org)" "" 25; shot 20c_dark_examples 1; back; }
+open_app; type_text "gehen"; wait_for "Conjugation" "" 20; back
+tap "Conjugation" && { sleep 1; shot 20b_dark_conjugation 1; back; }
 
 # 12. Widget on the home screen
 back; tap "Settings"

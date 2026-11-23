@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.2 — 2026-11-23
+
+- **Examples**: a button under the result opens simple real sentences with the word (from Tatoeba),
+  each with its translation into the other two languages.
+- **Conjugation**: for verbs, a button opens the conjugation in German, English and Persian
+  (e.g. habe → haben: ich habe, du hast, er hat …), with a tab per language. Works without internet.
+  - German: present, simple past, perfect (with haben or sein), future, imperative; separable and
+    inseparable verbs and "sich …" verbs.
+  - English: present, present continuous, past, present perfect, future; irregular forms.
+  - Persian: present, simple past, past continuous, present perfect, subjunctive, future, imperative;
+    compound verbs (کار کردن) and verbs like برگشتن.
+
 ## 1.1 — 2026-11-23
 
 - "Did you mean": when a word looks misspelled, the corrected word is shown above the results; tap it to translate it.

@@ -21,6 +21,15 @@
     <string name="did_you_mean">Did you mean</string>
     <string name="showing_results_for">Showing results for</string>
     <string name="did_you_mean_desc">Did you mean %1$s? Tap to translate it</string>
+    <string name="examples">Examples</string>
+    <string name="examples_loading">Finding examples…</string>
+    <string name="examples_none">No examples found for this word.</string>
+    <string name="examples_none_hint">Try its dictionary form, e.g. "go" instead of "went".</string>
+    <string name="examples_failed">Could not load examples.</string>
+    <string name="examples_source">Sentences from Tatoeba (tatoeba.org)</string>
+    <string name="conjugation">Conjugation</string>
+    <string name="conjugation_tab">%1$s: %2$s</string>
+    <string name="close">Close</string>
     <string name="clipboard_empty">Nothing to paste</string>
     <string name="no_letters">Type a word to translate.</string>
     <string name="error_offline">No internet connection.</string>

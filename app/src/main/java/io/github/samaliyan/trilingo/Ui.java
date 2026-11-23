@@ -124,6 +124,23 @@ final class Ui {
         return b;
     }
 
+    /** Outlined pill with a leading icon, for secondary actions (Examples, Conjugation). */
+    TextView actionPill(Icons.Kind kind, CharSequence label) {
+        TextView b = text(14, text, MEDIUM);
+        b.setText(label);
+        b.setGravity(Gravity.CENTER_VERTICAL);
+        b.setMinHeight(dp(40));
+        b.setPadding(dp(12), 0, dp(16), 0);
+        android.graphics.drawable.Drawable d = Icons.of(kind, accent);
+        d.setBounds(0, 0, dp(18), dp(18));
+        b.setCompoundDrawablesRelative(d, null, null, null);
+        b.setCompoundDrawablePadding(dp(8));
+        b.setBackground(ripple(outline(surface, line, 20), 20));
+        b.setClickable(true);
+        b.setFocusable(true);
+        return b;
+    }
+
     /** Filled or quiet pill button. */
     TextView pill(CharSequence label, boolean filled) {
         TextView b = text(14, filled ? onAccent : accent, MEDIUM);

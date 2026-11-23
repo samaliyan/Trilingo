@@ -15,7 +15,7 @@ import android.graphics.drawable.Drawable;
 final class Icons {
     private Icons() { }
 
-    enum Kind { BACK, CLOSE, SETTINGS, COPY, SPEAK, PASTE, SEARCH, SHARE }
+    enum Kind { BACK, CLOSE, SETTINGS, COPY, SPEAK, PASTE, SEARCH, SHARE, EXAMPLES, TABLE }
 
     static Drawable of(Kind kind, int color) {
         return new IconDrawable(kind, color);
@@ -112,6 +112,32 @@ final class Icons {
                     c.drawCircle(17.5f, 18.5f, 2.6f, stroke);
                     line(c, 8.8f, 10.7f, 15.2f, 6.9f);
                     line(c, 8.8f, 13.3f, 15.2f, 17.1f);
+                    break;
+                case EXAMPLES:
+                    // speech bubble with two lines of text
+                    path.moveTo(7, 4.5f);
+                    path.lineTo(17.5f, 4.5f);
+                    path.quadTo(20.5f, 4.5f, 20.5f, 7.5f);
+                    path.lineTo(20.5f, 13.5f);
+                    path.quadTo(20.5f, 16.5f, 17.5f, 16.5f);
+                    path.lineTo(12, 16.5f);
+                    path.lineTo(8, 20);
+                    path.lineTo(8, 16.5f);
+                    path.lineTo(6.5f, 16.5f);
+                    path.quadTo(3.5f, 16.5f, 3.5f, 13.5f);
+                    path.lineTo(3.5f, 7.5f);
+                    path.quadTo(3.5f, 4.5f, 7, 4.5f);
+                    path.close();
+                    c.drawPath(path, stroke);
+                    line(c, 7.5f, 9, 16.5f, 9);
+                    line(c, 7.5f, 12.5f, 13.5f, 12.5f);
+                    break;
+                case TABLE:
+                    r.set(4, 4, 20, 20);
+                    c.drawRoundRect(r, 2.5f, 2.5f, stroke);
+                    line(c, 4, 9.5f, 20, 9.5f);
+                    line(c, 4, 14.75f, 20, 14.75f);
+                    line(c, 10, 9.5f, 10, 20);
                     break;
             }
             c.restore();

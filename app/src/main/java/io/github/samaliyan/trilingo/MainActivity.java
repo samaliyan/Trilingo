@@ -49,7 +49,7 @@ import java.util.Set;
  * Results come from the history when the word was looked up before (instant, works offline),
  * otherwise from the translation service, 400 ms after the last key press.
  */
-public final class MainActivity extends Activity implements TextToSpeech.OnInitListener {
+public final class MainActivity extends Activity implements TextToSpeech.OnInitListener, DetailSheets.Host {
     static final String ACTION_OPEN = "io.github.samaliyan.trilingo.OPEN";
     static final String EXTRA_TEXT = "io.github.samaliyan.trilingo.TEXT";
 
@@ -62,6 +62,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
     private History history;
     private Engine engine;
     private Updater updater;
+    private DetailSheets sheets;
     private int themeAtStart;
 
     private EditText input;
@@ -103,6 +104,9 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         history = Store.history(this);
         engine = new Engine(Engine.NET);
         updater = new Updater(this, ui);
+        sheets = new DetailSheets(this, ui, this);
+        // Builds the irregular-verb index once, off the screen thread, so the first result shows without delay.
+        new Thread(() -> GermanVerbs.isKnownForm("habe"), "verbs").start();
         if (saved != null) forced = Lang.of(saved.getString("forced"));
 
         boolean hasText = incomingText(getIntent()) != null;
@@ -499,6 +503,8 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
             src.setMinimumHeight(ui.dp(44));
         }
         content.addView(src);
+        View actions = actionRow(l);
+        if (actions != null) content.addView(actions);
 
         if (corrected) content.addView(correctedRow(l.query));
         else if (l.hasSuggestion()) content.addView(suggestionRow(l.suggestion));
@@ -541,6 +547,47 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         lp.bottomMargin = ui.dp(12);
         row.setLayoutParams(lp);
         return row;
+    }
+
+    /** "Examples" and "Conjugation" buttons under the language line, only when they have something to show. */
+    private View actionRow(Lookup l) {
+        boolean examples = Examples.suitable(l.query);
+        java.util.Map<Lang, String> verbs = Verbs.of(l);
+        if (!examples && verbs.isEmpty()) return null;
+        LinearLayout row = new LinearLayout(this);
+        row.setPadding(ui.dp(2), ui.dp(2), 0, ui.dp(12));
+        if (examples) {
+            TextView b = ui.actionPill(Icons.Kind.EXAMPLES, getString(R.string.examples));
+            b.setOnClickListener(v -> {
+                saveNow();
+                sheets.showExamples(l.query, l.source);
+            });
+            row.addView(b);
+        }
+        if (!verbs.isEmpty()) {
+            TextView b = ui.actionPill(Icons.Kind.TABLE, getString(R.string.conjugation));
+            b.setOnClickListener(v -> {
+                saveNow();
+                sheets.showConjugation(verbs, l.source);
+            });
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            if (examples) lp.leftMargin = ui.dp(8);
+            row.addView(b, lp);
+        }
+        return row;
+    }
+
+    // DetailSheets.Host
+    @Override public boolean canSpeak(Lang l) {
+        return speakable.contains(l);
+    }
+
+    @Override public Engine engine() {
+        return engine;
+    }
+
+    @Override public int service() {
+        return store.service();
     }
 
     /** "Showing results for Schmetterling" — the typed word was misspelled and unknown. */
@@ -833,7 +880,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         });
     }
 
-    private void speak(String text, Lang l) {
+    @Override public void speak(String text, Lang l) {
         if (tts == null) return;
         try {
             tts.setLanguage(locale(l));

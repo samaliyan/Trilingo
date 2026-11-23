@@ -56,12 +56,21 @@ final class Lookup {
     final long time;
     /** "Did you mean" correction of the query; "" when the spelling looks right. */
     final String suggestion;
+    /** Dictionary form of the query from the service (may be ""). */
+    final String baseForm;
 
     Lookup(String query, Lang source, List<Result> results, String service, long time) {
         this(query, source, results, service, time, "");
     }
 
     Lookup(String query, Lang source, List<Result> results, String service, long time, String suggestion) {
+        this(query, source, results, service, time, suggestion, "");
+    }
+
+    /**
+     * @param baseForm dictionary form of the query given by the service (habe → haben, went → go), or ""
+     */
+    Lookup(String query, Lang source, List<Result> results, String service, long time, String suggestion, String baseForm) {
         this.query = query;
         this.source = source;
         this.results = Collections.unmodifiableList(new ArrayList<>(results));
@@ -70,6 +79,7 @@ final class Lookup {
         String sg = suggestion == null ? "" : suggestion;
         // A "correction" that only changes letter case or spaces is not shown.
         this.suggestion = Text.key(sg).equals(Text.key(query == null ? "" : query)) ? "" : sg;
+        this.baseForm = baseForm == null ? "" : Text.clean(baseForm);
     }
 
     boolean hasSuggestion() {
@@ -77,7 +87,7 @@ final class Lookup {
     }
 
     Lookup withTime(long t) {
-        return new Lookup(query, source, results, service, t, suggestion);
+        return new Lookup(query, source, results, service, t, suggestion, baseForm);
     }
 
     Result result(Lang l) {
@@ -99,6 +109,7 @@ final class Lookup {
                 .append(",\"svc\":").append(Json.quote(service))
                 .append(",\"t\":").append(time)
                 .append(",\"sg\":").append(Json.quote(suggestion))
+                .append(",\"bf\":").append(Json.quote(baseForm))
                 .append(",\"r\":[");
         for (int k = 0; k < results.size(); k++) {
             Result r = results.get(k);
@@ -146,6 +157,6 @@ final class Lookup {
             results.add(new Result(l, x, senses));
         }
         if (results.size() != 2) return null;
-        return new Lookup(q, src, results, Json.str(m, "svc"), (long) Json.num(m, "t", 0), Json.str(m, "sg"));
+        return new Lookup(q, src, results, Json.str(m, "svc"), (long) Json.num(m, "t", 0), Json.str(m, "sg"), Json.str(m, "bf"));
     }
 }

@@ -5,5 +5,8 @@ cd "$(dirname "$0")/.."
 OUT="$(mktemp -d)"
 S=app/src/main/java/io/github/samaliyan/trilingo
 javac -encoding UTF-8 -Xlint:all -Werror -d "$OUT" "$S/Lang.java" "$S/Json.java" "$S/Text.java" "$S/Lookup.java" \
-  "$S/Services.java" "$S/Engine.java" "$S/History.java" tests/java/io/github/samaliyan/trilingo/CoreTest.java
+  "$S/Services.java" "$S/Engine.java" "$S/History.java" \
+  "$S/Conjugation.java" "$S/GermanVerbs.java" "$S/EnglishVerbs.java" "$S/PersianVerbs.java" "$S/Verbs.java" "$S/Examples.java" \
+  tests/java/io/github/samaliyan/trilingo/CoreTest.java tests/java/io/github/samaliyan/trilingo/VerbTest.java
 java -Dstdout.encoding=UTF-8 -cp "$OUT" io.github.samaliyan.trilingo.CoreTest
+java -Dstdout.encoding=UTF-8 -cp "$OUT" io.github.samaliyan.trilingo.VerbTest

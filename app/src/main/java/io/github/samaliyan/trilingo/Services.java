@@ -29,6 +29,8 @@ final class Services {
         final List<String> detectedCandidates;
         /** Google's spelling correction of the typed text ("Did you mean"), or "" when it looks right. */
         final String suggestion;
+        /** Dictionary form of the typed word (habe → haben), or "". */
+        String baseForm = "";
 
         Answer(Lookup.Result result, String detected, List<String> candidates, String suggestion) {
             this.result = result;
@@ -64,7 +66,7 @@ final class Services {
         }
         StringBuilder text = new StringBuilder();
         List<Lookup.Sense> senses = new ArrayList<>();
-        String src = null, spell = null;
+        String src = null, spell = null, base = null;
         List<String> cands = new ArrayList<>();
 
         Map<String, Object> m = Json.obj(root);
@@ -91,6 +93,8 @@ final class Services {
                         }
                     }
                     addSense(senses, Json.str(dm, "pos"), terms);
+                    String bf = Json.str(dm, "base_form");
+                    if (bf != null && (base == null || "verb".equals(Json.str(dm, "pos")))) base = bf;
                 }
             }
             src = Json.str(m, "src");
@@ -115,6 +119,8 @@ final class Services {
                     List<Object> ts = Json.arr(Json.at(da, 1));
                     if (ts != null) for (Object t : ts) if (Json.str(t) != null) terms.add((String) t);
                     addSense(senses, Json.str(Json.at(da, 0)), terms);
+                    String bf = Json.str(Json.at(da, 3));
+                    if (bf != null && (base == null || "verb".equals(Json.str(Json.at(da, 0))))) base = bf;
                 }
             }
             src = Json.str(Json.at(a, 2));
@@ -123,7 +129,9 @@ final class Services {
         String t = text.toString().trim();
         if (t.isEmpty() && senses.isEmpty()) throw new IOException("empty answer");
         if (t.isEmpty()) t = senses.get(0).terms.get(0);
-        return new Answer(new Lookup.Result(target, t, senses), src, cands, suggestion(spell));
+        Answer ans = new Answer(new Lookup.Result(target, t, senses), src, cands, suggestion(spell));
+        ans.baseForm = base == null ? "" : Text.clean(base);
+        return ans;
     }
 
     /** Cleans Google's correction (it may carry <b>/<i> marks); "" when there is none. */

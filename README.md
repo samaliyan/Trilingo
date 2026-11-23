@@ -6,6 +6,8 @@ and choosing "English to Persian" or "German to English" every time.
 - **Type once, see both** — type a word in any of the three languages; its translation into the other two appears
   as you type. The language is detected automatically, or tap *English*, *German* or *Persian* to choose it.
 - **All meanings** — not only one translation: the different meanings, grouped by word type (noun, verb…).
+- **Examples** — simple real sentences with the word (from [Tatoeba](https://tatoeba.org)), translated into the other two languages.
+- **Conjugation** — for verbs, the conjugation in German, English and Persian, built in (works offline).
 - **Widget** — a search bar on the home screen that opens the app with the keyboard up. Make it taller to see your recent words.
 - **From any app** — select a word and choose *Trilingo* in the text menu, share text to it, or use the Quick Settings tile.
 - **Works offline for known words** — every looked-up word is saved (can be turned off).
