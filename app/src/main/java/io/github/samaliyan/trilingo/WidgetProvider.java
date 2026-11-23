@@ -1,0 +1,83 @@
+package io.github.samaliyan.trilingo;
+
+import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
+import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.RemoteViews;
+
+import java.util.List;
+
+/**
+ * Home-screen widget: a search bar that opens the app ready to type. When the widget is taller,
+ * the last looked-up words are listed under it (tap one to see it again). Redrawn only when the
+ * history or the widget size changes, so it uses no battery.
+ */
+public final class WidgetProvider extends AppWidgetProvider {
+    private static final int[] ROWS = {R.id.row1, R.id.row2, R.id.row3};
+    private static final int[] WORDS = {R.id.word1, R.id.word2, R.id.word3};
+    private static final int[] MEANINGS = {R.id.meaning1, R.id.meaning2, R.id.meaning3};
+
+    @Override public void onUpdate(Context c, AppWidgetManager m, int[] ids) {
+        for (int id : ids) update(c, m, id);
+    }
+
+    @Override public void onAppWidgetOptionsChanged(Context c, AppWidgetManager m, int id, Bundle newOptions) {
+        update(c, m, id);
+    }
+
+    static void updateAll(Context c) {
+        AppWidgetManager m = AppWidgetManager.getInstance(c);
+        if (m == null) return;
+        int[] ids = m.getAppWidgetIds(new ComponentName(c, WidgetProvider.class));
+        for (int id : ids) update(c, m, id);
+    }
+
+    /** How many recent words fit: none in a one-row widget, up to three when it is taller. */
+    static int rowsFor(int heightDp) {
+        if (heightDp <= 0) return 0;
+        return Math.max(0, Math.min(ROWS.length, (heightDp - 64) / 34));
+    }
+
+    private static void update(Context c, AppWidgetManager m, int id) {
+        try {
+            Bundle o = m.getAppWidgetOptions(id);
+            int h = o != null ? o.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, 0) : 0;
+            m.updateAppWidget(id, views(c, rowsFor(h)));
+        } catch (RuntimeException e) {
+            // A launcher that rejects an update must not crash the app; the next change will try again.
+        }
+    }
+
+    static RemoteViews views(Context c, int rows) {
+        RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.widget);
+        v.setOnClickPendingIntent(R.id.bar, open(c, null, 0));
+        List<Lookup> items = new Store(c).saveHistory() ? Store.history(c).items() : java.util.Collections.emptyList();
+        int shown = Math.min(rows, items.size());
+        for (int k = 0; k < ROWS.length; k++) {
+            if (k < shown) {
+                Lookup l = items.get(k);
+                v.setViewVisibility(ROWS[k], View.VISIBLE);
+                v.setTextViewText(WORDS[k], l.query);
+                v.setTextViewText(MEANINGS[k], l.results.get(0).text);
+                v.setOnClickPendingIntent(ROWS[k], open(c, l.query, k + 1));
+            } else {
+                v.setViewVisibility(ROWS[k], View.GONE);
+            }
+        }
+        v.setViewVisibility(R.id.divider, shown > 0 ? View.VISIBLE : View.GONE);
+        return v;
+    }
+
+    /** Opens the app with a clean field (text == null) or with a word shown. */
+    static PendingIntent open(Context c, String text, int requestCode) {
+        Intent it = new Intent(c, MainActivity.class).setAction(MainActivity.ACTION_OPEN)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        if (text != null) it.putExtra(MainActivity.EXTRA_TEXT, text);
+        return PendingIntent.getActivity(c, requestCode, it, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    }
+}

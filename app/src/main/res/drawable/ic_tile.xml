@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Quick-settings tile: two speech bubbles (A and a Persian-like stroke). Must be a single white shape. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M4,3h9a2,2 0,0 1,2 2v6a2,2 0,0 1,-2 2H9l-3,3v-3H4a2,2 0,0 1,-2 -2V5a2,2 0,0 1,2 -2zM8.5,5.2L6,11h1.5l0.5,-1.3h2.1l0.5,1.3h1.5L9.6,5.2zM9.05,6.9l0.6,1.6H8.4z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M17,9h3a2,2 0,0 1,2 2v6a2,2 0,0 1,-2 2h-1v3l-3,-3h-4a2,2 0,0 1,-2 -2v-2h3a3,3 0,0 0,3 -3zM13.5,16.5c1.5,0.6 3.5,0.6 5,-0.8l-0.8,-0.8c-1,1 -2.4,1 -3.6,0.6z" />
+</vector>
