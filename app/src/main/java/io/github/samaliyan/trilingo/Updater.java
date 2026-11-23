@@ -46,6 +46,9 @@ final class Updater {
     static final String REPO_URL = "https://github.com/" + REPO;
     private static final String API = "https://api.github.com/repos/" + REPO + "/releases/latest";
     private static final String APK_URL = REPO_URL + "/releases/latest/download/Trilingo.apk";
+    /** Same information as the API answer, as a release file (no API rate limit). */
+    private static final String INFO_URL = REPO_URL + "/releases/latest/download/update.txt";
+    private static final Pattern VERSION = Pattern.compile("(?m)^version=(\\S+)\\s*$");
     private static final String ACTION = "io.github.samaliyan.trilingo.INSTALL_RESULT";
     private static final int MAX_APK = 30 * 1024 * 1024;
     private static final Pattern CODE = Pattern.compile("code=(\\d{1,9})");
@@ -94,15 +97,26 @@ final class Updater {
         if (!silent) Toast.makeText(act, R.string.checking, Toast.LENGTH_SHORT).show();
         new Thread(() -> {
             try {
-                JSONObject j = new JSONObject(readText(API, silent ? 8000 : 15000));
-                String body = j.optString("body", "");
+                String body, version;
+                try {
+                    JSONObject j = new JSONObject(readText(API, silent ? 8000 : 15000));
+                    body = j.optString("body", "");
+                    version = j.optString("tag_name", "").replaceFirst("^[vV]", "");
+                } catch (Exception apiFailed) {
+                    // GitHub's API allows 60 requests an hour per network; the release file has no limit.
+                    body = readText(INFO_URL, silent ? 8000 : 15000);
+                    Matcher vm = VERSION.matcher(body);
+                    version = vm.find() ? vm.group(1) : "";
+                    body = VERSION.matcher(body).replaceAll("");
+                }
                 Matcher m = CODE.matcher(body);
-                int code = m.find() ? Integer.parseInt(m.group(1)) : 0;
-                String version = j.optString("tag_name", "").replaceFirst("^[vV]", "");
-                String notes = CODE.matcher(body).replaceAll("").trim();
+                if (!m.find()) throw new java.io.IOException("no build number");
+                int code = Integer.parseInt(m.group(1));
+                final String notes = CODE.matcher(body).replaceAll("").trim();
+                final String ver = version;
                 new Store(act).setLastUpdateCheck(System.currentTimeMillis());
                 ui(() -> {
-                    if (code > versionCode()) offer(version, code, notes);
+                    if (code > versionCode()) offer(ver, code, notes);
                     else if (!silent) Toast.makeText(act, R.string.up_to_date, Toast.LENGTH_SHORT).show();
                 });
             } catch (Exception e) {

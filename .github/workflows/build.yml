@@ -88,12 +88,15 @@ jobs:
           awk -v v="$V" 'index($0,"## ")==1 { if (f) exit; if ($2 == v) { f=1; next } } f' CHANGELOG.md > "$RUNNER_TEMP/notes.md"
           [ -s "$RUNNER_TEMP/notes.md" ] || { echo "::error::CHANGELOG.md has no '## $V' section"; exit 1; }
           printf '\n\ncode=%s\n' "$BUILD_NUMBER" >> "$RUNNER_TEMP/notes.md"
+          # update.txt: the same notes with the version first; the app reads it when the GitHub API is
+          # not reachable or rate-limited (releases/latest/download/… has no such limit).
+          { printf 'version=%s\n' "$V"; cat "$RUNNER_TEMP/notes.md"; } > "$RUNNER_TEMP/update.txt"
           if gh release view "$TAG" > /dev/null 2>&1; then
-            gh release upload "$TAG" "$RUNNER_TEMP/Trilingo.apk" --clobber
+            gh release upload "$TAG" "$RUNNER_TEMP/Trilingo.apk" "$RUNNER_TEMP/update.txt" --clobber
             gh release edit "$TAG" --title "Trilingo $V" --notes-file "$RUNNER_TEMP/notes.md" --latest
             git tag -f "$TAG" "$GITHUB_SHA" && git push -f origin "refs/tags/$TAG" || echo "could not move the tag (not important)"
           else
-            gh release create "$TAG" "$RUNNER_TEMP/Trilingo.apk" --target "$GITHUB_SHA" \
+            gh release create "$TAG" "$RUNNER_TEMP/Trilingo.apk" "$RUNNER_TEMP/update.txt" --target "$GITHUB_SHA" \
               --title "Trilingo $V" --notes-file "$RUNNER_TEMP/notes.md" --latest
           fi
 

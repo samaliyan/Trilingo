@@ -12,6 +12,7 @@
   - Persian: present, simple past, past continuous, present perfect, subjunctive, future, imperative;
     compound verbs (کار کردن) and verbs like برگشتن.
 - The update window shows the release notes as clean text.
+- Update check also works when GitHub's API limit is reached.
 
 ## 1.1 — 2026-11-23
 
