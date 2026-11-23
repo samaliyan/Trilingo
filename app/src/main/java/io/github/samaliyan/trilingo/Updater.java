@@ -125,9 +125,31 @@ final class Updater {
                 .show();
     }
 
-    /** Release notes for the dialog: markdown marks removed, cut at a whole line, at most {@code max} characters. */
+    /**
+     * Release notes for the dialog, as plain text: markdown marks (#, **, `) removed, bullets shown as •
+     * (sub-points as ◦), wrapped lines joined, cut at a whole line at most {@code max} characters.
+     */
     static String shortNotes(String notes, int max) {
-        String n = notes.replaceAll("(?m)^#+\\s*", "").replaceAll("(?m)^\\s*[-*]\\s+", "\u2022 ").trim();
+        java.util.List<String> out = new java.util.ArrayList<>();
+        for (String raw : notes.replace("\r", "").split("\n")) {
+            String line = raw.replace("**", "").replace("__", "").replace("`", "");
+            String t = line.trim();
+            if (t.isEmpty()) {
+                if (!out.isEmpty() && !out.get(out.size() - 1).isEmpty()) out.add("");
+                continue;
+            }
+            int indent = line.length() - line.replaceAll("^\\s+", "").length();
+            if (t.startsWith("#")) {
+                out.add(t.replaceAll("^#+\\s*", ""));
+            } else if (t.startsWith("- ") || t.startsWith("* ")) {
+                out.add((indent >= 2 ? "    \u25E6 " : "\u2022 ") + t.substring(2).trim());
+            } else if (!out.isEmpty() && !out.get(out.size() - 1).isEmpty()) {
+                out.set(out.size() - 1, out.get(out.size() - 1) + " " + t);      // continuation of the line above
+            } else {
+                out.add(t);
+            }
+        }
+        String n = String.join("\n", out).trim();
         if (n.length() <= max) return n;
         int cut = n.lastIndexOf('\n', max);
         return (cut > 0 ? n.substring(0, cut) : n.substring(0, max)).trim() + "\n\u2026";

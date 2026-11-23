@@ -11,6 +11,7 @@
   - English: present, present continuous, past, present perfect, future; irregular forms.
   - Persian: present, simple past, past continuous, present perfect, subjunctive, future, imperative;
     compound verbs (کار کردن) and verbs like برگشتن.
+- The update window shows the release notes as clean text.
 
 ## 1.1 — 2026-11-23
 

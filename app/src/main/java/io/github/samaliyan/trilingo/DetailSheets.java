@@ -222,6 +222,8 @@ final class DetailSheets {
                 lang.setLetterSpacing(0.08f);
                 TextView verb = ui.line(16, ui.text, Ui.MEDIUM);
                 verb.setText(c.verb);
+                lang.setGravity(Gravity.CENTER);
+                verb.setGravity(Gravity.CENTER);
                 tab.addView(lang);
                 tab.addView(verb);
                 tab.setContentDescription(act.getString(R.string.conjugation_tab, c.lang.label, c.verb));
@@ -263,21 +265,38 @@ final class DetailSheets {
         sheet.show();
 
         if (panel.tables.size() >= 3) return;
-        // Find the missing languages from the infinitive (the typed language's if there is one).
-        Map.Entry<Lang, String> from = verbs.entrySet().iterator().next();
-        if (verbs.containsKey(source)) from = new java.util.AbstractMap.SimpleEntry<>(source, verbs.get(source));
-        final Lang fromLang = from.getKey();
-        final String fromVerb = from.getValue();
+        // A missing language (e.g. Persian, when the translation was the conjugated "دارند") is found by
+        // translating the infinitive: "to have" from English is the most reliable, else the typed language's.
+        final Lang fromLang;
+        final String fromText;
+        if (verbs.containsKey(Lang.EN)) {
+            fromLang = Lang.EN;
+            fromText = "to " + verbs.get(Lang.EN);
+        } else if (verbs.containsKey(source)) {
+            fromLang = source;
+            fromText = verbs.get(source);
+        } else {
+            Map.Entry<Lang, String> e = verbs.entrySet().iterator().next();
+            fromLang = e.getKey();
+            fromText = e.getValue();
+        }
         new Thread(() -> {
-            Map<Lang, String> more;
+            Map<Lang, String> found = new java.util.LinkedHashMap<>();
             try {
-                Lookup t = host.engine().translate(fromVerb, fromLang, host.service(), System.currentTimeMillis());
-                more = Verbs.of(t);
-                if (!more.containsKey(fromLang)) more.put(fromLang, fromVerb);
+                Lookup t = host.engine().translate(fromText, fromLang, host.service(), System.currentTimeMillis());
+                for (Lookup.Result r : t.results) {
+                    if (verbs.containsKey(r.lang)) continue;
+                    String v = null;
+                    for (Lookup.Sense sense : r.senses) {
+                        if (!Verbs.isVerbPos(sense.pos)) continue;
+                        for (String term : sense.terms) if (v == null) v = Verbs.infinitive(r.lang, term);
+                    }
+                    if (v == null) v = Verbs.infinitive(r.lang, r.text);
+                    if (v != null) found.put(r.lang, v);
+                }
             } catch (Engine.Failure e) {
                 return;
             }
-            final Map<Lang, String> found = more;
             act.runOnUiThread(() -> {
                 if (act.isFinishing() || act.isDestroyed() || !sheet.isShowing()) return;
                 int before = panel.tables.size();
