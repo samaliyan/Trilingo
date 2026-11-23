@@ -88,7 +88,7 @@ final class Engine {
         if (src != null) {
             Lang[] t = src.targets();
             List<Services.Answer> a = all(gReq(q, src.code, t[0]), gReq(q, src.code, t[1]));
-            return make(q, src, a.get(0).result, a.get(1).result, Services.GOOGLE, now);
+            return make(q, src, a.get(0).result, a.get(1).result, Services.GOOGLE, now, spell(a));
         }
         // Automatic Latin text: ask for all three at once and keep what fits the detected language.
         List<Services.Answer> a = all(gReq(q, "auto", Lang.FA), gReq(q, "auto", Lang.EN), gReq(q, "auto", Lang.DE));
@@ -106,12 +106,12 @@ final class Engine {
             if (det == null || det == Lang.FA) det = Text.guessLatin(q);
             Lang[] t = det.targets();
             List<Services.Answer> b = all(gReq(q, det.code, t[0]), gReq(q, det.code, t[1]));
-            return make(q, det, b.get(0).result, b.get(1).result, Services.GOOGLE, now);
+            return make(q, det, b.get(0).result, b.get(1).result, Services.GOOGLE, now, spell(b));
         }
         Services.Answer fa = a.get(0), other = det == Lang.EN ? a.get(2) : a.get(1);
         Lang[] t = det.targets();
         Services.Answer r0 = t[0] == Lang.FA ? fa : other, r1 = t[1] == Lang.FA ? fa : other;
-        return make(q, det, r0.result, r1.result, Services.GOOGLE, now);
+        return make(q, det, r0.result, r1.result, Services.GOOGLE, now, spell(a));
     }
 
     private Callable<Services.Answer> gReq(String q, String sl, Lang tl) {
@@ -124,7 +124,7 @@ final class Engine {
         Lang src = forced != null ? forced : Text.hasPersian(q) ? Lang.FA : Text.guessLatin(q);
         Lang[] t = src.targets();
         List<Services.Answer> a = all(mReq(q, src, t[0]), mReq(q, src, t[1]));
-        return make(q, src, a.get(0).result, a.get(1).result, Services.MYMEMORY, now);
+        return make(q, src, a.get(0).result, a.get(1).result, Services.MYMEMORY, now, "");
     }
 
     private Callable<Services.Answer> mReq(String q, Lang sl, Lang tl) {
@@ -133,11 +133,17 @@ final class Engine {
 
     // ------------------------------------------------------------------ helpers
 
-    private static Lookup make(String q, Lang src, Lookup.Result a, Lookup.Result b, int service, long now) {
+    private static Lookup make(String q, Lang src, Lookup.Result a, Lookup.Result b, int service, long now, String spell) {
         List<Lookup.Result> rs = new ArrayList<>();
         rs.add(a);
         rs.add(b);
-        return new Lookup(q, src, rs, Services.NAMES[service], now);
+        return new Lookup(q, src, rs, Services.NAMES[service], now, spell);
+    }
+
+    /** The first correction any of the answers gives. */
+    private static String spell(List<Services.Answer> answers) {
+        for (Services.Answer x : answers) if (!x.suggestion.isEmpty()) return x.suggestion;
+        return "";
     }
 
     @SafeVarargs

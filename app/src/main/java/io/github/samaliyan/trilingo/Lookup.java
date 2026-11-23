@@ -54,17 +54,30 @@ final class Lookup {
     final List<Result> results;
     final String service;
     final long time;
+    /** "Did you mean" correction of the query; "" when the spelling looks right. */
+    final String suggestion;
 
     Lookup(String query, Lang source, List<Result> results, String service, long time) {
+        this(query, source, results, service, time, "");
+    }
+
+    Lookup(String query, Lang source, List<Result> results, String service, long time, String suggestion) {
         this.query = query;
         this.source = source;
         this.results = Collections.unmodifiableList(new ArrayList<>(results));
         this.service = service == null ? "" : service;
         this.time = time;
+        String sg = suggestion == null ? "" : suggestion;
+        // A "correction" that only changes letter case or spaces is not shown.
+        this.suggestion = Text.key(sg).equals(Text.key(query == null ? "" : query)) ? "" : sg;
+    }
+
+    boolean hasSuggestion() {
+        return !suggestion.isEmpty();
     }
 
     Lookup withTime(long t) {
-        return new Lookup(query, source, results, service, t);
+        return new Lookup(query, source, results, service, t, suggestion);
     }
 
     Result result(Lang l) {
@@ -85,6 +98,7 @@ final class Lookup {
                 .append(",\"src\":").append(Json.quote(source.code))
                 .append(",\"svc\":").append(Json.quote(service))
                 .append(",\"t\":").append(time)
+                .append(",\"sg\":").append(Json.quote(suggestion))
                 .append(",\"r\":[");
         for (int k = 0; k < results.size(); k++) {
             Result r = results.get(k);
@@ -132,6 +146,6 @@ final class Lookup {
             results.add(new Result(l, x, senses));
         }
         if (results.size() != 2) return null;
-        return new Lookup(q, src, results, Json.str(m, "svc"), (long) Json.num(m, "t", 0));
+        return new Lookup(q, src, results, Json.str(m, "svc"), (long) Json.num(m, "t", 0), Json.str(m, "sg"));
     }
 }

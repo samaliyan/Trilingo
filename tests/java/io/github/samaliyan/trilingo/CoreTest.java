@@ -37,6 +37,7 @@ public final class CoreTest {
         text();
         google();
         myMemory();
+        spelling();
         lookupJson();
         engine();
         history();
@@ -208,6 +209,41 @@ public final class CoreTest {
             ok(threw, "mymemory rejects: " + bad);
         }
         eq("https://api.mymemory.translated.net/get?q=Haus&langpair=de%7Cen", Services.myMemoryUrl("Haus", Lang.DE, Lang.EN), "mymemory url");
+    }
+
+    // ------------------------------------------------------------------ "Did you mean"
+
+    static void spelling() throws IOException {
+        String withSpell = gObj("hous", "en", null, "\"en\"").replace("\"spell\":{}",
+                "\"spell\":{\"spell_html_res\":\"<b><i>house</i></b>\",\"spell_res\":\"house\",\"correction_type\":[1]}");
+        eq("house", Services.parseGoogle(withSpell, Lang.FA).suggestion, "spell_res read");
+        eq("", Services.parseGoogle(gObj("x", "en", null, ""), Lang.FA).suggestion, "no correction → empty");
+        String arr = "[[[\"Haus\",\"hous\"]],null,\"en\",null,null,null,null,[\"<b><i>house</i></b>\",\"house\",null,null,null,true]]";
+        eq("house", Services.parseGoogle(arr, Lang.DE).suggestion, "array form correction");
+        eq("it's here", Services.suggestion("<b>it&#39;s</b>  here"), "html removed from correction");
+        eq("", Services.suggestion(null), "null correction");
+        eq("", Services.parseMyMemory(mm("x", 200), Lang.EN).suggestion, "mymemory has no correction");
+        ok(Services.googleUrl("x", "auto", Lang.FA).contains("dt=qc"), "google asks for corrections");
+
+        Lookup a = new Lookup("hous", Lang.EN, sample("x", Lang.EN, 1).results, "Google Translate", 1, "house");
+        ok(a.hasSuggestion(), "lookup keeps suggestion");
+        eq("house", a.withTime(5).suggestion, "withTime keeps suggestion");
+        Lookup b = new Lookup("House ", Lang.EN, sample("x", Lang.EN, 1).results, "Google Translate", 1, "house");
+        ok(!b.hasSuggestion(), "case/space-only correction ignored");
+        Lookup c = Lookup.fromJson(Json.parse(a.toJson()));
+        eq("house", c == null ? null : c.suggestion, "suggestion saved and read back");
+        Lookup old = Lookup.fromJson(Json.parse(sample("y", Lang.EN, 1).toJson().replace(",\"sg\":\"\"", "")));
+        ok(old != null && !old.hasSuggestion(), "history from version without suggestions still reads");
+
+        Fake f = new Fake();
+        f.answers.put("sl=auto&tl=fa", withSpell);
+        f.answers.put("sl=auto&tl=de", gObj("Haus", "en", null, "\"en\""));
+        f.answers.put("sl=auto&tl=en", gObj("hous", "en", null, "\"en\""));
+        eq("house", new Engine(f).translate("hous", null, Services.GOOGLE, 1).suggestion, "engine passes correction on");
+        f = new Fake();
+        f.answers.put("sl=de&tl=en", gObj("x", "de", null, ""));
+        f.answers.put("sl=de&tl=fa", withSpell.replace("house", "Schmetterling"));
+        eq("Schmetterling", new Engine(f).translate("Schmeterling", Lang.DE, Services.GOOGLE, 1).suggestion, "correction from second answer");
     }
 
     // ------------------------------------------------------------------ Lookup JSON

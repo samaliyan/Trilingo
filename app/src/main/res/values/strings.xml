@@ -18,6 +18,8 @@
     <string name="copied">Copied</string>
     <string name="speak_failed">Could not play the sound</string>
     <string name="via_service">Translated by %1$s</string>
+    <string name="did_you_mean">Did you mean</string>
+    <string name="did_you_mean_desc">Did you mean %1$s? Tap to translate it</string>
     <string name="clipboard_empty">Nothing to paste</string>
     <string name="no_letters">Type a word to translate.</string>
     <string name="error_offline">No internet connection.</string>

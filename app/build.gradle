@@ -16,7 +16,7 @@ android {
         targetSdk 34
         // Every GitHub build gets a higher number, so the in-app updater and Android accept it as newer.
         versionCode((System.getenv('BUILD_NUMBER') ?: '1') as int)
-        versionName '1.0'
+        versionName '1.1'
     }
 
     signingConfigs {

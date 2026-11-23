@@ -422,7 +422,9 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
     /** The word is saved to the history once the user has stopped typing (or copied it, pressed Enter…). */
     private void scheduleSave(Lookup l, boolean now) {
         handler.removeCallbacks(saveTask);
-        pendingSave = l;
+        // A word that is probably misspelled ("Did you mean …") is not kept in the history.
+        pendingSave = l.hasSuggestion() ? null : l;
+        if (pendingSave == null) return;
         if (now) saveNow();
         else handler.postDelayed(saveTask, SAVE_DELAY);
     }
@@ -471,6 +473,8 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         }
         content.addView(src);
 
+        if (l.hasSuggestion()) content.addView(suggestionRow(l.suggestion));
+
         for (Lookup.Result r : l.results) content.addView(card(l, r));
 
         if (Services.NAMES[Services.MYMEMORY].equals(l.service)) {
@@ -480,6 +484,35 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
             content.addView(via);
         }
         scroll.scrollTo(0, 0);
+    }
+
+    /** "Did you mean house?" — tap to look up the corrected word instead. */
+    private View suggestionRow(String suggestion) {
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.VERTICAL);
+        row.setBackground(ui.ripple(ui.round(ui.accentSoft, 18), 18));
+        row.setPadding(ui.dp(18), ui.dp(12), ui.dp(18), ui.dp(12));
+        row.setMinimumHeight(ui.dp(56));
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        TextView label = ui.line(13, ui.sub, Ui.MEDIUM);
+        label.setText(R.string.did_you_mean);
+        row.addView(label);
+        TextView word = ui.text(18, ui.accent, Ui.MEDIUM);
+        word.setText(suggestion);
+        Ui.bidi(word);
+        LinearLayout.LayoutParams wp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        wp.topMargin = ui.dp(2);
+        row.addView(word, wp);
+        row.setContentDescription(getString(R.string.did_you_mean_desc, suggestion));
+        row.setOnClickListener(v -> {
+            setInput(suggestion);
+            lookup(true);
+            hideKeyboard();
+        });
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.bottomMargin = ui.dp(12);
+        row.setLayoutParams(lp);
+        return row;
     }
 
     private View card(Lookup l, Lookup.Result r) {

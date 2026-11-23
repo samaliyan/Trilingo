@@ -27,11 +27,14 @@ final class Services {
         final Lookup.Result result;
         final String detected;
         final List<String> detectedCandidates;
+        /** Google's spelling correction of the typed text ("Did you mean"), or "" when it looks right. */
+        final String suggestion;
 
-        Answer(Lookup.Result result, String detected, List<String> candidates) {
+        Answer(Lookup.Result result, String detected, List<String> candidates, String suggestion) {
             this.result = result;
             this.detected = detected;
             this.detectedCandidates = candidates;
+            this.suggestion = suggestion == null ? "" : suggestion;
         }
     }
 
@@ -48,7 +51,7 @@ final class Services {
     /** @param sl source code or "auto" */
     static String googleUrl(String q, String sl, Lang tl) {
         return "https://translate.googleapis.com/translate_a/single?client=gtx&dj=1&hl=en&ie=UTF-8&oe=UTF-8"
-                + "&sl=" + sl + "&tl=" + tl.code + "&dt=t&dt=bd&q=" + enc(q);
+                + "&sl=" + sl + "&tl=" + tl.code + "&dt=t&dt=bd&dt=qc&q=" + enc(q);
     }
 
     /** Reads Google's answer; understands the object form (dj=1) and the older array form. */
@@ -61,7 +64,7 @@ final class Services {
         }
         StringBuilder text = new StringBuilder();
         List<Lookup.Sense> senses = new ArrayList<>();
-        String src = null;
+        String src = null, spell = null;
         List<String> cands = new ArrayList<>();
 
         Map<String, Object> m = Json.obj(root);
@@ -91,6 +94,7 @@ final class Services {
                 }
             }
             src = Json.str(m, "src");
+            spell = Json.str(Json.obj(m, "spell"), "spell_res");
             List<Object> ls = Json.arr(Json.obj(m, "ld_result"), "srclangs");
             if (ls != null) for (Object l : ls) if (Json.str(l) != null) cands.add((String) l);
         } else {
@@ -114,11 +118,19 @@ final class Services {
                 }
             }
             src = Json.str(Json.at(a, 2));
+            spell = Json.str(Json.at(Json.arr(Json.at(a, 7)), 1));
         }
         String t = text.toString().trim();
         if (t.isEmpty() && senses.isEmpty()) throw new IOException("empty answer");
         if (t.isEmpty()) t = senses.get(0).terms.get(0);
-        return new Answer(new Lookup.Result(target, t, senses), src, cands);
+        return new Answer(new Lookup.Result(target, t, senses), src, cands, suggestion(spell));
+    }
+
+    /** Cleans Google's correction (it may carry <b>/<i> marks); "" when there is none. */
+    static String suggestion(String spell) {
+        if (spell == null) return "";
+        String c = Text.clean(Text.unescapeHtml(spell.replaceAll("<[^>]*>", "")));
+        return c.length() > Text.MAX_LEN ? "" : c;
     }
 
     private static void addSense(List<Lookup.Sense> senses, String pos, List<String> terms) {
@@ -154,6 +166,6 @@ final class Services {
         if (!"200".equals(status) || t == null || t.trim().isEmpty()) throw new IOException("service: " + status);
         // When the daily free limit is used up, the "translation" is a warning text.
         if (t.startsWith("MYMEMORY WARNING") || t.startsWith("QUERY LENGTH LIMIT")) throw new IOException("limit");
-        return new Answer(new Lookup.Result(target, t.trim(), new ArrayList<>()), null, new ArrayList<>());
+        return new Answer(new Lookup.Result(target, t.trim(), new ArrayList<>()), null, new ArrayList<>(), "");
     }
 }

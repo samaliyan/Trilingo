@@ -62,6 +62,21 @@ expect "PERSIAN"; expect "From English · detected"
 expect "Haus" "Haus"
 expect "Noun" "^Noun$"
 
+# 2b. Misspelled word → "Did you mean", tap it
+clear_field
+type_text "hous"
+wait_for "Did you mean" "" 20
+shot 02b_did_you_mean 1
+expect "house" "^house$"
+tap "Did you mean house? Tap to translate it"
+wait_for "Haus" "Haus" 10
+expect_not "Did you mean"
+clear_field
+type_text "Schmeterling"
+wait_for "Did you mean" "" 20
+shot 02c_did_you_mean_german 1
+expect "Schmetterling" "^Schmetterling$"
+
 # 3. German word → English + Persian
 clear_field
 type_text "Schmetterling"
@@ -106,6 +121,8 @@ KB=$(adb shell dumpsys input_method | grep -c "mInputShown=true")
 back
 shot 09b_recent 1
 expect "Recent"; expect "house"; expect "Gift"
+expect_not "hous" "^hous$"
+expect_not "Schmeterling" "^Schmeterling$"
 longpress "Schmetterling"
 shot 10_remove_dialog
 tap_any "Remove" "REMOVE"
