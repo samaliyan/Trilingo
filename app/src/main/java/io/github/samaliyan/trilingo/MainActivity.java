@@ -503,13 +503,13 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
             src.setMinimumHeight(ui.dp(44));
         }
         content.addView(src);
-        View actions = actionRow(l);
-        if (actions != null) content.addView(actions);
 
         if (corrected) content.addView(correctedRow(l.query));
         else if (l.hasSuggestion()) content.addView(suggestionRow(l.suggestion));
 
         for (Lookup.Result r : l.results) content.addView(card(l, r));
+        View actions = actionRow(l);
+        if (actions != null) content.addView(actions);
 
         if (Services.NAMES[Services.MYMEMORY].equals(l.service)) {
             TextView via = ui.text(12, ui.sub, Ui.REGULAR);
@@ -549,29 +549,34 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         return row;
     }
 
-    /** "Examples" and "Conjugation" buttons under the language line, only when they have something to show. */
+    /**
+     * "Examples" and "Conjugation" under the translations (the translation itself stays at the top),
+     * each shown only when it has something to show.
+     */
     private View actionRow(Lookup l) {
         boolean examples = Examples.suitable(l.query);
         java.util.Map<Lang, String> verbs = Verbs.of(l);
         if (!examples && verbs.isEmpty()) return null;
         LinearLayout row = new LinearLayout(this);
-        row.setPadding(ui.dp(2), ui.dp(2), 0, ui.dp(12));
+        row.setPadding(0, 0, 0, ui.dp(12));
         if (examples) {
-            TextView b = ui.actionPill(Icons.Kind.EXAMPLES, getString(R.string.examples));
+            LinearLayout b = ui.actionPill(Icons.Kind.EXAMPLES, getString(R.string.examples));
             b.setOnClickListener(v -> {
                 saveNow();
                 sheets.showExamples(l.query, l.source);
             });
-            row.addView(b);
+            b.setGravity(Gravity.CENTER);
+            row.addView(b, new LinearLayout.LayoutParams(0, ui.dp(48), 1));
         }
         if (!verbs.isEmpty()) {
-            TextView b = ui.actionPill(Icons.Kind.TABLE, getString(R.string.conjugation));
+            LinearLayout b = ui.actionPill(Icons.Kind.TABLE, getString(R.string.conjugation));
             b.setOnClickListener(v -> {
                 saveNow();
                 sheets.showConjugation(verbs, l.source);
             });
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            if (examples) lp.leftMargin = ui.dp(8);
+            b.setGravity(Gravity.CENTER);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ui.dp(48), 1);
+            if (examples) lp.leftMargin = ui.dp(10);
             row.addView(b, lp);
         }
         return row;

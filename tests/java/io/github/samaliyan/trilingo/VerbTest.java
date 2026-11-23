@@ -329,6 +329,10 @@ public final class VerbTest {
         // noun: nothing
         v = Verbs.of(lookup("house", Lang.EN, res(Lang.FA, "خانه", "noun", "خانه"), res(Lang.DE, "Haus", "noun", "Haus"), ""));
         ok(v.isEmpty(), "noun has no verbs");
+        Lookup.Result nounFirst = new Lookup.Result(Lang.FA, "خانه", Arrays.asList(
+                new Lookup.Sense("noun", Arrays.asList("خانه")), new Lookup.Sense("verb", Arrays.asList("منزل دادن"))));
+        v = Verbs.of(lookup("house", Lang.EN, nounFirst, res(Lang.DE, "Haus", "noun", "Haus"), ""));
+        ok(v.isEmpty(), "rare verb meaning after the noun: no conjugation");
         v = Verbs.of(lookup("Haus", Lang.DE, res(Lang.EN, "house", null), res(Lang.FA, "خانه", null), ""));
         ok(v.isEmpty(), "german noun without senses has no verbs");
 

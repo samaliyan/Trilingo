@@ -15,8 +15,12 @@ final class Verbs {
         return pos != null && pos.trim().toLowerCase(Locale.ROOT).startsWith("verb");
     }
 
+    /**
+     * True when the word's main meaning is a verb: the first dictionary group of a translation is "verb".
+     * ("house" also has a rare verb meaning, but its first group is "noun", so it gets no conjugation.)
+     */
     private static boolean hasVerbSense(Lookup l) {
-        for (Lookup.Result r : l.results) for (Lookup.Sense s : r.senses) if (isVerbPos(s.pos)) return true;
+        for (Lookup.Result r : l.results) if (!r.senses.isEmpty() && isVerbPos(r.senses.get(0).pos)) return true;
         return false;
     }
 

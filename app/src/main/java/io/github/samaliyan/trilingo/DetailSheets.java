@@ -182,60 +182,114 @@ final class DetailSheets {
 
     // ------------------------------------------------------------------ Conjugation
 
-    void showConjugation(Map<Lang, String> verbs, Lang first) {
-        List<Conjugation> tables = new ArrayList<>();
-        for (Map.Entry<Lang, String> e : verbs.entrySet()) {
-            Conjugation c = Conjugation.of(e.getKey(), e.getValue());
-            if (c != null) tables.add(c);
-        }
-        if (tables.isEmpty()) return;
-        Sheet sheet = new Sheet(act, ui, act.getString(R.string.conjugation), null);
+    /** One open conjugation panel: its tables (one per language) and the selected one. */
+    private final class ConjPanel {
+        final Sheet sheet;
+        final List<Conjugation> tables = new ArrayList<>();
+        final LinearLayout tabs = new LinearLayout(act);
+        int selected;
 
-        LinearLayout tabs = new LinearLayout(act);
-        tabs.setPadding(ui.dp(16), ui.dp(4), ui.dp(16), ui.dp(8));
-        List<View> tabViews = new ArrayList<>();
-        int start = 0;
-        for (int i = 0; i < tables.size(); i++) if (tables.get(i).lang == first) start = i;
-        for (int i = 0; i < tables.size(); i++) {
-            Conjugation c = tables.get(i);
-            LinearLayout tab = new LinearLayout(act);
-            tab.setOrientation(LinearLayout.VERTICAL);
-            tab.setGravity(Gravity.CENTER);
-            tab.setPadding(ui.dp(8), ui.dp(8), ui.dp(8), ui.dp(8));
-            tab.setMinimumHeight(ui.dp(60));
-            TextView lang = ui.line(11, ui.sub, Ui.MEDIUM);
-            lang.setText(c.lang.label.toUpperCase(Locale.ROOT));
-            lang.setLetterSpacing(0.08f);
-            lang.setGravity(Gravity.CENTER);
-            TextView verb = ui.line(16, ui.text, Ui.MEDIUM);
-            verb.setText(c.verb);
-            verb.setGravity(Gravity.CENTER);
-            tab.addView(lang);
-            tab.addView(verb, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            tab.setContentDescription(act.getString(R.string.conjugation_tab, c.lang.label, c.verb));
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
-            if (i > 0) lp.leftMargin = ui.dp(8);
-            tabs.addView(tab, lp);
-            tabViews.add(tab);
-            final int index = i;
-            tab.setOnClickListener(v -> selectTab(sheet, tables, tabViews, index));
+        ConjPanel(Sheet sheet) {
+            this.sheet = sheet;
+            tabs.setPadding(ui.dp(16), ui.dp(4), ui.dp(16), ui.dp(8));
+            sheet.top.addView(tabs);
         }
-        if (tables.size() > 1) sheet.top.addView(tabs);
-        selectTab(sheet, tables, tabViews, start);
-        sheet.show();
+
+        /** Languages in the fixed order of the lookup (typed language first). */
+        void add(Conjugation c, List<Lang> order) {
+            for (Conjugation t : tables) if (t.lang == c.lang) return;
+            Lang current = tables.isEmpty() ? null : tables.get(selected).lang;
+            tables.add(c);
+            tables.sort((x, y) -> order.indexOf(x.lang) - order.indexOf(y.lang));
+            if (current != null) for (int i = 0; i < tables.size(); i++) if (tables.get(i).lang == current) selected = i;
+        }
+
+        void rebuildTabs() {
+            tabs.removeAllViews();
+            tabs.setVisibility(tables.size() > 1 ? View.VISIBLE : View.GONE);
+            for (int i = 0; i < tables.size(); i++) {
+                Conjugation c = tables.get(i);
+                boolean on = i == selected;
+                LinearLayout tab = new LinearLayout(act);
+                tab.setOrientation(LinearLayout.VERTICAL);
+                tab.setGravity(Gravity.CENTER);
+                tab.setPadding(ui.dp(6), ui.dp(8), ui.dp(6), ui.dp(8));
+                tab.setMinimumHeight(ui.dp(60));
+                tab.setBackground(ui.ripple(on ? ui.outline(ui.accentSoft, ui.accent, 16) : ui.outline(ui.surface, ui.line, 16), 16));
+                tab.setSelected(on);
+                TextView lang = ui.line(11, on ? ui.accent : ui.sub, Ui.MEDIUM);
+                lang.setText(c.lang.label.toUpperCase(Locale.ROOT));
+                lang.setLetterSpacing(0.08f);
+                TextView verb = ui.line(16, ui.text, Ui.MEDIUM);
+                verb.setText(c.verb);
+                tab.addView(lang);
+                tab.addView(verb);
+                tab.setContentDescription(act.getString(R.string.conjugation_tab, c.lang.label, c.verb));
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+                if (i > 0) lp.leftMargin = ui.dp(8);
+                tabs.addView(tab, lp);
+                final int index = i;
+                tab.setOnClickListener(v -> {
+                    if (index == selected) return;
+                    selected = index;
+                    rebuildTabs();
+                    renderTable(sheet, tables.get(selected), tables.size() == 1);
+                    sheet.scroll.scrollTo(0, 0);
+                });
+            }
+        }
     }
 
-    private void selectTab(Sheet sheet, List<Conjugation> tables, List<View> tabs, int index) {
-        for (int i = 0; i < tabs.size(); i++) {
-            boolean on = i == index;
-            View t = tabs.get(i);
-            t.setBackground(ui.ripple(on ? ui.outline(ui.accentSoft, ui.accent, 16) : ui.outline(ui.surface, ui.line, 16), 16));
-            t.setSelected(on);
-            TextView lang = (TextView) ((LinearLayout) t).getChildAt(0);
-            lang.setTextColor(on ? ui.accent : ui.sub);
+    /**
+     * @param verbs  language → infinitive found in the lookup (typed language first)
+     * @param source the typed word's language; its table is shown first
+     * A language whose verb is not in the lookup (e.g. the Persian translation was a conjugated form)
+     * is looked up from the typed verb's infinitive and added as a tab when it arrives.
+     */
+    void showConjugation(Map<Lang, String> verbs, Lang source) {
+        List<Lang> order = new ArrayList<>();
+        order.add(source);
+        for (Lang l : source.targets()) order.add(l);
+        Sheet sheet = new Sheet(act, ui, act.getString(R.string.conjugation), null);
+        ConjPanel panel = new ConjPanel(sheet);
+        for (Map.Entry<Lang, String> e : verbs.entrySet()) {
+            Conjugation c = Conjugation.of(e.getKey(), e.getValue());
+            if (c != null) panel.add(c, order);
         }
-        renderTable(sheet, tables.get(index), tables.size() == 1);
-        sheet.scroll.scrollTo(0, 0);
+        if (panel.tables.isEmpty()) return;
+        panel.selected = 0;
+        panel.rebuildTabs();
+        renderTable(sheet, panel.tables.get(0), panel.tables.size() == 1);
+        sheet.show();
+
+        if (panel.tables.size() >= 3) return;
+        // Find the missing languages from the infinitive (the typed language's if there is one).
+        Map.Entry<Lang, String> from = verbs.entrySet().iterator().next();
+        if (verbs.containsKey(source)) from = new java.util.AbstractMap.SimpleEntry<>(source, verbs.get(source));
+        final Lang fromLang = from.getKey();
+        final String fromVerb = from.getValue();
+        new Thread(() -> {
+            Map<Lang, String> more;
+            try {
+                Lookup t = host.engine().translate(fromVerb, fromLang, host.service(), System.currentTimeMillis());
+                more = Verbs.of(t);
+                if (!more.containsKey(fromLang)) more.put(fromLang, fromVerb);
+            } catch (Engine.Failure e) {
+                return;
+            }
+            final Map<Lang, String> found = more;
+            act.runOnUiThread(() -> {
+                if (act.isFinishing() || act.isDestroyed() || !sheet.isShowing()) return;
+                int before = panel.tables.size();
+                for (Map.Entry<Lang, String> e : found.entrySet()) {
+                    Conjugation c = Conjugation.of(e.getKey(), e.getValue());
+                    if (c != null) panel.add(c, order);
+                }
+                if (panel.tables.size() == before) return;
+                panel.rebuildTabs();
+                if (before == 1) renderTable(sheet, panel.tables.get(panel.selected), false);
+            });
+        }, "conjugation").start();
     }
 
     /** @param single only one language: there are no tabs, so the verb is shown above the table */

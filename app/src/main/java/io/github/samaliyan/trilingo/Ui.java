@@ -124,18 +124,25 @@ final class Ui {
         return b;
     }
 
-    /** Outlined pill with a leading icon, for secondary actions (Examples, Conjugation). */
-    TextView actionPill(Icons.Kind kind, CharSequence label) {
-        TextView b = text(14, text, MEDIUM);
-        b.setText(label);
-        b.setGravity(Gravity.CENTER_VERTICAL);
-        b.setMinHeight(dp(40));
-        b.setPadding(dp(12), 0, dp(16), 0);
-        android.graphics.drawable.Drawable d = Icons.of(kind, accent);
-        d.setBounds(0, 0, dp(18), dp(18));
-        b.setCompoundDrawablesRelative(d, null, null, null);
-        b.setCompoundDrawablePadding(dp(8));
-        b.setBackground(ripple(outline(surface, line, 20), 20));
+    /** Outlined button with an icon before its label, content centred, for secondary actions. */
+    android.widget.LinearLayout actionPill(Icons.Kind kind, CharSequence label) {
+        android.widget.LinearLayout b = new android.widget.LinearLayout(ctx);
+        b.setGravity(Gravity.CENTER);
+        b.setPadding(dp(12), 0, dp(14), 0);
+        b.setMinimumHeight(dp(44));
+        android.widget.ImageView icon = new android.widget.ImageView(ctx);
+        icon.setImageDrawable(Icons.of(kind, accent));
+        icon.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        b.addView(icon, new android.widget.LinearLayout.LayoutParams(dp(20), dp(20)));
+        TextView t = text(15, text, MEDIUM);
+        t.setText(label);
+        t.setMaxLines(1);
+        android.widget.LinearLayout.LayoutParams tp = new android.widget.LinearLayout.LayoutParams(
+                android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+        tp.leftMargin = dp(8);
+        b.addView(t, tp);
+        b.setBackground(ripple(outline(surface, line, 22), 22));
+        b.setContentDescription(label);
         b.setClickable(true);
         b.setFocusable(true);
         return b;
