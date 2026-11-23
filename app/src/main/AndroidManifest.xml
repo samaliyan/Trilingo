@@ -4,6 +4,8 @@
 
     <!-- Translation requests, and checking/downloading updates from GitHub Releases. -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- To tell "no internet" apart from "the service did not answer". -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <!-- Android 11+: lets the app see the phone's text-to-speech engine (for the speaker buttons). -->

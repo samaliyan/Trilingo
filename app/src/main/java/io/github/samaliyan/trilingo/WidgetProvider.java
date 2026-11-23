@@ -6,11 +6,15 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.ArrayMap;
+import android.util.SizeF;
 import android.view.View;
 import android.widget.RemoteViews;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Home-screen widget: a search bar that opens the app ready to type. When the widget is taller,
@@ -40,13 +44,24 @@ public final class WidgetProvider extends AppWidgetProvider {
     /** How many recent words fit: none in a one-row widget, up to three when it is taller. */
     static int rowsFor(int heightDp) {
         if (heightDp <= 0) return 0;
-        return Math.max(0, Math.min(ROWS.length, (heightDp - 64) / 34));
+        return Math.max(0, Math.min(ROWS.length, (heightDp - 64) / 30));
     }
 
     private static void update(Context c, AppWidgetManager m, int id) {
         try {
+            if (Build.VERSION.SDK_INT >= 31) {
+                // Android 12+: one layout per size; the launcher picks the one that fits, also while resizing.
+                Map<SizeF, RemoteViews> map = new ArrayMap<>();
+                for (int rows = 0; rows <= ROWS.length; rows++) map.put(new SizeF(150, rows == 0 ? 40 : 64 + rows * 30), views(c, rows));
+                m.updateAppWidget(id, new RemoteViews(map));
+                return;
+            }
             Bundle o = m.getAppWidgetOptions(id);
-            int h = o != null ? o.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, 0) : 0;
+            int h = 0;
+            if (o != null) {
+                h = o.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, 0);
+                if (h <= 0) h = o.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 0);
+            }
             m.updateAppWidget(id, views(c, rowsFor(h)));
         } catch (RuntimeException e) {
             // A launcher that rejects an update must not crash the app; the next change will try again.

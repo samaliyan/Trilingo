@@ -9,6 +9,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +24,8 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -78,6 +83,9 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
     private final Runnable saveTask = this::saveNow;
     private final Runnable typeTask = () -> lookup(false);
 
+    /** Open the keyboard as soon as the window has focus (it cannot be opened before). */
+    private boolean wantKeyboard;
+
     private TextToSpeech tts;
     private final Set<Lang> speakable = EnumSet.noneOf(Lang.class);
 
@@ -101,7 +109,10 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         build();
         updateChips();
         // After a rotation the restored text triggers onTextChanged by itself (shown again from the history).
-        if (saved == null) handleIntent(getIntent());
+        if (saved == null) {
+            wantKeyboard = !hasText;
+            handleIntent(getIntent());
+        }
 
         try {
             tts = new TextToSpeech(getApplicationContext(), this);
@@ -126,6 +137,14 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
             return;
         }
         if (Text.clean(input.getText().toString()).isEmpty()) showRecent();   // history may have been cleared in Settings
+    }
+
+    @Override public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus && wantKeyboard) {
+            wantKeyboard = false;
+            openKeyboardNow();
+        }
     }
 
     @Override protected void onPause() {
@@ -173,7 +192,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
             setInput(text);
             lookup(true);
             hideKeyboard();
-        } else if (it != null && ACTION_OPEN.equals(it.getAction())) {
+        } else if ((it != null && ACTION_OPEN.equals(it.getAction())) || wantKeyboard) {
             // From the widget or the quick-settings tile: a clean field, ready to type.
             forced = null;
             updateChips();
@@ -392,7 +411,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                     showLookup(r, f == null);
                     scheduleSave(r, now);
                 } else {
-                    boolean offline = x != null && x.offline;
+                    boolean offline = (x != null && x.offline) || !online();
                     showMessage(getString(offline ? R.string.error_offline : R.string.error_service),
                             getString(offline ? R.string.error_offline_hint : R.string.error_service_hint), true);
                 }
@@ -667,6 +686,18 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                 .show();
     }
 
+    /** True when the phone has a network that reaches the internet. */
+    private boolean online() {
+        try {
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            Network n = cm != null ? cm.getActiveNetwork() : null;
+            NetworkCapabilities nc = n != null ? cm.getNetworkCapabilities(n) : null;
+            return nc != null && nc.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
+        } catch (RuntimeException e) {
+            return true;      // unknown: do not claim "no internet"
+        }
+    }
+
     // ------------------------------------------------------------------ widget pinning (also used by Settings)
 
     static boolean canPinWidget(Context c) {
@@ -729,12 +760,24 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         }
     }
 
+    /** Opens the keyboard now if the window has focus, otherwise as soon as it gets it. */
     private void showKeyboard() {
         input.requestFocus();
-        input.postDelayed(() -> {
+        if (hasWindowFocus()) openKeyboardNow();
+        else wantKeyboard = true;
+    }
+
+    private void openKeyboardNow() {
+        input.requestFocus();
+        input.post(() -> {
+            if (isFinishing()) return;
+            if (Build.VERSION.SDK_INT >= 30) {
+                WindowInsetsController c = getWindow().getInsetsController();
+                if (c != null) c.show(WindowInsets.Type.ime());
+            }
             InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (im != null && !isFinishing()) im.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT);
-        }, 120);
+            if (im != null) im.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT);
+        });
     }
 
     private void hideKeyboard() {

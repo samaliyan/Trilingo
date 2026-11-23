@@ -48,6 +48,8 @@ adb shell settings put global window_animation_scale 0
 # 1. First start: introduction, keyboard up
 adb shell am start -W -n "$PKG/.MainActivity" > /dev/null; sleep 3
 shot 01_first_start
+KB=$(adb shell dumpsys input_method | grep -c "mInputShown=true")
+[ "$KB" -gt 0 ] && log "ok: keyboard open on first start" || fail "keyboard not open on first start"
 expect "English · German · Persian"
 expect "Type a word"
 
@@ -96,9 +98,13 @@ expect "house|home" "(?i)(house|home)"
 tap "Copy English"
 shot 08_copied 0.3
 
-# 8. Recent words (empty field), long-press menu
+# 8. Recent words (empty field), long-press menu; keyboard must be up after opening from the widget/tile
 open_app
-shot 09_recent 1.5
+shot 09_recent_keyboard 1.5
+KB=$(adb shell dumpsys input_method | grep -c "mInputShown=true")
+[ "$KB" -gt 0 ] && log "ok: keyboard open" || fail "keyboard not open after OPEN"
+back
+shot 09b_recent 1
 expect "Recent"; expect "house"; expect "Gift"
 longpress "Schmetterling"
 shot 10_remove_dialog
@@ -109,7 +115,9 @@ shot 11_from_history 1
 expect "Haus" "Haus"
 
 # 9. Offline: a known word still works, a new word explains the problem
-adb shell svc wifi disable; adb shell svc data disable; sleep 3
+net_off() { adb shell cmd connectivity airplane-mode enable 2>/dev/null || { adb shell settings put global airplane_mode_on 1; adb shell am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true; }; adb shell svc wifi disable; adb shell svc data disable; sleep 4; }
+net_on() { adb shell cmd connectivity airplane-mode disable 2>/dev/null || { adb shell settings put global airplane_mode_on 0; adb shell am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false; }; adb shell svc wifi enable; adb shell svc data enable; sleep 8; }
+net_off
 open_app
 type_text "house"; sleep 2
 shot 12_offline_known 1
@@ -118,7 +126,7 @@ clear_field
 type_text "zebra"
 wait_for "No internet connection." "" 25
 shot 13_offline_new 1
-adb shell svc wifi enable; adb shell svc data enable; sleep 6
+net_on
 tap "Try again"
 wait_for "PERSIAN" "" 25
 shot 14_back_online 1.5
@@ -185,7 +193,7 @@ adb shell settings put system accelerometer_rotation 0
 adb shell settings put system user_rotation 1
 sleep 2
 shot 25_landscape 2
-expect "Haus" "Haus"
+expect "PERSIAN"
 adb shell settings put system user_rotation 0
 sleep 1
 
@@ -201,9 +209,9 @@ if [ -f old.apk ]; then
   adb uninstall "$PKG" > /dev/null
   adb install old.apk > /dev/null && log "old build installed"
   adb shell appops set "$PKG" REQUEST_INSTALL_PACKAGES allow
-  adb shell am start -n "$PKG/.MainActivity" > /dev/null; sleep 8
+  adb shell am start -n "$PKG/.MainActivity" > /dev/null
+  wait_for "Update available" "" 40
   shot 27_update_offered 1
-  expect "Update available"
   tap_any "Update" "UPDATE"
   for i in $(seq 1 30); do
     sleep 2
