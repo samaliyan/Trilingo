@@ -311,6 +311,14 @@ final class DetailSheets {
         }, "conjugation").start();
     }
 
+    /** Persian text pinned to the right edge of its view, whatever the text-direction rules decide. */
+    @android.annotation.SuppressLint("RtlHardcoded")      // deliberately right, also on left-to-right phones
+    private static void rightAligned(TextView t) {
+        t.setTextDirection(View.TEXT_DIRECTION_RTL);
+        t.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
+        t.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
+    }
+
     /** @param single only one language: there are no tabs, so the verb is shown above the table */
     private void renderTable(Sheet sheet, Conjugation c, boolean single) {
         sheet.body.removeAllViews();
@@ -379,12 +387,13 @@ final class DetailSheets {
                 form.setText(t.forms[i]);
                 form.setTextIsSelectable(true);
                 if (rtl) {
-                    // Persian: person on the right, the form to its left, both right-aligned
-                    form.setGravity(Gravity.END);
-                    Ui.bidi(form);
-                    row.addView(form, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-                    person.setGravity(Gravity.END);
-                    row.addView(person, new LinearLayout.LayoutParams(ui.dp(64), ViewGroup.LayoutParams.WRAP_CONTENT));
+                    // Persian: person in a column on the right, its form right next to it (right-aligned)
+                    rightAligned(form);
+                    LinearLayout.LayoutParams fp2 = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+                    fp2.rightMargin = ui.dp(16);
+                    row.addView(form, fp2);
+                    rightAligned(person);
+                    row.addView(person, new LinearLayout.LayoutParams(ui.dp(52), ViewGroup.LayoutParams.WRAP_CONTENT));
                 } else {
                     row.addView(person, new LinearLayout.LayoutParams(ui.dp(c.lang == Lang.DE ? 84 : 76), ViewGroup.LayoutParams.WRAP_CONTENT));
                     row.addView(form, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
