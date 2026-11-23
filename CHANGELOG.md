@@ -3,7 +3,8 @@
 ## 1.1 — 2026-11-23
 
 - "Did you mean": when a word looks misspelled, the corrected word is shown above the results; tap it to translate it.
-  Misspelled words are not saved in the history.
+  If the service does not know the misspelled word at all, the corrected word is translated right away
+  ("Showing results for …"). Misspelled words are not saved in the history.
 
 ## 1.0 — 2026-11-23
 

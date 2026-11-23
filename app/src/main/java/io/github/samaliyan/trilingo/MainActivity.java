@@ -77,6 +77,9 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
     private int generation;
     private String lastQuery = "";
     private Lookup shown;
+    /** Key of the typed text the shown result answers (differs from shown.query after a spelling correction). */
+    private String shownFor = "";
+    private boolean shownCorrected;
     private boolean settingText;
 
     private Lookup pendingSave;
@@ -366,7 +369,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
     }
 
     private boolean lastQueryShown() {
-        return shown != null && Text.key(shown.query).equals(Text.key(input.getText().toString()));
+        return shown != null && shownFor.equals(Text.key(input.getText().toString()));
     }
 
     /** Looks up the current text: from the history if possible, else from the service. */
@@ -387,7 +390,8 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         Lookup cached = history.find(q, forced);
         if (cached != null) {
             busy.setVisibility(View.INVISIBLE);
-            showLookup(cached, forced == null);
+            showLookup(cached, forced == null, false);
+            shownFor = Text.key(q);
             scheduleSave(cached, now);
             return;
         }
@@ -397,18 +401,31 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         new Thread(() -> {
             Lookup res = null;
             Engine.Failure fail = null;
+            boolean corrected = false;
             try {
                 res = engine.translate(q, f, service, System.currentTimeMillis());
+                // Misspelled and the "translation" only repeats it: show the corrected word's translation instead.
+                if (res.hasSuggestion() && echoes(res)) {
+                    try {
+                        Lookup fixed = engine.translate(res.suggestion, f, service, System.currentTimeMillis());
+                        res = fixed;
+                        corrected = true;
+                    } catch (Engine.Failure ignored) {
+                        // keep the first answer with its "Did you mean"
+                    }
+                }
             } catch (Engine.Failure e) {
                 fail = e;
             }
             final Lookup r = res;
             final Engine.Failure x = fail;
+            final boolean fixedWord = corrected;
             runOnUiThread(() -> {
                 if (g != generation || isFinishing() || isDestroyed()) return;
                 busy.setVisibility(View.INVISIBLE);
                 if (r != null) {
-                    showLookup(r, f == null);
+                    showLookup(r, f == null, fixedWord);
+                    shownFor = Text.key(q);
                     scheduleSave(r, now);
                 } else {
                     boolean offline = (x != null && x.offline) || !online();
@@ -417,6 +434,12 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                 }
             });
         }, "lookup").start();
+    }
+
+    /** True when every result is just the typed text again (the service did not know the word). */
+    static boolean echoes(Lookup l) {
+        for (Lookup.Result r : l.results) if (!Text.key(r.text).equals(Text.key(l.query))) return false;
+        return true;
     }
 
     /** The word is saved to the history once the user has stopped typing (or copied it, pressed Enter…). */
@@ -454,8 +477,12 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
 
     // ------------------------------------------------------------------ showing results
 
-    private void showLookup(Lookup l, boolean detected) {
+    /**
+     * @param corrected the typed text was misspelled and unknown, so {@code l} is the corrected word's lookup
+     */
+    private void showLookup(Lookup l, boolean detected, boolean corrected) {
         shown = l;
+        shownCorrected = corrected;
         content.removeAllViews();
 
         LinearLayout src = new LinearLayout(this);
@@ -473,7 +500,8 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         }
         content.addView(src);
 
-        if (l.hasSuggestion()) content.addView(suggestionRow(l.suggestion));
+        if (corrected) content.addView(correctedRow(l.query));
+        else if (l.hasSuggestion()) content.addView(suggestionRow(l.suggestion));
 
         for (Lookup.Result r : l.results) content.addView(card(l, r));
 
@@ -509,6 +537,27 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
             lookup(true);
             hideKeyboard();
         });
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.bottomMargin = ui.dp(12);
+        row.setLayoutParams(lp);
+        return row;
+    }
+
+    /** "Showing results for Schmetterling" — the typed word was misspelled and unknown. */
+    private View correctedRow(String corrected) {
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.VERTICAL);
+        row.setBackground(ui.round(ui.accentSoft, 18));
+        row.setPadding(ui.dp(18), ui.dp(12), ui.dp(18), ui.dp(12));
+        TextView label = ui.line(13, ui.sub, Ui.MEDIUM);
+        label.setText(R.string.showing_results_for);
+        row.addView(label);
+        TextView word = ui.text(18, ui.accent, Ui.MEDIUM);
+        word.setText(corrected);
+        Ui.bidi(word);
+        LinearLayout.LayoutParams wp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        wp.topMargin = ui.dp(2);
+        row.addView(word, wp);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.bottomMargin = ui.dp(12);
         row.setLayoutParams(lp);
@@ -659,7 +708,8 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                 setInput(l.query);
                 lastQuery = Text.clean(l.query);
                 generation++;
-                showLookup(l, true);
+                showLookup(l, true, false);
+                shownFor = Text.key(l.query);
                 scheduleSave(l, true);
                 hideKeyboard();
             });
@@ -779,7 +829,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                     // engine without this language
                 }
             }
-            if (shown != null && !speakable.isEmpty()) showLookup(shown, forced == null);
+            if (shown != null && !speakable.isEmpty()) showLookup(shown, forced == null, shownCorrected);
         });
     }
 

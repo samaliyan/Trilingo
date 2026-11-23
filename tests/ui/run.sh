@@ -73,9 +73,11 @@ wait_for "Haus" "Haus" 10
 expect_not "Did you mean"
 clear_field
 type_text "Schmeterling"
-wait_for "Did you mean" "" 20
-shot 02c_did_you_mean_german 1
+# Unknown misspelled word: the corrected word is translated right away
+wait_for "Showing results for" "" 25
+shot 02c_corrected_german 1
 expect "Schmetterling" "^Schmetterling$"
+expect "butterfly" "(?i)butterfly"
 
 # 3. German word → English + Persian
 clear_field
