@@ -769,15 +769,27 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
 
     private void openKeyboardNow() {
         input.requestFocus();
-        input.post(() -> {
-            if (isFinishing()) return;
-            if (Build.VERSION.SDK_INT >= 30) {
-                WindowInsetsController c = getWindow().getInsetsController();
-                if (c != null) c.show(WindowInsets.Type.ime());
-            }
-            InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (im != null) im.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT);
-        });
+        // Right after the app starts the keyboard service may not be connected yet: ask again a little later.
+        input.post(this::askKeyboard);
+        input.postDelayed(() -> {
+            if (!keyboardVisible()) askKeyboard();
+        }, 450);
+    }
+
+    private void askKeyboard() {
+        if (isFinishing() || !input.hasFocus()) return;
+        if (Build.VERSION.SDK_INT >= 30) {
+            WindowInsetsController c = getWindow().getInsetsController();
+            if (c != null) c.show(WindowInsets.Type.ime());
+        }
+        InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (im != null) im.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    private boolean keyboardVisible() {
+        if (Build.VERSION.SDK_INT < 30) return false;      // unknown: asking again does no harm
+        WindowInsets wi = input.getRootWindowInsets();
+        return wi != null && wi.isVisible(WindowInsets.Type.ime());
     }
 
     private void hideKeyboard() {
