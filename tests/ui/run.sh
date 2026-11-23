@@ -123,15 +123,19 @@ type_text "house"; sleep 2
 shot 12_offline_known 1
 expect "Haus" "Haus"
 clear_field
-if adb shell ping -c 1 -W 3 8.8.8.8 > /dev/null 2>&1; then
-  log "offline message test skipped: this emulator cannot be taken offline"
-  type_text "zebra"; sleep 3
-  shot 13_offline_new 1
+type_text "zebra"
+# Some emulator images (Android 8) cannot be taken offline from adb: then the word is simply translated.
+for i in $(seq 1 25); do
+  sleep 1
+  [ -n "$(nfind "No internet connection.")" ] && break
+  [ -n "$(nfind "PERSIAN")" ] && break
+done
+shot 13_offline_new 1
+if [ -n "$(nfind "PERSIAN")" ]; then
+  log "offline message test skipped: this emulator stayed online"
   net_on
 else
-  type_text "zebra"
-  wait_for "No internet connection." "" 25
-  shot 13_offline_new 1
+  expect "No internet connection."
   net_on
   tap "Try again"
 fi
