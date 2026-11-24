@@ -1127,6 +1127,9 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         input.postDelayed(() -> {
             if (!keyboardVisible()) askKeyboard();
         }, 450);
+        input.postDelayed(() -> {
+            if (!keyboardVisible()) askKeyboard();
+        }, 1200);
     }
 
     private void askKeyboard() {

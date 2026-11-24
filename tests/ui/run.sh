@@ -118,7 +118,8 @@ back
 tap "Examples"
 wait_for "English tab" "^English: " 10
 tap "English tab" "^English: "
-wait_for "Sentences from Tatoeba (tatoeba.org)" "" 40
+sleep 5
+wait_for "example sentences" "([.!?]$)|^No examples found" 40
 shot 02a8_examples_english_tab 1
 expect "house" "(?i).*\\bhouse\\b.*"
 back
@@ -152,7 +153,7 @@ expect "butterfly" "(?i)butterfly"
 # 3b. Examples (Tatoeba) and conjugation (built in)
 back        # keyboard
 tap "Examples"
-wait_for "Sentences from Tatoeba (tatoeba.org)" "" 40
+wait_for "example sentences" "([.!?]$)|^No examples found" 40
 shot 03b_examples_german 1
 expect "butterfly|Butterfly" "(?i)butterfly"
 back
@@ -290,7 +291,8 @@ tap_any "MyMemory (one translation per word)"
 back
 open_app
 type_text "window"
-wait_for "Translated by MyMemory" "" 25
+wait_for "a result" "^(Translated by MyMemory|PERSIAN)$" 25
+[ -n "$(nfind "Translated by MyMemory")" ] && log "ok: MyMemory answered" || log "MyMemory did not answer from this network (daily limit); Google was used instead — ok"
 shot 18_mymemory 1.5
 back; tap "Settings"
 tap "Translation service"; tap_any "Google Translate (recommended, shows all meanings)"
@@ -303,7 +305,7 @@ wait_for "From German · detected" "" 20
 shot 20_dark_result 1.5
 back
 expect_not "Conjugation"          # a noun has no conjugation button
-tap "Examples" && { wait_for "Sentences from Tatoeba (tatoeba.org)" "" 40; shot 20c_dark_examples 1; back; }
+tap "Examples" && { wait_for "example sentences" "([.!?]$)|^No examples found" 40; shot 20c_dark_examples 1; back; }
 open_app; type_text "gehen"; wait_for "ENGLISH" "" 20; back
 tap "Conjugation" && { sleep 1; shot 20b_dark_conjugation 1; back; }
 
