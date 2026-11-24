@@ -127,7 +127,7 @@ open_app
 type_text "Haus"
 wait_for "ENGLISH" "" 20
 back
-tap "Examples"
+scroll_to "Examples"; tap "Examples"
 wait_for "English tab" "^English: " 10
 tap "English tab" "^English: "
 sleep 5
@@ -164,7 +164,7 @@ expect "butterfly" "(?i)butterfly"
 
 # 3b. Examples (Tatoeba) and conjugation (built in)
 back        # keyboard
-tap "Examples"
+scroll_to "Examples"; tap "Examples"
 wait_for "example sentences" "([.!?]$)|^No examples found" 40
 shot 03b_examples_german 1
 expect "butterfly|Butterfly" "(?i)butterfly"
@@ -175,7 +175,7 @@ wait_for "ENGLISH" "" 20
 back        # keyboard
 wait_for "Conjugation" "" 5
 shot 03c_habe_result 1
-tap "Conjugation"
+scroll_to "Conjugation"; tap "Conjugation"
 sleep 1
 shot 03d_conjugation_german 1
 expect "hast" "^hast$"
@@ -192,14 +192,14 @@ shot 03g_conjugation_persian_scrolled 1
 back
 adb shell "am start -a android.intent.action.PROCESS_TEXT -t text/plain --es android.intent.extra.PROCESS_TEXT 'رفتن' -n $PKG/.MainActivity" > /dev/null
 wait_for "Conjugation" "" 20
-tap "Conjugation"
+scroll_to "Conjugation"; tap "Conjugation"
 sleep 1
 shot 03h_conjugation_from_persian 1
 expect "می‌روم" "^می.روم$"
 tap "English: go"
 expect "went" "^went$"
 back
-tap "Examples"
+scroll_to "Examples"; tap "Examples"
 wait_for "examples result" "^(Sentences from Tatoeba|No examples found)" 25
 shot 03i_examples_persian 1
 back
@@ -215,7 +215,7 @@ open_app
 type_text "tisch"
 wait_for "ENGLISH" "" 20
 back
-tap "Examples"
+scroll_to "Examples"; tap "Examples"
 wait_for "example sentences" "([.!?]$)|^No examples found" 40
 shot 03j_examples_tisch 1
 expect "a sentence with Tisch" "(?i).*\\btisch.*[.!?]$"
@@ -350,7 +350,7 @@ expect "Review tile" "^Review( \(\d+\))?$"
 tap "Saved words"
 sleep 1
 shot 03z5_saved_words 1
-expect "Tisch"
+expect "Tisch" "^Tisch$"
 expect "Export for Anki"
 tap "+ New folder"
 type_text "Class"
@@ -544,9 +544,9 @@ wait_for "From German · detected" "" 20
 shot 20_dark_result 1.5
 back
 expect_not "Conjugation"          # a noun has no conjugation button
-tap "Examples" && { wait_for "example sentences" "([.!?]$)|^No examples found" 40; shot 20c_dark_examples 1; back; }
+scroll_to "Examples"; tap "Examples" && { wait_for "example sentences" "([.!?]$)|^No examples found" 40; shot 20c_dark_examples 1; back; }
 open_app; type_text "gehen"; wait_for "ENGLISH" "" 20; back
-tap "Conjugation" && { sleep 1; shot 20b_dark_conjugation 1; back; }
+scroll_to "Conjugation"; tap "Conjugation" && { sleep 1; shot 20b_dark_conjugation 1; back; }
 
 # 12. Widget on the home screen
 open_app; back; tap "Settings"

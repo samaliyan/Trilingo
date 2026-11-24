@@ -832,9 +832,11 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
     /** Star: saves the word in the notebook (choosing a folder when there are folders); tap again to remove. */
     private ImageButton starButton(Lookup l) {
         Notebook nb = Store.notebook(this);
+        // German nouns are saved with their capital (typed "tisch" → "Tisch")
+        String word = l.source == Lang.DE ? Lexicon.germanCase(Text.clean(l.query)) : Text.clean(l.query);
         ImageButton star = ui.iconButton(Icons.Kind.STAR, ui.sub, "");
         Runnable update = () -> {
-            boolean saved = nb.isSaved(l.source, l.query);
+            boolean saved = nb.isSaved(l.source, word);
             star.setImageDrawable(Icons.of(saved ? Icons.Kind.STAR_ON : Icons.Kind.STAR, saved ? ui.accent : ui.sub));
             String d = getString(saved ? R.string.unsave_word : R.string.save_word);
             star.setContentDescription(d);
@@ -842,15 +844,15 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         };
         update.run();
         star.setOnClickListener(v -> {
-            if (nb.isSaved(l.source, l.query)) {
-                nb.unsave(l.source, l.query);
+            if (nb.isSaved(l.source, word)) {
+                nb.unsave(l.source, word);
                 Toast.makeText(this, R.string.word_unsaved, Toast.LENGTH_SHORT).show();
                 update.run();
                 return;
             }
             List<String> folders = nb.folders();
             if (folders.isEmpty()) {
-                nb.save(l.source, l.query, Notebook.summary(l), "", System.currentTimeMillis());
+                nb.save(l.source, word, Notebook.summary(l), "", System.currentTimeMillis());
                 Toast.makeText(this, R.string.word_saved, Toast.LENGTH_SHORT).show();
                 update.run();
                 return;
@@ -861,7 +863,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
             new AlertDialog.Builder(this, ui.dialogTheme())
                     .setTitle(R.string.save_to)
                     .setItems(items, (d, i) -> {
-                        nb.save(l.source, l.query, Notebook.summary(l), i == 0 ? "" : folders.get(i - 1), System.currentTimeMillis());
+                        nb.save(l.source, word, Notebook.summary(l), i == 0 ? "" : folders.get(i - 1), System.currentTimeMillis());
                         Toast.makeText(this, R.string.word_saved, Toast.LENGTH_SHORT).show();
                         update.run();
                     })

@@ -96,6 +96,12 @@
             android:exported="false"
             android:grantUriPermissions="true" />
 
+        <!-- ML Kit starts itself when the app starts; Scan text starts it instead, so the app opens faster. -->
+        <provider
+            android:name="com.google.mlkit.common.internal.MlKitInitProvider"
+            android:authorities="${applicationId}.mlkitinitprovider"
+            tools:node="remove" />
+
         <receiver
             android:name=".WidgetProvider"
             android:exported="true"

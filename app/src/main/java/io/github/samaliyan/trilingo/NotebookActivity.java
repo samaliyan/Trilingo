@@ -89,7 +89,7 @@ public final class NotebookActivity extends Activity {
             c.addView(h, Page.full());
             return;
         }
-        TextView review = ui.pill(getString(R.string.review_these, words.size()), true);
+        TextView review = ui.pill(getResources().getQuantityString(R.plurals.review_these, words.size(), words.size()), true);
         review.setOnClickListener(v -> startActivity(new Intent(this, ReviewActivity.class)
                 .putExtra(ReviewActivity.EXTRA_FOLDER, folder == null ? ReviewActivity.ALL_SAVED : folder)));
         c.addView(review, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ui.dp(48)));

@@ -191,7 +191,10 @@
     <string name="move_to_folder">Move to folder</string>
     <string name="saved_empty">No saved words yet</string>
     <string name="saved_empty_hint">Tap the star next to a word to save it here.</string>
-    <string name="review_these">Review these %1$d words</string>
+    <plurals name="review_these">
+        <item quantity="one">Review this word</item>
+        <item quantity="other">Review these %d words</item>
+    </plurals>
     <string name="export_anki">Export for Anki</string>
     <string name="exported">%1$d words exported. In Anki: File, Import.</string>
     <string name="export_failed">Could not export</string>

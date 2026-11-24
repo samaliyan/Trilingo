@@ -206,6 +206,11 @@ public final class ScanActivity extends Activity {
     }
 
     private void recognise(Bitmap bmp) {
+        try {
+            com.google.mlkit.common.MlKit.initialize(getApplicationContext());
+        } catch (IllegalStateException alreadyStarted) {
+            // started before in this process
+        }
         TextRecognizer r = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
         r.process(InputImage.fromBitmap(bmp, 0))
                 .addOnSuccessListener(text -> {
