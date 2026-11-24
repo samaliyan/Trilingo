@@ -9,6 +9,13 @@ and choosing "English to Persian" or "German to English" every time.
 - **Suggestions while typing** — dicti → dictionary; German words typed without ä/ö/ü/ß are understood (mude → müde).
 - **All meanings** — not only one translation: the different meanings, grouped by word type (noun, verb…).
 - **Examples** — simple real sentences with the word (from [Tatoeba](https://tatoeba.org)), translated into the other two languages.
+- **Meaning first** — what a word means in its own language (like a monolingual dictionary), with a picture, examples, synonyms, opposites and word family; the translation can stay hidden until you want it.
+- **Pronunciation practice** — a real recording of the word, record yourself and compare.
+- **Word levels** — A1 … C2 next to English and German words.
+- **Voice search** — say a word you heard but cannot spell.
+- **Saved words and review** — star words into folders, review them as flashcards with spaced repetition, export to Anki.
+- **Scan text** — photo or shared picture → tap any word to translate it (text recognition on the phone).
+- **Check a sentence** and **grammar exercises** — practice questions, "find the mistake", five at a time with new sets on demand.
 - **Grammar** — English and German grammar from A1 to C1 (109 lessons), explained in Persian, English or German, with tables and examples. Search by topic in any of the three languages or by a word (fernsehen → separable verbs); a looked-up word shows its grammar lessons too.
 - **Conjugation** — for verbs, the conjugation in German, English and Persian, built in (works offline).
 - **Widget** — a search bar on the home screen that opens the app with the keyboard up. Make it taller to see your recent words.
@@ -22,7 +29,11 @@ and choosing "English to Persian" or "German to English" every time.
 
 German nouns from [German Wiktionary](https://de.wiktionary.org) via [german-nouns](https://github.com/gambolputty/german-nouns)
 (CC BY-SA 4.0); grammar lessons in `app/src/main/assets/grammar` (written for this app, format in `Grammar.java`); word frequencies from [FrequencyWords](https://github.com/hermitdave/FrequencyWords) (MIT);
-example sentences from [Tatoeba](https://tatoeba.org) (CC BY 2.0 FR). `tools/build_data.py` rebuilds `app/src/main/assets`.
+example sentences from [Tatoeba](https://tatoeba.org) (CC BY 2.0 FR); meanings from [Wiktionary](https://www.wiktionary.org) (CC BY-SA)
+and the [Free Dictionary API](https://dictionaryapi.dev); pictures from Wikimedia Commons / Wikipedia; word levels from
+[Words-CEFR-Dataset](https://github.com/Maximax67/Words-CEFR-Dataset) (MIT, based on CEFR-J) and
+[german-cefr-wordlist](https://github.com/ph98/german-cefr-wordlist) (MIT) — `tools/build_levels.py`;
+sentence checks by [LanguageTool](https://languagetool.org); text recognition by Google ML Kit. `tools/build_data.py` rebuilds `app/src/main/assets`.
 
 ## Install
 

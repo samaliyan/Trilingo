@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.6 — 2026-11-24
+
+- **Meaning in the word's own language**: what the word means, explained like a monolingual dictionary (English, German and Persian), with examples. Choose *Translation* or *Meaning* above the result; in *Meaning* mode the translation stays hidden until you tap *Show translation*.
+- **Picture** for the word: a simple picture chosen to show the meaning (from Wiktionary / Wikipedia). Tap to enlarge.
+- **Pronunciation practice**: listen to a real recording, record yourself, and play your recording to compare.
+- **Word level** (A1 … C2) next to English and German words.
+- **Synonyms, opposites and word family**, each word tappable.
+- **Voice search**: say a word you heard; the other spellings that were heard are offered too.
+- **Saved words**: the star saves a word; folders; export for Anki.
+- **Review**: flashcards with spaced repetition for saved and looked-up words (Again / Good / Easy).
+- **Grammar practice**: 5 questions per lesson or mixed up to a level, and *5 new questions* for another set.
+- **Find the mistake**: which sentence is correct? 5 at a time, then 5 new ones.
+- **Check a sentence**: write a German, English or Persian sentence; mistakes are marked with corrections and the matching grammar lesson.
+- **Scan text**: take a photo or choose / share a picture; the text is read on the phone (no internet needed) and each word can be tapped to translate it.
+- **Text size** setting and **widget colours** (as the phone, light or dark).
+- Fixed: some German verb forms were not traced back to their infinitive (spielt → spielen).
+
 ## 1.5 — 2026-11-24
 
 - **Grammar**: a new Grammar screen (book button at the top) with 60 German and 49 English lessons from A1 to C1 — explanation, table, examples with Persian and English/German translations, and related lessons.
