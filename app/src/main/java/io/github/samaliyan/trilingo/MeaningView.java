@@ -228,7 +228,10 @@ final class MeaningView {
                 }
                 n++;
                 TextView t = ui.text(16, ui.text, Ui.REGULAR);
-                GrammarViews.show(t, n + ". " + s.text, lang);
+                // the number stays "1." in right-to-left Persian text too
+                String num = lang == Lang.FA ? (char) 0x2066 + (n + ".") + (char) 0x2069 + " " : n + ". ";
+                t.setText(num + (lang == Lang.FA ? Grammar.isolateLatin(s.text) : s.text));
+                GrammarViews.direction(t, lang);
                 t.setLineSpacing(0, 1.25f);
                 LinearLayout.LayoutParams tp = full();
                 tp.topMargin = ui.dp(6);

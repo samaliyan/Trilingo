@@ -115,7 +115,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         engine = new Engine(Engine.NET);
         updater = new Updater(this, ui);
         sheets = new DetailSheets(this, ui, this);
-        Net.init(this);
+        Net.POOL.execute(() -> Net.init(this));          // disk work, off the screen thread
         voice = new Voice(this);
         meaningView = new MeaningView(this, ui, new MeaningView.Host() {
             @Override public boolean canSpeak(Lang l) {
@@ -1444,9 +1444,12 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         input.postDelayed(() -> {
             if (!keyboardVisible()) askKeyboard();
         }, 450);
-        input.postDelayed(() -> {
-            if (!keyboardVisible()) askKeyboard();
-        }, 1200);
+        // a slow first start (cold process) can take longer: keep asking for a few seconds until it is up
+        for (int ms : new int[]{1200, 2000, 3000}) {
+            input.postDelayed(() -> {
+                if (!keyboardVisible()) askKeyboard();
+            }, ms);
+        }
     }
 
     private void askKeyboard() {
