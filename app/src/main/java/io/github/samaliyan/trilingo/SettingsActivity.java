@@ -83,6 +83,12 @@ public final class SettingsActivity extends Activity {
             store.setTheme(i);
             if (i != themeAtStart) recreate();
         }));
+        String[] sizes = {getString(R.string.size_small), getString(R.string.size_normal), getString(R.string.size_large), getString(R.string.size_xlarge)};
+        item(getString(R.string.text_size), sizes[store.textScale()], v -> choose(R.string.text_size, sizes, store.textScale(), i -> {
+            if (i == store.textScale()) return;
+            store.setTextScale(i);
+            recreate();
+        }));
 
         section(R.string.section_history);
         toggle(getString(R.string.save_history), getString(R.string.save_history_hint), store.saveHistory(), b -> {
@@ -106,7 +112,15 @@ public final class SettingsActivity extends Activity {
                     .show();
         });
 
+        toggle(getString(R.string.review_recent), getString(R.string.review_recent_hint), store.reviewRecent(), store::setReviewRecent);
+
         section(R.string.section_widget);
+        String[] wthemes = {getString(R.string.phone_setting), getString(R.string.theme_light), getString(R.string.theme_dark)};
+        item(getString(R.string.widget_theme), wthemes[store.widgetTheme()], v -> choose(R.string.widget_theme, wthemes, store.widgetTheme(), i -> {
+            store.setWidgetTheme(i);
+            WidgetProvider.updateAll(this);
+            build();
+        }));
         item(getString(R.string.widget_add_home), getString(R.string.widget_add_hint), v -> {
             if (MainActivity.canPinWidget(this)) MainActivity.pinWidget(this);
             else Toast.makeText(this, R.string.widget_add_manual, Toast.LENGTH_LONG).show();

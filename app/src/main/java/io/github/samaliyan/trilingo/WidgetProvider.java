@@ -85,7 +85,25 @@ public final class WidgetProvider extends AppWidgetProvider {
             }
         }
         v.setViewVisibility(R.id.divider, shown > 0 ? View.VISIBLE : View.GONE);
+        colors(c, v);
         return v;
+    }
+
+    /** Light or dark as chosen in Settings; "as the phone" keeps the resources (values / values-night). */
+    private static void colors(Context c, RemoteViews v) {
+        int t = new Store(c).widgetTheme();
+        if (t == Store.THEME_SYSTEM) return;
+        boolean dark = t == Store.THEME_DARK;
+        int text = dark ? 0xFFF1F3F6 : 0xFF12161C, sub = dark ? 0xFFA3ABB7 : 0xFF5F6874, accent = dark ? 0xFF7AB0FF : 0xFF2563EB;
+        v.setInt(android.R.id.background, "setBackgroundResource", dark ? R.drawable.widget_bg_dark : R.drawable.widget_bg_light);
+        v.setInt(R.id.bar, "setBackgroundResource", dark ? R.drawable.widget_field_dark : R.drawable.widget_field_light);
+        v.setImageViewResource(R.id.search_icon, dark ? R.drawable.ic_search_dark : R.drawable.ic_search_light);
+        v.setTextColor(R.id.hint, sub);
+        v.setTextColor(R.id.langs, accent);
+        for (int k = 0; k < ROWS.length; k++) {
+            v.setTextColor(WORDS[k], text);
+            v.setTextColor(MEANINGS[k], sub);
+        }
     }
 
     /** Opens the app with a clean field (text == null) or with a word shown. */

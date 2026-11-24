@@ -15,7 +15,7 @@ import android.graphics.drawable.Drawable;
 final class Icons {
     private Icons() { }
 
-    enum Kind { BACK, CLOSE, SETTINGS, COPY, SPEAK, PASTE, SEARCH, SHARE, EXAMPLES, TABLE, FAMILY, BOOK, CHEVRON }
+    enum Kind { BACK, CLOSE, SETTINGS, COPY, SPEAK, PASTE, SEARCH, SHARE, EXAMPLES, TABLE, FAMILY, BOOK, CHEVRON, MIC, PLAY, STAR, STAR_ON, CAMERA, CHECK, CARDS, FOLDER, PLUS, PEN }
 
     static Drawable of(Kind kind, int color) {
         return new IconDrawable(kind, color);
@@ -165,6 +165,86 @@ final class Icons {
                     path.close();
                     c.drawPath(path, stroke);
                     line(c, 12, 6.5f, 12, 19.5f);
+                    break;
+                case MIC:
+                    r.set(9, 3.5f, 15, 14.5f);
+                    c.drawRoundRect(r, 3, 3, stroke);
+                    r.set(5.5f, 7.5f, 18.5f, 17.5f);
+                    c.drawArc(r, 0, 180, false, stroke);
+                    line(c, 12, 17.5f, 12, 20.5f);
+                    line(c, 9, 20.5f, 15, 20.5f);
+                    break;
+                case PLAY:
+                    path.moveTo(8, 5);
+                    path.lineTo(19, 12);
+                    path.lineTo(8, 19);
+                    path.close();
+                    c.drawPath(path, fill);
+                    break;
+                case STAR:
+                case STAR_ON:
+                    for (int i = 0; i < 10; i++) {
+                        double a = Math.PI / 2 + i * Math.PI / 5;
+                        float rr = i % 2 == 0 ? 8.5f : 3.6f;
+                        float x = 12 + (float) (rr * Math.cos(a)), y = 12.8f - (float) (rr * Math.sin(a));
+                        if (i == 0) path.moveTo(x, y);
+                        else path.lineTo(x, y);
+                    }
+                    path.close();
+                    c.drawPath(path, kind == Kind.STAR_ON ? fill : stroke);
+                    break;
+                case CAMERA:
+                    r.set(3, 7, 21, 19);
+                    c.drawRoundRect(r, 2.5f, 2.5f, stroke);
+                    path.moveTo(8.5f, 7);
+                    path.lineTo(10, 4.5f);
+                    path.lineTo(14, 4.5f);
+                    path.lineTo(15.5f, 7);
+                    c.drawPath(path, stroke);
+                    c.drawCircle(12, 13, 3.3f, stroke);
+                    break;
+                case CHECK:
+                    path.moveTo(4.5f, 12.5f);
+                    path.lineTo(9.5f, 17.5f);
+                    path.lineTo(19.5f, 7);
+                    c.drawPath(path, stroke);
+                    break;
+                case CARDS:
+                    r.set(7, 3.5f, 20, 16.5f);
+                    c.drawRoundRect(r, 2, 2, stroke);
+                    path.moveTo(4, 7.5f);
+                    path.lineTo(4, 18.5f);
+                    path.quadTo(4, 20.5f, 6, 20.5f);
+                    path.lineTo(16, 20.5f);
+                    c.drawPath(path, stroke);
+                    break;
+                case FOLDER:
+                    path.moveTo(3.5f, 6.5f);
+                    path.quadTo(3.5f, 5, 5, 5);
+                    path.lineTo(9.5f, 5);
+                    path.lineTo(11.5f, 7.5f);
+                    path.lineTo(19, 7.5f);
+                    path.quadTo(20.5f, 7.5f, 20.5f, 9);
+                    path.lineTo(20.5f, 17.5f);
+                    path.quadTo(20.5f, 19, 19, 19);
+                    path.lineTo(5, 19);
+                    path.quadTo(3.5f, 19, 3.5f, 17.5f);
+                    path.close();
+                    c.drawPath(path, stroke);
+                    break;
+                case PLUS:
+                    line(c, 12, 5, 12, 19);
+                    line(c, 5, 12, 19, 12);
+                    break;
+                case PEN:
+                    path.moveTo(4.5f, 19.5f);
+                    path.lineTo(5.5f, 15.5f);
+                    path.lineTo(15.5f, 5.5f);
+                    path.lineTo(18.5f, 8.5f);
+                    path.lineTo(8.5f, 18.5f);
+                    path.close();
+                    c.drawPath(path, stroke);
+                    line(c, 13.5f, 7.5f, 16.5f, 10.5f);
                     break;
                 case CHEVRON:
                     path.moveTo(9.5f, 6);

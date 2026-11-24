@@ -20,12 +20,14 @@
         android:paddingEnd="14dp">
 
         <ImageView
+            android:id="@+id/search_icon"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_search" />
 
         <TextView
+            android:id="@+id/hint"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -37,6 +39,7 @@
             android:textSize="16sp" />
 
         <TextView
+            android:id="@+id/langs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"

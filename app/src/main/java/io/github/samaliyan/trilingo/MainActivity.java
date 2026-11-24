@@ -63,7 +63,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
     private Engine engine;
     private Updater updater;
     private DetailSheets sheets;
-    private int themeAtStart;
+    private int themeAtStart, scaleAtStart;
 
     private EditText input;
     private ImageButton clearBtn, pasteBtn;
@@ -93,6 +93,13 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
     private boolean wantKeyboard;
 
     private TextToSpeech tts;
+    private Voice voice;
+    private MeaningView meaningView;
+    private ImageButton micBtn;
+    private static final int VOICE_REQUEST = 52;
+    private Lang voiceLang;
+    /** Other spellings the speech recognizer heard, shown above the result ("Did you say …"). */
+    private List<String> voiceAlternatives = new java.util.ArrayList<>();
     private final Set<Lang> speakable = EnumSet.noneOf(Lang.class);
 
     // ------------------------------------------------------------------ lifecycle
@@ -103,10 +110,26 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         ui = Ui.of(this);
         ui.applyWindow(this);
         themeAtStart = store.theme();
+        scaleAtStart = store.textScale();
         history = Store.history(this);
         engine = new Engine(Engine.NET);
         updater = new Updater(this, ui);
         sheets = new DetailSheets(this, ui, this);
+        Net.init(this);
+        voice = new Voice(this);
+        meaningView = new MeaningView(this, ui, new MeaningView.Host() {
+            @Override public boolean canSpeak(Lang l) {
+                return speakable.contains(l);
+            }
+
+            @Override public void speak(String text, Lang l) {
+                MainActivity.this.speak(text, l);
+            }
+
+            @Override public void openWord(String word) {
+                MainActivity.this.openWord(word);
+            }
+        }, voice);
         // Builds the irregular-verb index once, off the screen thread, so the first result shows without delay.
         new Thread(() -> GermanVerbs.isKnownForm("habe"), "verbs").start();
         if (saved != null) forced = Lang.of(saved.getString("forced"));
@@ -148,7 +171,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
 
     @Override protected void onResume() {
         super.onResume();
-        if (store.theme() != themeAtStart) {
+        if (store.theme() != themeAtStart || store.textScale() != scaleAtStart) {
             recreate();
             return;
         }
@@ -178,6 +201,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         generation++;
         engine.shutdown();
         updater.destroy();
+        voice.release();
         if (tts != null) {
             try {
                 tts.shutdown();
@@ -283,6 +307,9 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         pasteBtn = ui.iconButton(Icons.Kind.PASTE, ui.sub, getString(R.string.paste));
         pasteBtn.setOnClickListener(v -> paste());
         field.addView(pasteBtn, new LinearLayout.LayoutParams(ui.dp(46), ui.dp(46)));
+        micBtn = ui.iconButton(Icons.Kind.MIC, ui.sub, getString(R.string.voice_search));
+        micBtn.setOnClickListener(v -> voiceSearch());
+        field.addView(micBtn, new LinearLayout.LayoutParams(ui.dp(46), ui.dp(46)));
 
         top.addView(field, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         ImageButton grammar = ui.iconButton(Icons.Kind.BOOK, ui.text, getString(R.string.grammar_open));
@@ -386,6 +413,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
     }
 
     private void onTextChanged() {
+        voiceAlternatives.clear();
         updateFieldButtons();
         updateSuggestions();
         handler.removeCallbacks(typeTask);
@@ -564,26 +592,64 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         LinearLayout src = new LinearLayout(this);
         src.setGravity(Gravity.CENTER_VERTICAL);
         src.setPadding(ui.dp(6), 0, 0, 0);
+        src.setMinimumHeight(ui.dp(44));
         TextView from = ui.line(13, ui.sub, Ui.MEDIUM);
         from.setText(getString(detected ? R.string.from_detected : R.string.from_lang, l.source.label));
-        src.addView(from, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+        src.addView(from);
+        String level = MeaningView.applies(l) ? Lexicon.level(l.query, l.source) : null;
+        if (level != null) {
+            TextView lv = ui.text(12, ui.accent, Ui.MEDIUM);
+            lv.setText(level);
+            lv.setPadding(ui.dp(8), ui.dp(3), ui.dp(8), ui.dp(3));
+            lv.setBackground(ui.round(ui.accentSoft, 10));
+            lv.setContentDescription(getString(R.string.level_desc, level, Levels.name(level)));
+            lv.setTooltipText(level + " · " + Levels.name(level));
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            lp.leftMargin = ui.dp(8);
+            src.addView(lv, lp);
+        }
+        src.addView(new View(this), new LinearLayout.LayoutParams(0, 1, 1));
+        if (MeaningView.applies(l) && !l.results.isEmpty()) src.addView(starButton(l), new LinearLayout.LayoutParams(ui.dp(44), ui.dp(44)));
         if (speakable.contains(l.source)) {
             ImageButton say = ui.iconButton(Icons.Kind.SPEAK, ui.sub, getString(R.string.speak_lang, l.source.label));
             say.setOnClickListener(v -> speak(l.query, l.source));
             src.addView(say, new LinearLayout.LayoutParams(ui.dp(44), ui.dp(44)));
-        } else {
-            src.setMinimumHeight(ui.dp(44));
         }
         content.addView(src);
 
+        if (!voiceAlternatives.isEmpty()) content.addView(alternativesRow(l));
         View nounRow = typedNounRow(l);
         if (nounRow != null) content.addView(nounRow);
         if (corrected) content.addView(correctedRow(l.query));
         else if (l.hasSuggestion()) content.addView(suggestionRow(l.suggestion));
 
-        for (Lookup.Result r : l.results) content.addView(card(l, r));
+        boolean meaning = MeaningView.applies(l);
+        LinearLayout picture = column(), meaningBox = column();
+        if (meaning) content.addView(modeSwitch(l, detected, corrected));
         View actions = actionRow(l);
-        if (actions != null) content.addView(actions);
+        if (meaning && store.meaningFirst()) {
+            // learn from the meaning first; the translation is one tap away
+            content.addView(picture);
+            content.addView(meaningBox);
+            LinearLayout hidden = column();
+            hidden.setVisibility(View.GONE);
+            for (Lookup.Result r : l.results) hidden.addView(card(l, r));
+            TextView reveal = ui.pill(getString(R.string.show_translation), true);
+            reveal.setOnClickListener(v -> {
+                reveal.setVisibility(View.GONE);
+                hidden.setVisibility(View.VISIBLE);
+            });
+            LinearLayout.LayoutParams rp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ui.dp(48));
+            rp.bottomMargin = ui.dp(12);
+            content.addView(reveal, rp);
+            content.addView(hidden);
+            if (actions != null) content.addView(actions);
+        } else {
+            for (Lookup.Result r : l.results) content.addView(card(l, r));
+            if (meaning) content.addView(picture);
+            if (actions != null) content.addView(actions);
+            if (meaning) content.addView(meaningBox);
+        }
 
         if (Services.NAMES[Services.MYMEMORY].equals(l.service)) {
             TextView via = ui.text(12, ui.sub, Ui.REGULAR);
@@ -591,7 +657,216 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
             via.setPadding(ui.dp(6), ui.dp(4), 0, 0);
             content.addView(via);
         }
+        if (meaning) meaningView.fill(l, picture, meaningBox);
         scroll.scrollTo(0, 0);
+    }
+
+    // ------------------------------------------------------------------ voice search
+
+    /** Speak a word you heard: the phone's speech recognition writes it (in the chosen language). */
+    private void voiceSearch() {
+        Intent probe = new Intent(android.speech.RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        if (probe.resolveActivity(getPackageManager()) == null) {
+            Toast.makeText(this, R.string.voice_unavailable, Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (forced != null) {
+            startVoice(forced);
+            return;
+        }
+        Lang[] langs = {Lang.EN, Lang.DE, Lang.FA};
+        String[] names = {Lang.EN.label, Lang.DE.label, Lang.FA.label};
+        int cur = java.util.Arrays.asList(langs).indexOf(store.voiceLang());
+        new AlertDialog.Builder(this, ui.dialogTheme())
+                .setTitle(R.string.voice_which)
+                .setSingleChoiceItems(names, cur, (d, i) -> {
+                    d.dismiss();
+                    store.setVoiceLang(langs[i]);
+                    startVoice(langs[i]);
+                })
+                .show();
+    }
+
+    @SuppressWarnings("deprecation")
+    private void startVoice(Lang l) {
+        Intent it = new Intent(android.speech.RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        it.putExtra(android.speech.RecognizerIntent.EXTRA_LANGUAGE_MODEL, android.speech.RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        String tag = l == Lang.DE ? "de-DE" : l == Lang.EN ? "en-US" : "fa-IR";
+        it.putExtra(android.speech.RecognizerIntent.EXTRA_LANGUAGE, tag);
+        it.putExtra(android.speech.RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, tag);
+        it.putExtra(android.speech.RecognizerIntent.EXTRA_MAX_RESULTS, 5);
+        it.putExtra(android.speech.RecognizerIntent.EXTRA_PROMPT, getString(R.string.voice_prompt, l.label));
+        voiceLang = l;
+        try {
+            startActivityForResult(it, VOICE_REQUEST);
+        } catch (RuntimeException e) {
+            Toast.makeText(this, R.string.voice_unavailable, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override protected void onActivityResult(int request, int result, Intent data) {
+        super.onActivityResult(request, result, data);
+        if (request != VOICE_REQUEST || result != RESULT_OK || data == null) return;
+        java.util.ArrayList<String> heard = data.getStringArrayListExtra(android.speech.RecognizerIntent.EXTRA_RESULTS);
+        if (heard == null || heard.isEmpty()) return;
+        List<String> alt = new java.util.ArrayList<>();
+        for (String h : heard) {
+            String c = Text.clean(h);
+            boolean dup = false;
+            for (String a : alt) dup |= a.equalsIgnoreCase(c);
+            if (!c.isEmpty() && !dup) alt.add(c);
+        }
+        if (alt.isEmpty()) return;
+        if (voiceLang != null) {
+            forced = voiceLang;
+            updateChips();
+        }
+        voiceAlternatives = alt.size() > 1 ? alt : new java.util.ArrayList<>();
+        setInput(alt.get(0));
+        lookup(true);
+        hideKeyboard();
+    }
+
+    @Override public void onRequestPermissionsResult(int request, String[] permissions, int[] results) {
+        super.onRequestPermissionsResult(request, permissions, results);
+        if (request == Voice.PERMISSION_REQUEST)
+            voice.permissionResult(results.length > 0 && results[0] == android.content.pm.PackageManager.PERMISSION_GRANTED);
+    }
+
+    /** "You said: … · or: a, b" — tap another spelling the recognizer heard. */
+    private View alternativesRow(Lookup l) {
+        LinearLayout box = column();
+        box.setPadding(ui.dp(6), 0, 0, ui.dp(10));
+        TextView h = ui.line(13, ui.sub, Ui.MEDIUM);
+        h.setText(R.string.voice_or);
+        box.addView(h);
+        HorizontalScrollView hs = new HorizontalScrollView(this);
+        hs.setHorizontalScrollBarEnabled(false);
+        LinearLayout row = new LinearLayout(this);
+        for (String a : voiceAlternatives) {
+            if (Text.key(a).equals(Text.key(l.query))) continue;
+            TextView chip = ui.pill(a, false);
+            chip.setContentDescription(getString(R.string.suggestion_desc, a));
+            chip.setOnClickListener(v -> {
+                setInput(a);
+                lookup(true);
+            });
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            lp.rightMargin = ui.dp(8);
+            lp.topMargin = ui.dp(6);
+            row.addView(chip, lp);
+        }
+        hs.addView(row);
+        box.addView(hs);
+        return box;
+    }
+
+    // ------------------------------------------------------------------ home: review, notebook, scan, check
+
+    /** Four tiles above the recent words: Review (with the number due), Saved words, Scan text, Check a sentence. */
+    private View homeTiles() {
+        Notebook nb = Store.notebook(this);
+        int due = nb.due(null, store.reviewRecent() ? history.items() : null, System.currentTimeMillis(), 99).size();
+        String[] labels = {due > 0 ? getString(R.string.review_n, due) : getString(R.string.review), getString(R.string.saved_words),
+                getString(R.string.scan_text), getString(R.string.check_sentence)};
+        Icons.Kind[] icons = {Icons.Kind.CARDS, Icons.Kind.STAR, Icons.Kind.CAMERA, Icons.Kind.CHECK};
+        Class<?>[] screens = {ReviewActivity.class, NotebookActivity.class, ScanActivity.class, CheckActivity.class};
+        LinearLayout box = column();
+        box.setPadding(0, ui.dp(4), 0, ui.dp(8));
+        LinearLayout row = null;
+        for (int i = 0; i < 4; i++) {
+            if (i % 2 == 0) {
+                row = new LinearLayout(this);
+                LinearLayout.LayoutParams rp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                if (i > 0) rp.topMargin = ui.dp(10);
+                box.addView(row, rp);
+            }
+            LinearLayout t = ui.actionTile(icons[i], labels[i]);
+            final Class<?> screen = screens[i];
+            t.setOnClickListener(v -> {
+                hideKeyboard();
+                startActivity(new Intent(this, screen));
+            });
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+            if (i % 2 == 1) lp.leftMargin = ui.dp(10);
+            row.addView(t, lp);
+        }
+        return box;
+    }
+
+    private LinearLayout column() {
+        LinearLayout c = new LinearLayout(this);
+        c.setOrientation(LinearLayout.VERTICAL);
+        return c;
+    }
+
+    /** "Translation | Meaning": which comes first. The choice is remembered. */
+    private View modeSwitch(Lookup l, boolean detected, boolean corrected) {
+        LinearLayout row = new LinearLayout(this);
+        row.setPadding(0, 0, 0, ui.dp(12));
+        String[] names = {getString(R.string.mode_translation), getString(R.string.mode_meaning)};
+        for (int i = 0; i < 2; i++) {
+            boolean meaningMode = i == 1;
+            boolean on = store.meaningFirst() == meaningMode;
+            TextView t = ui.text(14, on ? ui.onAccent : ui.text, Ui.MEDIUM);
+            t.setText(names[i]);
+            t.setGravity(Gravity.CENTER);
+            t.setMinHeight(ui.dp(40));
+            t.setBackground(ui.ripple(on ? ui.round(ui.accent, 20) : ui.outline(ui.surface, ui.line, 20), 20));
+            t.setSelected(on);
+            t.setContentDescription(getString(meaningMode ? R.string.mode_meaning_desc : R.string.mode_translation_desc));
+            t.setOnClickListener(v -> {
+                if (store.meaningFirst() == meaningMode) return;
+                store.setMeaningFirst(meaningMode);
+                showLookup(l, detected, corrected);
+            });
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+            if (i == 1) lp.leftMargin = ui.dp(8);
+            row.addView(t, lp);
+        }
+        return row;
+    }
+
+    /** Star: saves the word in the notebook (choosing a folder when there are folders); tap again to remove. */
+    private ImageButton starButton(Lookup l) {
+        Notebook nb = Store.notebook(this);
+        ImageButton star = ui.iconButton(Icons.Kind.STAR, ui.sub, "");
+        Runnable update = () -> {
+            boolean saved = nb.isSaved(l.source, l.query);
+            star.setImageDrawable(Icons.of(saved ? Icons.Kind.STAR_ON : Icons.Kind.STAR, saved ? ui.accent : ui.sub));
+            String d = getString(saved ? R.string.unsave_word : R.string.save_word);
+            star.setContentDescription(d);
+            star.setTooltipText(d);
+        };
+        update.run();
+        star.setOnClickListener(v -> {
+            if (nb.isSaved(l.source, l.query)) {
+                nb.unsave(l.source, l.query);
+                Toast.makeText(this, R.string.word_unsaved, Toast.LENGTH_SHORT).show();
+                update.run();
+                return;
+            }
+            List<String> folders = nb.folders();
+            if (folders.isEmpty()) {
+                nb.save(l.source, l.query, Notebook.summary(l), "", System.currentTimeMillis());
+                Toast.makeText(this, R.string.word_saved, Toast.LENGTH_SHORT).show();
+                update.run();
+                return;
+            }
+            String[] items = new String[folders.size() + 1];
+            items[0] = getString(R.string.no_folder);
+            for (int i = 0; i < folders.size(); i++) items[i + 1] = folders.get(i);
+            new AlertDialog.Builder(this, ui.dialogTheme())
+                    .setTitle(R.string.save_to)
+                    .setItems(items, (d, i) -> {
+                        nb.save(l.source, l.query, Notebook.summary(l), i == 0 ? "" : folders.get(i - 1), System.currentTimeMillis());
+                        Toast.makeText(this, R.string.word_saved, Toast.LENGTH_SHORT).show();
+                        update.run();
+                    })
+                    .show();
+        });
+        return star;
     }
 
     /** "Did you mean house?" — tap to look up the corrected word instead. */
@@ -971,6 +1246,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
     private void showRecent() {
         shown = null;
         content.removeAllViews();
+        content.addView(homeTiles());
         List<Lookup> items = history.items();
         if (items.isEmpty() || !store.saveHistory()) {
             intro();

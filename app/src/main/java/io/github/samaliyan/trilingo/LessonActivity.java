@@ -157,6 +157,15 @@ public final class LessonActivity extends Activity implements TextToSpeech.OnIni
         section(getString(R.string.examples));
         for (String[] e : lesson.examples) content.addView(example(e, ex));
 
+        // practice
+        TextView practice = ui.pill(getString(R.string.practice_lesson), true);
+        practice.setOnClickListener(v -> startActivity(new android.content.Intent(this, PracticeActivity.class)
+                .putExtra(PracticeActivity.EXTRA_MODE, PracticeActivity.MODE_PRACTICE)
+                .putExtra(PracticeActivity.EXTRA_LESSON, lesson.id)));
+        LinearLayout.LayoutParams pl = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ui.dp(52));
+        pl.topMargin = ui.dp(8);
+        content.addView(practice, pl);
+
         // related lessons
         boolean any = false;
         for (String id : lesson.see) {

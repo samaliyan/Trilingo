@@ -16,7 +16,11 @@ android {
         targetSdk 34
         // Every GitHub build gets a higher number, so the in-app updater and Android accept it as newer.
         versionCode((System.getenv('BUILD_NUMBER') ?: '1') as int)
-        versionName '1.5'
+        versionName '1.6'
+        // Text recognition (Scan text) ships native code: phones (ARM) and the x86_64 test emulator.
+        ndk {
+            abiFilters 'arm64-v8a', 'armeabi-v7a', 'x86_64'
+        }
     }
 
     signingConfigs {
@@ -52,4 +56,7 @@ android {
         disable 'GradleDependency', 'OldTargetApi', 'AndroidGradlePluginVersion'
     }
 }
-// No libraries on purpose: the app stays small and starts fast.
+// One library: Google ML Kit text recognition for "Scan text" (works on the phone, without internet).
+dependencies {
+    implementation 'com.google.mlkit:text-recognition:16.0.1'
+}

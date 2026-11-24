@@ -21,6 +21,7 @@ final class Lexicon {
     private static volatile Nouns nouns;
     private static volatile Phrasal phrasal;
     private static volatile Grammar grammar;
+    private static volatile Levels enLevels, deLevels;
     private static boolean started;
     private static final List<Runnable> waiting = new ArrayList<>();
 
@@ -43,6 +44,12 @@ final class Lexicon {
                 nouns = Nouns.read(am.open("de_nouns.txt"));
             } catch (IOException | RuntimeException e) {
                 // without the lists the app works as before (no suggestions, no articles)
+            }
+            try {
+                enLevels = Levels.read(am.open("levels_en.txt"));
+                deLevels = Levels.read(am.open("levels_de.txt"));
+            } catch (IOException | RuntimeException e) {
+                // no levels shown
             }
             grammar = readGrammar(am);
             List<Runnable> run;
@@ -68,6 +75,21 @@ final class Lexicon {
 
     static Phrasal phrasal() {
         return phrasal;
+    }
+
+    /** CEFR level of a word ("B1"), or null. */
+    static String level(String word, Lang lang) {
+        Levels l = lang == Lang.EN ? enLevels : lang == Lang.DE ? deLevels : null;
+        return l == null ? null : l.of(word, lang, nouns);
+    }
+
+    static Levels germanLevels() {
+        return deLevels;
+    }
+
+    /** The right case of a German word for dictionary pages ("tisch" → "Tisch"). */
+    static String germanCase(String w) {
+        return DetailSheets.germanCase(w);
     }
 
     /** The grammar lessons (assets/grammar/*.txt), or null while loading. */

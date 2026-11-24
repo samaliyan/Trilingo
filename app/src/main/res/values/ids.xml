@@ -2,4 +2,5 @@
 <resources>
     <!-- Fixed id so Android restores the typed text after a rotation. -->
     <item name="input" type="id" />
+    <item name="check_text" type="id" />
 </resources>

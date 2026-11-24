@@ -22,15 +22,18 @@ import android.widget.TextView;
 final class Ui {
     final Context ctx;
     final boolean dark;
+    /** Text size factor chosen in Settings. */
+    final float scale;
     final int bg, surface, text, sub, line, accent, accentSoft, onAccent, danger;
 
     static final Typeface MEDIUM = Typeface.create("sans-serif-medium", Typeface.NORMAL);
     static final Typeface LIGHT = Typeface.create("sans-serif-light", Typeface.NORMAL);
     static final Typeface REGULAR = Typeface.create("sans-serif", Typeface.NORMAL);
 
-    private Ui(Context ctx, boolean dark) {
+    private Ui(Context ctx, boolean dark, float scale) {
         this.ctx = ctx;
         this.dark = dark;
+        this.scale = scale;
         if (dark) {
             bg = 0xFF0E1116; surface = 0xFF171B22; text = 0xFFECEFF4; sub = 0xFF9AA3AF; line = 0xFF262C36;
             accent = 0xFF7AB0FF; accentSoft = 0xFF1B2A42; onAccent = 0xFF0B1220;
@@ -43,7 +46,8 @@ final class Ui {
     }
 
     static Ui of(Context c) {
-        return new Ui(c, isDark(c, new Store(c).theme()));
+        Store s = new Store(c);
+        return new Ui(c, isDark(c, s.theme()), Store.SCALES[s.textScale()]);
     }
 
     static boolean isDark(Context c, int themeSetting) {
@@ -77,7 +81,7 @@ final class Ui {
 
     TextView text(float sp, int color, Typeface face) {
         TextView t = new TextView(ctx);
-        t.setTextSize(TypedValue.COMPLEX_UNIT_SP, sp);
+        t.setTextSize(TypedValue.COMPLEX_UNIT_SP, sp * scale);
         t.setTextColor(color);
         t.setTypeface(face);
         t.setIncludeFontPadding(false);

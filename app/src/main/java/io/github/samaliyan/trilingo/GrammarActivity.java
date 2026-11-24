@@ -168,6 +168,7 @@ public final class GrammarActivity extends Activity {
             return;
         }
         if (q.isEmpty()) {
+            list.addView(exerciseTiles());
             String level = null;
             for (Grammar.Lesson l : g.of(store.grammarLang())) {
                 if (!l.level.equals(level)) {
@@ -189,6 +190,42 @@ public final class GrammarActivity extends Activity {
                 hideKeyboard();
                 GrammarViews.open(this, l);
             }));
+    }
+
+    /** Practice (mixed, up to a level), Find the mistake, Check a sentence — for the language of the tab. */
+    private View exerciseTiles() {
+        Lang lang = store.grammarLang();
+        LinearLayout row = new LinearLayout(this);
+        row.setPadding(0, ui.dp(10), 0, ui.dp(2));
+        String[] labels = {getString(R.string.practice), getString(R.string.find_mistake), getString(R.string.check_sentence)};
+        Icons.Kind[] icons = {Icons.Kind.PEN, Icons.Kind.CHECK, Icons.Kind.TABLE};
+        for (int i = 0; i < 3; i++) {
+            LinearLayout t = ui.actionTile(icons[i], labels[i]);
+            final int k = i;
+            t.setOnClickListener(v -> {
+                if (k == 0) {
+                    String[] levels = new String[Grammar.LEVELS.length];
+                    for (int j = 0; j < levels.length; j++) levels[j] = getString(R.string.up_to_level, Grammar.LEVELS[j]) + "  ·  " + Grammar.levelName(Grammar.LEVELS[j], Lang.EN);
+                    new android.app.AlertDialog.Builder(this, ui.dialogTheme())
+                            .setTitle(R.string.practice_which)
+                            .setItems(levels, (d, j) -> startActivity(new android.content.Intent(this, PracticeActivity.class)
+                                    .putExtra(PracticeActivity.EXTRA_MODE, PracticeActivity.MODE_PRACTICE)
+                                    .putExtra(PracticeActivity.EXTRA_LANG, lang.code)
+                                    .putExtra(PracticeActivity.EXTRA_LEVEL, Grammar.LEVELS[j])))
+                            .show();
+                } else if (k == 1) {
+                    startActivity(new android.content.Intent(this, PracticeActivity.class)
+                            .putExtra(PracticeActivity.EXTRA_MODE, PracticeActivity.MODE_MISTAKES)
+                            .putExtra(PracticeActivity.EXTRA_LANG, lang.code));
+                } else {
+                    startActivity(new android.content.Intent(this, CheckActivity.class));
+                }
+            });
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+            if (i > 0) lp.leftMargin = ui.dp(8);
+            row.addView(t, lp);
+        }
+        return row;
     }
 
     private void note(String title, String hint) {

@@ -139,6 +139,18 @@ final class GermanVerbs {
         boolean reflexive;
     }
 
+    /** Common verbs for exercises: the built-in irregular verbs and the common regular ones, sorted. */
+    static List<String> practiceVerbs() {
+        java.util.TreeSet<String> s = new java.util.TreeSet<>(TABLE.keySet());
+        s.addAll(COMMON_WEAK);
+        return new ArrayList<>(s);
+    }
+
+    /** The modal verbs. */
+    static boolean isModal(String v) {
+        return MODALS.contains(v);
+    }
+
     static Parts analyze(String input) {
         if (input == null) return null;
         String s = Text.clean(input).toLowerCase(Locale.GERMAN);
@@ -380,6 +392,8 @@ final class GermanVerbs {
         }
         if (rest == null) return null;
         if (rest.endsWith("e") && needsE(rest.substring(0, rest.length() - 1))) rest = rest.substring(0, rest.length() - 1);
-        return rest.endsWith("el") || rest.endsWith("er") ? rest + "n" : rest + "en";
+        // sammelt → sammeln, wandert → wandern; but spielt → spielen, verliert → verlieren ("ie" is one vowel)
+        boolean shortE = (rest.endsWith("el") || rest.endsWith("er")) && !rest.endsWith("iel") && !rest.endsWith("ier");
+        return shortE ? rest + "n" : rest + "en";
     }
 }

@@ -15,6 +15,10 @@ final class Store {
     private static final String FILE = "trilingo";
     private static final String K_THEME = "theme", K_SERVICE = "service", K_SAVE_HISTORY = "saveHistory";
     private static final String K_AUTO_UPD = "autoUpdate", K_LAST_UPD = "lastUpdateCheck";
+    private static final String K_SCALE = "textScale", K_WIDGET_THEME = "widgetTheme", K_MEANING_FIRST = "meaningFirst";
+    private static final String K_VOICE = "voiceLang", K_REVIEW_RECENT = "reviewRecent";
+    static final float[] SCALES = {0.9f, 1f, 1.15f, 1.3f};
+    private static Notebook notebook;
     private static final String K_EXPLAIN = "grammarExplain", K_GRAMMAR_LANG = "grammarLang";
 
     private static History history;
@@ -29,6 +33,59 @@ final class Store {
     static synchronized History history(Context c) {
         if (history == null) history = new History(new File(c.getApplicationContext().getFilesDir(), "history.json"));
         return history;
+    }
+
+    /** Saved words and review progress, one object per process. */
+    static synchronized Notebook notebook(Context c) {
+        if (notebook == null) notebook = new Notebook(new File(c.getApplicationContext().getFilesDir(), "notebook.json"));
+        return notebook;
+    }
+
+    /** Text size inside the app: index into {@link #SCALES} (1 = normal). */
+    int textScale() {
+        int i = p.getInt(K_SCALE, 1);
+        return i < 0 || i >= SCALES.length ? 1 : i;
+    }
+
+    void setTextScale(int i) {
+        p.edit().putInt(K_SCALE, i).apply();
+    }
+
+    /** Widget colours: {@link #THEME_SYSTEM} (as the phone), light or dark. */
+    int widgetTheme() {
+        return p.getInt(K_WIDGET_THEME, THEME_SYSTEM);
+    }
+
+    void setWidgetTheme(int t) {
+        p.edit().putInt(K_WIDGET_THEME, t).apply();
+    }
+
+    /** Show the meaning in the word's own language first (translations behind a button). */
+    boolean meaningFirst() {
+        return p.getBoolean(K_MEANING_FIRST, false);
+    }
+
+    void setMeaningFirst(boolean b) {
+        p.edit().putBoolean(K_MEANING_FIRST, b).apply();
+    }
+
+    /** Last language chosen for voice search. */
+    Lang voiceLang() {
+        Lang l = Lang.of(p.getString(K_VOICE, "de"));
+        return l == null ? Lang.DE : l;
+    }
+
+    void setVoiceLang(Lang l) {
+        p.edit().putString(K_VOICE, l.code).apply();
+    }
+
+    /** Review also recently looked-up words (not only saved ones). */
+    boolean reviewRecent() {
+        return p.getBoolean(K_REVIEW_RECENT, true);
+    }
+
+    void setReviewRecent(boolean b) {
+        p.edit().putBoolean(K_REVIEW_RECENT, b).apply();
     }
 
     int theme() {

@@ -145,6 +145,11 @@ final class EnglishVerbs {
         return looksLikeVerb(s) ? s : null;
     }
 
+    /** The built-in irregular verbs (base forms), sorted. */
+    static List<String> irregularVerbs() {
+        return new ArrayList<>(new java.util.TreeSet<>(TABLE.keySet()));
+    }
+
     static Conjugation conjugate(String input) {
         String s = clean(input);
         if (s == null) return null;
