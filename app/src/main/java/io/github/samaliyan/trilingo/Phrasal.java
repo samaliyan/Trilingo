@@ -79,12 +79,16 @@ final class Phrasal {
         GermanVerbs.Parts p = GermanVerbs.analyze(infinitive);
         if (p == null || de == null) return out;
         String base = p.base;
+        // "gekommen" is the participle of kommen, not a prefix verb
+        Conjugation c = GermanVerbs.conjugate(base);
+        String participle = "";
+        if (c != null) for (Conjugation.Info i : c.info) if (i.label.equals("Participle")) participle = i.value;
         List<int[]> found = new ArrayList<>();
         List<String> verbs = new ArrayList<>();
         for (String pre : PREFIXES) {
             String v = pre + base;
             int r = de.rank(v);
-            if (r >= 0 && !v.equals(base)) {
+            if (r >= 0 && !v.equals(base) && !v.equals(participle)) {
                 found.add(new int[]{r, verbs.size()});
                 verbs.add(v);
             }

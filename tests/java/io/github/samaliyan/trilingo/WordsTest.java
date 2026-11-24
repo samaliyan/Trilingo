@@ -134,6 +134,7 @@ public final class WordsTest {
         for (Phrasal.Entry e : ge) gv.add(e.verb);
         ok(gv.contains("bekommen") && gv.contains("ankommen"), "kommen → bekommen, ankommen: " + gv);
         ok(!gv.contains("kommen"), "the verb itself is not listed");
+        ok(!gv.contains("gekommen"), "the participle is not a prefix verb");
         List<Phrasal.Entry> ge2 = Phrasal.german("ankommen", de, 14);
         ok(ge2.size() == ge.size(), "ankommen shows the kommen family");
         ok(Phrasal.german("Haus", de, 14).isEmpty(), "noun: none");

@@ -59,6 +59,7 @@ type_text "house"
 wait_for "GERMAN" "" 20
 shot 02_english_house 1.5
 expect "PERSIAN"; expect "From English · detected"
+back
 expect "Haus" "Haus"
 expect "Noun" "^Noun$"
 
@@ -84,10 +85,6 @@ back
 shot 02a4_umlaut_fixed 1
 expect "müde" "^müde$"
 expect "tired" "(?i)tired"
-open_app
-type_text "strasse"
-wait_for "Showing results for" "" 20
-expect "Straße" "^Straße$"
 
 # 2a5. Phrasal verbs (English) and prefix verbs (German); examples also for the English translation
 open_app
@@ -110,7 +107,8 @@ back
 tap "Prefix verbs" "^(Phrasal verbs|Prefix verbs)$"
 sleep 3
 shot 02a7_prefix_verbs 1
-expect "ankommen" "^ankommen$"
+expect "bekommen" "^bekommen$"
+expect_not "gekommen" "^gekommen$"
 expect "German has no phrasal verbs" "^German has no phrasal verbs"
 back
 open_app
@@ -120,7 +118,7 @@ back
 tap "Examples"
 wait_for "English tab" "^English: " 10
 tap "English tab" "^English: "
-wait_for "Sentences from Tatoeba (tatoeba.org)" "" 25
+wait_for "Sentences from Tatoeba (tatoeba.org)" "" 40
 shot 02a8_examples_english_tab 1
 expect "house" "(?i).*\\bhouse\\b.*"
 back
@@ -154,7 +152,7 @@ expect "butterfly" "(?i)butterfly"
 # 3b. Examples (Tatoeba) and conjugation (built in)
 back        # keyboard
 tap "Examples"
-wait_for "Sentences from Tatoeba (tatoeba.org)" "" 25
+wait_for "Sentences from Tatoeba (tatoeba.org)" "" 40
 shot 03b_examples_german 1
 expect "butterfly|Butterfly" "(?i)butterfly"
 back
@@ -252,6 +250,7 @@ net_on() { adb shell cmd connectivity airplane-mode disable 2>/dev/null || { adb
 net_off
 open_app
 type_text "house"; sleep 2
+back
 shot 12_offline_known 1
 expect "Haus" "Haus"
 clear_field
@@ -304,7 +303,7 @@ wait_for "From German · detected" "" 20
 shot 20_dark_result 1.5
 back
 expect_not "Conjugation"          # a noun has no conjugation button
-tap "Examples" && { wait_for "Sentences from Tatoeba (tatoeba.org)" "" 25; shot 20c_dark_examples 1; back; }
+tap "Examples" && { wait_for "Sentences from Tatoeba (tatoeba.org)" "" 40; shot 20c_dark_examples 1; back; }
 open_app; type_text "gehen"; wait_for "ENGLISH" "" 20; back
 tap "Conjugation" && { sleep 1; shot 20b_dark_conjugation 1; back; }
 

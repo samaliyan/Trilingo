@@ -91,6 +91,8 @@ final class DetailSheets {
         for (Lookup.Result r : l.results) {
             String w = Text.clean(r.text);
             if (r.lang == Lang.EN && w.toLowerCase(Locale.ROOT).startsWith("to ")) w = w.substring(3);
+            Words enList = Lexicon.words(Lang.EN);
+            if (r.lang == Lang.EN && enList != null && !w.contains(" ") && enList.known(w)) w = w.toLowerCase(Locale.ROOT);
             if (Examples.suitable(w) && !m.containsKey(r.lang)) m.put(r.lang, w);
         }
         return m;
@@ -144,22 +146,35 @@ final class DetailSheets {
         new Thread(() -> {
             List<Examples.Example> list = null;
             boolean offline = false;
-            // The three quality levels are asked for at the same time; the best sentences come first.
-            List<java.util.concurrent.Future<String>> answers = new ArrayList<>();
-            java.util.concurrent.ExecutorService pool = java.util.concurrent.Executors.newFixedThreadPool(Examples.FILTERS.length);
-            for (String f : Examples.FILTERS) answers.add(pool.submit(() -> Engine.NET.get(Examples.url(word, src, f), Engine.TIMEOUT)));
-            pool.shutdown();
+            // Best quality first (recorded sentences, then native speakers, then all); the next level is only
+            // asked when there are not enough good sentences yet. One retry when the site is busy.
             List<Examples.Candidate> all = new ArrayList<>();
             int ok = 0;
             IOException last = null;
-            for (java.util.concurrent.Future<String> a : answers) {
-                try {
-                    all.addAll(Examples.parse(a.get(), src));
-                    ok++;
-                } catch (Exception e) {
-                    Throwable c = e instanceof java.util.concurrent.ExecutionException ? e.getCause() : e;
-                    if (c instanceof IOException) last = (IOException) c;
+            for (String f : Examples.FILTERS) {
+                String body = null;
+                for (int attempt = 0; attempt < 2 && body == null; attempt++) {
+                    try {
+                        body = Engine.NET.get(Examples.url(word, src, f), Engine.TIMEOUT);
+                    } catch (IOException e) {
+                        last = e;
+                        if (e instanceof java.net.UnknownHostException) break;
+                        try {
+                            Thread.sleep(1200);
+                        } catch (InterruptedException ie) {
+                            Thread.currentThread().interrupt();
+                            break;
+                        }
+                    }
                 }
+                if (body == null) continue;
+                try {
+                    all.addAll(Examples.parse(body, src));
+                    ok++;
+                } catch (IOException e) {
+                    last = e;
+                }
+                if (Examples.select(all, src, expected, Examples.MAX).size() >= Examples.MAX) break;
             }
             if (ok > 0) list = fillMissing(Examples.select(all, src, expected, Examples.MAX), src);
             else offline = last instanceof java.net.UnknownHostException || last instanceof java.net.ConnectException;
@@ -380,7 +395,17 @@ final class DetailSheets {
     private void fillFamilyRow(TextView[] views, Lookup t, Lang lang) {
         Lookup.Result fa = t.result(Lang.FA);
         if (fa != null && !fa.text.isEmpty()) {
-            views[1].setText(fa.summary(1));
+            // Prefer the infinitives of the verb meanings (دریافت کردن), not the main translation, which for a
+            // lone verb is often an imperative (دریافت کنید).
+            List<String> inf = new ArrayList<>();
+            for (Lookup.Sense sense : fa.senses) {
+                if (!Verbs.isVerbPos(sense.pos)) continue;
+                for (String term : sense.terms) {
+                    String v = Verbs.infinitive(Lang.FA, term);
+                    if (v != null && !inf.contains(v) && inf.size() < 2) inf.add(v);
+                }
+            }
+            views[1].setText(inf.isEmpty() ? fa.summary(1) : String.join("\u060C ", inf));
             views[1].setVisibility(View.VISIBLE);
         }
         if (lang == Lang.DE && views[0].getText().length() == 0) {
