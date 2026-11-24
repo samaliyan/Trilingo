@@ -78,7 +78,17 @@
             android:name=".CheckActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ScanActivity" android:exported="false" />
+        <!-- Share a picture (e.g. a screenshot) → "Scan text": tap its words to translate them. -->
+        <activity
+            android:name=".ScanActivity"
+            android:exported="true"
+            android:label="@string/scan_share_label">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
 
         <provider
             android:name=".PhotoProvider"

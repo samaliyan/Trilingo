@@ -275,6 +275,153 @@ back; back
 open_app
 type_text "x"            # the next step starts with clear_field (an empty field would hit "Clear" history instead)
 
+# 3v. Meaning in the word's own language, with a picture, level, pronunciation; save the word
+open_app
+type_text "Tisch"
+wait_for "ENGLISH" "" 20
+back
+tap "Show the meaning in the word's own language first"
+wait_for "meaning header" "^MEANING IN GERMAN$" 25
+wait_for "German meaning" ".*Möbelstück.*" 20
+wait_for "picture" "^Picture: Tisch.*" 25
+shot 03v_meaning_first 1
+expect "Level A1, Beginner"
+expect "Show translation"
+expect_not "ENGLISH" "^ENGLISH$"
+tap "Show translation"
+wait_for "ENGLISH" "^ENGLISH$" 5
+tap "Save word"
+expect "Remove from saved words"
+adb shell input swipe 540 1700 540 600 300; sleep 0.8
+shot 03w_meaning_scrolled 1
+tap "Show the translation first"
+sleep 1
+shot 03x_translation_first 1
+open_app
+type_text "distinguish"
+wait_for "PERSIAN" "" 20
+back
+for i in $(seq 1 6); do [ -n "$(nfind "m" "^MEANING IN ENGLISH$")" ] && break; adb shell input swipe 540 1500 540 900 400; sleep 1; done
+wait_for "English meaning" "(?i).*different.*" 25
+shot 03y_english_meaning 1
+expect "Listen"; expect "Record"
+tap "Record yourself saying the word"
+sleep 1
+tap_any "While using the app" "WHILE USING THE APP" "Only this time" "ONLY THIS TIME" "Allow" "ALLOW" || true
+sleep 3
+shot 03z_recording 0.5
+tap "Stop recording" || true
+sleep 1
+expect "Play your recording"
+
+# 3z2. Voice search opens (the recognizer itself cannot be driven here)
+open_app
+back
+tap "Voice search"
+sleep 1
+shot 03z2_voice_language 0.5
+if [ -n "$(nfind "Which language will you speak?")" ]; then
+  tap "German" "^German$"
+  sleep 3
+  shot 03z3_voice_after 0.5
+  back; sleep 1
+else
+  log "voice search: this emulator has no speech recognizer (the app shows a message) — ok"
+fi
+open_app
+
+# 3z4. Home: saved words, review (flashcards)
+open_app
+back
+shot 03z4_home_tiles 1
+expect "Review tile" "^Review( \(\d+\))?$"
+tap "Saved words"
+sleep 1
+shot 03z5_saved_words 1
+expect "Tisch"
+expect "Export for Anki"
+tap "+ New folder"
+type_text "Class"
+tap_any "OK" "Ok"
+sleep 1
+shot 03z6_folder 1
+expect "folder chip" "^Class .*"
+back
+tap "Review tile" "^Review( \(\d+\))?$"
+sleep 1
+shot 03z7_review_front 1
+if [ -n "$(nfind "Show answer")" ]; then
+  tap "Show answer"
+  shot 03z8_review_back 1
+  tap "Good" "^Good, .*"
+  sleep 1
+  log "ok: reviewed one card"
+else
+  fail "no card to review"
+fi
+back
+
+# 3z9. Grammar practice and find the mistake (5 questions, then 5 new ones)
+open_app
+back
+tap "Grammar lessons"
+sleep 1.5
+tap "Find the mistake"
+wait_for "question" "^Which sentence is correct\?$" 10
+shot 03z9_find_mistake 1
+expect "Question 1"
+for i in $(seq 1 8); do [ -n "$(nfind "more" "^5 new questions$")" ] && break; adb shell input swipe 540 1600 540 500 300; sleep 0.6; done
+tap "5 new questions" "^5 new questions$"
+sleep 1
+expect "Question 1"
+back
+tap "Practice" "^Practice$"
+tap "level" "^up to A1.*"
+wait_for "question" "^Question 1$" 10
+shot 03z10_practice 1
+back
+back
+open_app
+
+# 3z11. Check a sentence (LanguageTool)
+open_app
+back
+tap "Check a sentence"
+sleep 1
+tap "Write a sentence…"
+type_text "Ich%shabe%sgestern%snach%sHause%sgegangen."
+back
+tap "Check" "^Check$"
+wait_for "result" "^(\d+ possible mistakes?|No mistakes found\.|Could not check.*)$" 30
+shot 03z11_check 1
+expect "possible mistake" "^\d+ possible mistakes?$"
+back
+back
+
+# 3z12. Scan text: a shared picture with three German words
+adb push scan_sample.png /sdcard/Pictures/scan_sample.png > /dev/null
+adb shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///sdcard/Pictures/scan_sample.png > /dev/null 2>&1
+sleep 3
+MID=$(adb shell content query --uri content://media/external/images/media --projection _id:_display_name 2>/dev/null | grep scan_sample | head -1 | sed -n 's/.*_id=\([0-9]*\).*/\1/p')
+if [ -n "$MID" ]; then
+  adb shell am start -a android.intent.action.SEND -t image/png -d "content://media/external/images/media/$MID" --grant-read-uri-permission -n "$PKG/.ScanActivity" > /dev/null
+  wait_for "scan result" "^(Tap a word to translate it\.|No text found in this picture\.|Could not read.*)$" 30
+  shot 03z12_scan 1
+  expect "Tap a word to translate it."
+  P=$(nfind "photo" "^Photo with \d+ words.*")
+  if [ -n "$P" ]; then
+    set -- $P
+    # the first word ("Bahnhof") is near the top of the picture
+    adb shell input tap 250 $(( $2 - 175 ))
+    wait_for "translation" "(?i).*(station|ایستگاه).*" 25
+    shot 03z13_scan_word 1
+  fi
+  back
+else
+  log "scan test skipped: the picture could not be found in the media store"
+fi
+open_app
+
 # 4. Ambiguous word: auto vs forced German ("Gift" = poison in German)
 clear_field
 type_text "Gift"

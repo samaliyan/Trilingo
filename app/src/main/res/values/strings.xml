@@ -244,7 +244,7 @@
     <string name="check">Check</string>
     <string name="check_in">Check %1$s</string>
     <string name="check_ok">No mistakes found.</string>
-    <string name="check_failed">Could not check the sentence. Check the internet connection.</string>
+    <string name="sentence_check_failed">Could not check the sentence. Check the internet connection.</string>
     <plurals name="mistakes_found">
         <item quantity="one">%d possible mistake</item>
         <item quantity="other">%d possible mistakes</item>
@@ -254,6 +254,7 @@
 
     <!-- Scan text -->
     <string name="scan_text">Scan text</string>
+    <string name="scan_share_label">Scan text (Trilingo)</string>
     <string name="scan_intro">Take a photo of a sign, a page or a menu. The text is read on your phone, without internet; then tap any word to translate it.</string>
     <string name="take_photo">Take photo</string>
     <string name="choose_picture">Choose picture</string>

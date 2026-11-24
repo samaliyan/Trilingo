@@ -67,7 +67,21 @@ public final class ScanActivity extends Activity {
         store = new Store(this);
         engine = new Engine(Engine.NET);
         page = new Page(this, ui, getString(R.string.scan_text));
-        start();
+        Uri shared = sharedImage(getIntent());
+        if (saved == null && shared != null) read(shared);
+        else start();
+    }
+
+    /** A picture shared to "Scan text" (a screenshot, a photo from the gallery), or null. */
+    @SuppressWarnings("deprecation")
+    private static Uri sharedImage(Intent it) {
+        if (it == null) return null;
+        if (Intent.ACTION_SEND.equals(it.getAction())) {
+            Object o = it.getParcelableExtra(Intent.EXTRA_STREAM);
+            if (o instanceof Uri) return (Uri) o;
+        }
+        if (Intent.ACTION_SEND.equals(it.getAction()) || Intent.ACTION_VIEW.equals(it.getAction())) return it.getData();
+        return null;
     }
 
     @Override protected void onDestroy() {
@@ -122,7 +136,10 @@ public final class ScanActivity extends Activity {
         super.onActivityResult(request, result, data);
         if (result != RESULT_OK) return;
         Uri uri = request == CAMERA ? Uri.fromFile(PhotoProvider.file(this)) : data != null ? data.getData() : null;
-        if (uri == null) return;
+        if (uri != null) read(uri);
+    }
+
+    private void read(Uri uri) {
         loading();
         Net.run(() -> load(uri), (bmp, err) -> {
             if (isDestroyed()) return;

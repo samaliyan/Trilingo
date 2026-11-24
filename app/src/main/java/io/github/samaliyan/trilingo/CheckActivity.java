@@ -129,7 +129,7 @@ public final class CheckActivity extends Activity {
             if (gen != generation || isDestroyed()) return;
             results.removeAllViews();
             if (issues == null) {
-                note(getString(R.string.check_failed), ui.danger);
+                note(getString(R.string.sentence_check_failed), ui.danger);
                 return;
             }
             show(s, l, issues);
