@@ -35,6 +35,7 @@ jobs:
       - name: Build an old version (build 1, real key) for the self-update test
         env:
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+          TEST_EMULATOR: '1'
         run: |
           if [ -n "$SIGNING_PASSWORD" ]; then
             BUILD_NUMBER=1 gradle --no-daemon assembleRelease
@@ -42,6 +43,8 @@ jobs:
           fi
 
       - name: Build release APK (minified, debug-signed, high build number so no update is offered)
+        env:
+          TEST_EMULATOR: '1'
         run: |
           BUILD_NUMBER=999999 gradle --no-daemon lintRelease assembleRelease || FAILED=1
           R=app/build/intermediates/lint_intermediate_text_report/release/lintReportRelease/lint-results-release.txt

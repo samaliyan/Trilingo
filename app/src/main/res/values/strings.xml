@@ -89,7 +89,7 @@
     <string name="version_value">Version %1$s (build %2$d)</string>
     <string name="source_code">Source code</string>
     <string name="data_sources">Word data</string>
-    <string name="data_sources_value">German nouns: Wiktionary (CC BY-SA 4.0)\nWord lists: FrequencyWords (MIT)\nExample sentences: Tatoeba (CC BY 2.0 FR)</string>
+    <string name="data_sources_value">German nouns: Wiktionary (CC BY-SA 4.0)\nWord lists: FrequencyWords (MIT)\nExample sentences: Tatoeba (CC BY 2.0 FR)\nMeanings: Wiktionary (CC BY-SA), Free Dictionary API\nPictures: Wikimedia Commons, Wikipedia\nWord levels: Words-CEFR-Dataset, german-cefr-wordlist (MIT)\nSentence check: LanguageTool\nText recognition: Google ML Kit</string>
     <string name="no_browser">No browser found</string>
 
     <!-- Updates -->

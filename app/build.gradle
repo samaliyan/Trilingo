@@ -17,9 +17,11 @@ android {
         // Every GitHub build gets a higher number, so the in-app updater and Android accept it as newer.
         versionCode((System.getenv('BUILD_NUMBER') ?: '1') as int)
         versionName '1.6'
-        // Text recognition (Scan text) ships native code: phones (ARM) and the x86_64 test emulator.
+        // Text recognition (Scan text) ships native code. Phones are ARM; the x86_64 code is only added
+        // for the emulator test (TEST_EMULATOR=1), so the published APK stays small.
         ndk {
-            abiFilters 'arm64-v8a', 'armeabi-v7a', 'x86_64'
+            abiFilters 'arm64-v8a', 'armeabi-v7a'
+            if (System.getenv('TEST_EMULATOR')) abiFilters 'x86_64'
         }
     }
 
@@ -41,6 +43,13 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingPassword ? signingConfigs.release : signingConfigs.debug
+        }
+    }
+
+    // Native code compressed inside the APK: a much smaller download (it is unpacked once at install).
+    packaging {
+        jniLibs {
+            useLegacyPackaging true
         }
     }
 

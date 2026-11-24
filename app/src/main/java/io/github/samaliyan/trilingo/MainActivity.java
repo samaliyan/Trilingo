@@ -1247,6 +1247,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
     private void showRecent() {
         shown = null;
         content.removeAllViews();
+        scroll.scrollTo(0, 0);                         // a long result may have been scrolled down
         content.addView(homeTiles());
         List<Lookup> items = history.items();
         if (items.isEmpty() || !store.saveHistory()) {

@@ -50,7 +50,7 @@ final class Updater {
     private static final String INFO_URL = REPO_URL + "/releases/latest/download/update.txt";
     private static final Pattern VERSION = Pattern.compile("(?m)^version=(\\S+)\\s*$");
     private static final String ACTION = "io.github.samaliyan.trilingo.INSTALL_RESULT";
-    private static final int MAX_APK = 30 * 1024 * 1024;
+    private static final int MAX_APK = 80 * 1024 * 1024;
     private static final Pattern CODE = Pattern.compile("code=(\\d{1,9})");
 
     private final Activity act;

@@ -39,6 +39,15 @@ back() { adb shell input keyevent KEYCODE_BACK; sleep 0.8; }
 open_app() { adb shell am start -a io.github.samaliyan.trilingo.OPEN -f 0x14000000 -n "$PKG/.MainActivity" > /dev/null; sleep 2.5; }
 type_text() { adb shell input text "$1"; }
 clear_field() { tap "Clear" > /dev/null || true; }
+# scroll_to LABEL [REGEX] → scrolls the screen down in small steps until it is visible (fails if never)
+scroll_to() {
+  for i in $(seq 1 16); do
+    [ -n "$(nfind "$1" "${2:-}")" ] && return 0
+    if [ "$i" -le 8 ]; then adb shell input swipe 540 1500 540 1000 400; else adb shell input swipe 540 900 540 1500 400; fi
+    sleep 0.6
+  done
+  fail "could not scroll to '$1'"; return 1
+}
 
 log "API $API"
 adb install -r "$APK" || { echo "install failed"; exit 1; }
@@ -289,12 +298,12 @@ wait_for "German meaning" ".*Möbelstück.*" 20
 wait_for "picture" "^Picture: Tisch.*" 25
 shot 03v_meaning_first 1
 expect "Level A1, Beginner"
-expect_not "ENGLISH" "^ENGLISH$"
-for i in $(seq 1 8); do [ -n "$(nfind "Show translation")" ] && break; adb shell input swipe 540 1500 540 800 400; sleep 0.6; done
-tap "Show translation"
-wait_for "ENGLISH" "^ENGLISH$" 5
 tap "Save word"
 expect "Remove from saved words"
+expect_not "ENGLISH" "^ENGLISH$"
+scroll_to "Show translation"
+tap "Show translation"
+wait_for "ENGLISH" "^ENGLISH$" 5
 shot 03w_meaning_scrolled 1
 for i in $(seq 1 8); do [ -n "$(nfind "Show the translation first")" ] && break; adb shell input swipe 540 700 540 1600 300; sleep 0.6; done
 tap "Show the translation first"
@@ -304,10 +313,10 @@ open_app
 type_text "distinguish"
 wait_for "a translation" "^(GERMAN|PERSIAN)$" 20
 back
-for i in $(seq 1 6); do [ -n "$(nfind "m" "^MEANING IN ENGLISH$")" ] && break; adb shell input swipe 540 1500 540 900 400; sleep 1; done
-wait_for "English meaning" "(?i).*different.*" 25
+sleep 3
+scroll_to "English meaning" "(?i)^1\. .*different.*"
 shot 03y_english_meaning 1
-expect "Listen"; expect "Record"
+expect "Listen to a recording in English"
 tap "Record yourself saying the word"
 sleep 1
 tap_any "While using the app" "WHILE USING THE APP" "Only this time" "ONLY THIS TIME" "Allow" "ALLOW" || true
@@ -462,13 +471,15 @@ KB=$(adb shell dumpsys input_method | grep -c "mInputShown=true")
 [ "$KB" -gt 0 ] && log "ok: keyboard open" || fail "keyboard not open after OPEN"
 back
 shot 09b_recent 1
-expect "Recent"; expect "house"; expect "Gift"
+expect "Recent"; scroll_to "house"; scroll_to "Gift"
 expect_not "hous" "^hous$"
 expect_not "Schmeterling" "^Schmeterling$"
+scroll_to "fernsehen"
 longpress "fernsehen"
 shot 10_remove_dialog
 tap_any "Remove" "REMOVE"
 expect_not "fernsehen"
+scroll_to "house"
 tap "house"
 shot 11_from_history 1
 expect "Haus" "Haus"
@@ -577,12 +588,15 @@ sleep 1
 # 14. Update check button (the test build has a huge build number → "latest version" or "could not reach")
 open_app; back
 tap "Settings"
+scroll_to "Check for updates now"
 tap "Check for updates now"
 shot 26_update_check 0.6
 back
 
 # 15. Self-update from GitHub: an old build (same key) must find the latest release, download and install it
-if [ -f old.apk ]; then
+if [ -f old.apk ] && [ "$API" -lt 30 ]; then
+  log "self-update test skipped on API $API: the published APK has ARM code only (text recognition), and this x86 emulator cannot run ARM code"
+elif [ -f old.apk ]; then
   adb uninstall "$PKG" > /dev/null
   adb install old.apk > /dev/null && log "old build installed"
   adb shell appops set "$PKG" REQUEST_INSTALL_PACKAGES allow
@@ -590,7 +604,7 @@ if [ -f old.apk ]; then
   wait_for "Update available" "" 90
   shot 27_update_offered 1
   tap_any "Update" "UPDATE"
-  for i in $(seq 1 30); do
+  for i in $(seq 1 75); do
     sleep 2
     p=$(nfind "Update" '^(Update|UPDATE|Install|INSTALL)$')
     if [ -n "$p" ] && [ -z "$(nfind "Update available")" ]; then break; fi
