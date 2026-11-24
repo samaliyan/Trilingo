@@ -98,6 +98,7 @@ final class Notebook {
     /** Saves (or updates) a word with its translation summary in a folder ("" = no folder). */
     Card save(Lang l, String word, String back, String folder, long now) {
         Card c = cardFor(l, word, back, now);
+        c.word = Text.clean(word);                     // the spelling chosen now ("Tisch", not an earlier "tisch")
         c.saved = true;
         c.folder = folder == null ? "" : folder;
         if (!c.folder.isEmpty() && !folders.contains(c.folder)) folders.add(c.folder);

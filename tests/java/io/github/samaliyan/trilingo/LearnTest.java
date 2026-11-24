@@ -218,6 +218,9 @@ public final class LearnTest {
         eq("German class", m.get(Lang.DE, "Tisch").folder, "rename moves words");
         m.deleteFolder("German class");
         eq("", m.get(Lang.DE, "Tisch").folder, "delete keeps the words");
+        m.due(null, Collections.singletonList(new Lookup("schule", Lang.DE, Arrays.asList(new Lookup.Result(Lang.EN, "school", Collections.emptyList())), "Google", now)), now, 20);
+        m.save(Lang.DE, "Schule", "school", "", now);
+        eq("Schule", m.get(Lang.DE, "schule").word, "saving keeps the new spelling");
         m.unsave(Lang.EN, "distinguish");
         ok(!m.isSaved(Lang.EN, "distinguish"), "unsaved");
         f.delete();

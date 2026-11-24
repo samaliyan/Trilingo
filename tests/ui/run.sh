@@ -43,10 +43,11 @@ clear_field() { tap "Clear" > /dev/null || true; }
 scroll_to() {
   for i in $(seq 1 16); do
     [ -n "$(nfind "$1" "${2:-}")" ] && return 0
-    if [ "$i" -le 8 ]; then adb shell input swipe 540 1500 540 1000 400; else adb shell input swipe 540 900 540 1500 400; fi
+    # small swipes in the upper half: the keyboard may cover the lower half
+    if [ "$i" -le 8 ]; then adb shell input swipe 540 1100 540 650 400; else adb shell input swipe 540 650 540 1100 400; fi
     sleep 0.6
   done
-  fail "could not scroll to '$1'"; return 1
+  [ "${3:-}" = quiet ] || fail "could not scroll to '$1'"; return 1
 }
 
 log "API $API"
@@ -303,7 +304,8 @@ expect "Remove from saved words"
 expect_not "ENGLISH" "^ENGLISH$"
 scroll_to "Show translation"
 tap "Show translation"
-wait_for "ENGLISH" "^ENGLISH$" 5
+sleep 1
+scroll_to "ENGLISH" "^ENGLISH$"
 shot 03w_meaning_scrolled 1
 for i in $(seq 1 8); do [ -n "$(nfind "Show the translation first")" ] && break; adb shell input swipe 540 700 540 1600 300; sleep 0.6; done
 tap "Show the translation first"
@@ -320,11 +322,15 @@ expect "Listen to a recording in English"
 tap "Record yourself saying the word"
 sleep 1
 tap_any "While using the app" "WHILE USING THE APP" "Only this time" "ONLY THIS TIME" "Allow" "ALLOW" || true
-sleep 1.5
-shot 03z_recording 0.5
-[ -n "$(nfind "Stop recording")" ] && { adb shell input tap $(nfind "Stop recording"); log "ok: recording started and stopped"; } || log "recording stopped by itself or could not start"
 sleep 1
-expect "Play your recording"
+if scroll_to "Stop recording" "" quiet; then
+  shot 03z_recording 0.3
+  adb shell input tap $(nfind "Stop recording"); log "ok: recording started and stopped"
+else
+  log "recording could not start on this emulator (no microphone) — the app shows a message"
+fi
+sleep 1
+scroll_to "Play your recording"
 
 # 3z2. Voice search opens (the recognizer itself cannot be driven here)
 open_app
