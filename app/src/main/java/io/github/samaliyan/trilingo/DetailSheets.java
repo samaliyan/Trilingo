@@ -87,15 +87,31 @@ final class DetailSheets {
     /** Words to show examples for: the typed word, and its English / German / Persian translation when short. */
     private static Map<Lang, String> exampleWords(Lookup l) {
         Map<Lang, String> m = new java.util.LinkedHashMap<>();
-        if (Examples.suitable(l.query)) m.put(l.source, Text.clean(l.query));
+        if (Examples.suitable(l.query)) m.put(l.source, l.source == Lang.DE ? germanCase(l.query) : Text.clean(l.query));
         for (Lookup.Result r : l.results) {
             String w = Text.clean(r.text);
             if (r.lang == Lang.EN && w.toLowerCase(Locale.ROOT).startsWith("to ")) w = w.substring(3);
             Words enList = Lexicon.words(Lang.EN);
             if (r.lang == Lang.EN && enList != null && !w.contains(" ") && enList.known(w)) w = w.toLowerCase(Locale.ROOT);
+            if (r.lang == Lang.DE) w = germanCase(w);
             if (Examples.suitable(w) && !m.containsKey(r.lang)) m.put(r.lang, w);
         }
         return m;
+    }
+
+    /**
+     * German words as German writes them: Tatoeba only finds the exact form, so "tisch" finds nothing
+     * but "Tisch" finds many sentences. Single words only; the word list and the noun list decide.
+     */
+    static String germanCase(String word) {
+        String w = Text.clean(word);
+        if (w.isEmpty() || w.contains(" ")) return w;
+        Words de = Lexicon.words(Lang.DE);
+        if (de != null && de.known(w)) return de.canonical(w);
+        Nouns n = Lexicon.nouns();
+        if (n != null && Character.isLowerCase(w.charAt(0)) && n.lookup(w) != null && (de == null || !de.known(w)))
+            return Character.toUpperCase(w.charAt(0)) + w.substring(1);
+        return w;
     }
 
     boolean hasExamples(Lookup l) {

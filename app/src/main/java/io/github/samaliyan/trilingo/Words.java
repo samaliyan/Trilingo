@@ -84,6 +84,12 @@ final class Words {
         return words[rank];
     }
 
+    /** The word as the list writes it ("tisch" → "Tisch"); unchanged when it is not in the list. */
+    String canonical(String w) {
+        int r = rank(w);
+        return r >= 0 ? words[r] : w;
+    }
+
     /** Words starting with what was typed (case, umlauts and half-spaces ignored), most frequent first. */
     List<String> complete(String typed, int max) {
         List<String> out = new ArrayList<>();

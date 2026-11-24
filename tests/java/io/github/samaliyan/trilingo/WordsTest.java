@@ -108,6 +108,10 @@ public final class WordsTest {
         eq(null, nouns.lookup("das Haus"), "phrase is not looked up");
         eq(null, nouns.lookup(""), "empty");
 
+        eq("Tisch", de.canonical("tisch"), "canonical German casing");
+        eq("gehen", de.canonical("Gehen"), "verbs stay lower case");
+        eq("xyzzy", de.canonical("xyzzy"), "unknown unchanged");
+
         // ---------------------------------------------------------------- English or German?
         eq(Lang.DE, Words.guessLatin(en, de, "Haus"), "Haus is German");
         eq(Lang.DE, Words.guessLatin(en, de, "Schmetterling"), "Schmetterling is German");
