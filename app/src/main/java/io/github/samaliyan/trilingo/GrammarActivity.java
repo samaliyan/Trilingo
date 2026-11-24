@@ -110,6 +110,7 @@ public final class GrammarActivity extends Activity {
             final Lang l = i == 0 ? Lang.DE : Lang.EN;
             TextView t = ui.text(14, ui.text, Ui.MEDIUM);
             t.setText(names[i]);
+            t.setContentDescription(getString(R.string.grammar_tab_desc, names[i]));
             t.setGravity(Gravity.CENTER);
             t.setMinHeight(ui.dp(40));
             t.setClickable(true);

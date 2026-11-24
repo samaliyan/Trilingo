@@ -121,9 +121,8 @@ public final class LessonActivity extends Activity implements TextToSpeech.OnIni
         GrammarViews.direction(meta, ex);
         content.addView(meta, full());
         TextView title = ui.text(23, ui.text, Ui.MEDIUM);
-        title.setText(lesson.title(ex));
+        GrammarViews.show(title, lesson.title(ex), ex);
         title.setLineSpacing(0, 1.2f);
-        GrammarViews.direction(title, ex);
         LinearLayout.LayoutParams tp = full();
         tp.topMargin = ui.dp(6);
         tp.bottomMargin = ui.dp(14);
@@ -135,9 +134,8 @@ public final class LessonActivity extends Activity implements TextToSpeech.OnIni
         for (String p : lesson.body(ex)) {
             boolean bullet = p.startsWith("•");
             TextView t = ui.text(16, ui.text, Ui.REGULAR);
-            t.setText(p);
+            GrammarViews.show(t, p, ex);
             t.setLineSpacing(0, ex == Lang.FA ? 1.45f : 1.3f);
-            GrammarViews.direction(t, ex);
             if (bullet) {
                 if (ex == Lang.FA) t.setPadding(0, 0, ui.dp(6), 0);
                 else t.setPadding(ui.dp(6), 0, 0, 0);
@@ -260,9 +258,8 @@ public final class LessonActivity extends Activity implements TextToSpeech.OnIni
         for (int i = 0; i < 2; i++) {
             if (order[i].isEmpty()) continue;
             TextView t = ui.text(i == 0 ? 15 : 14, i == 0 ? ui.text : ui.sub, Ui.REGULAR);
-            t.setText(order[i]);
+            GrammarViews.show(t, order[i], langs[i]);
             t.setLineSpacing(0, 1.2f);
-            GrammarViews.direction(t, langs[i]);
             t.setPadding(0, 0, ui.dp(10), 0);
             LinearLayout.LayoutParams lp = full();
             lp.topMargin = ui.dp(i == 0 ? 6 : 4);

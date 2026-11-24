@@ -212,6 +212,17 @@ public final class GrammarTest {
         eq(0, g.search("   ", nouns, de, en).size(), "blank search");
         eq(0, g.search("qqqzzz", nouns, de, en).size(), "nothing found");
 
+        // Persian text with Latin words
+        String iso = Grammar.isolateLatin("مثلاً fernsehen (تلویزیون دیدن): Ich sehe jeden Abend fern. فعل");
+        eq("مثلاً \u2066fernsehen\u2069 (تلویزیون دیدن): \u2066Ich sehe jeden Abend fern.\u2069 فعل", iso, "Latin runs isolated");
+        eq("\u2066habe gemacht\u2069، \u2066bin gegangen\u2069", Grammar.isolateLatin("habe gemacht، bin gegangen"), "Persian comma splits runs");
+        eq("(\u2066sehe\u2069)", Grammar.isolateLatin("(sehe)"), "brackets stay outside");
+        eq("\u2066fahren → du fährst\u2069", Grammar.isolateLatin("fahren → du fährst"), "arrow inside run");
+        eq("فقط فارسی.", Grammar.isolateLatin("فقط فارسی."), "Persian only unchanged");
+        // a translation's generic verb lessons are not listed
+        for (Grammar.Lesson x : g.forLookup(fern, Verbs.of(fern), nouns, de, en, 8))
+            ok(x.lang == Lang.DE, "fernsehen: no English tense lessons from 'watch TV': " + x.id);
+
         // names
         eq("Verbs", Grammar.categoryName("verbs", Lang.EN), "category name");
         eq("مبتدی", Grammar.levelName("A1", Lang.FA), "level name");

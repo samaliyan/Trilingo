@@ -225,17 +225,18 @@ expect "separable verbs lesson" ".*fernsehen.*anrufen.*"
 tap "separable verbs lesson" "^فعل.*جداشدنی.*"
 sleep 1.5
 shot 03m_lesson_persian 1
-expect "Ich sehe jeden Abend fern."
 expect "Persian explanation" ".*fern.*ته جمله.*"
-adb shell input swipe 540 1700 540 400 300; sleep 0.8
-adb shell input swipe 540 1700 540 400 300; sleep 0.8
+# scroll down in small steps until the first example is on screen
+for i in $(seq 1 12); do [ -n "$(nfind "ex" "^Ich sehe jeden Abend fern\\.$")" ] && break; adb shell input swipe 540 1500 540 1000 600; sleep 0.5; done
 shot 03n_lesson_scrolled 1
+expect "example sentence" "^Ich sehe jeden Abend fern\\.$"
 adb shell input swipe 540 1700 540 400 300; sleep 0.8
 adb shell input swipe 540 1700 540 400 300; sleep 0.8
 shot 03o_lesson_end 1
 tap "Explanations in Persian. Change"
 tap "English" "^English$"
 sleep 1
+for i in 1 2 3 4 5; do adb shell input swipe 540 500 540 1800 200; done; sleep 0.8
 shot 03p_lesson_english 1
 expect "Separable verbs (like fernsehen, anrufen)"
 back                     # lesson
@@ -243,9 +244,9 @@ back                     # panel
 tap "Grammar lessons"
 sleep 1.5
 shot 03q_grammar_screen 1
-expect "German" "^German$"
+expect "German grammar"
 expect "first German lesson" "^Personal pronouns, sein and haben$"
-tap "English" "^English$"
+tap "English grammar"
 sleep 1
 shot 03r_grammar_english_list 1
 expect "first English lesson" "^The verb to be: am, is, are$"

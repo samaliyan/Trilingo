@@ -39,6 +39,12 @@ final class GrammarViews {
         }
     }
 
+    /** Sets text in a language: Persian right-to-left with its German/English words kept intact (see Grammar.isolateLatin). */
+    static void show(TextView t, String text, Lang lang) {
+        t.setText(lang == Lang.FA ? Grammar.isolateLatin(text) : text);
+        direction(t, lang);
+    }
+
     /** A lesson in a list: its title in the explanation language, level and topic below, an arrow on the right. */
     static View row(Activity a, Ui ui, Grammar.Lesson l, Lang explain, boolean withLanguage, View.OnClickListener click) {
         LinearLayout row = new LinearLayout(a);
@@ -49,9 +55,8 @@ final class GrammarViews {
         LinearLayout texts = new LinearLayout(a);
         texts.setOrientation(LinearLayout.VERTICAL);
         TextView title = ui.text(16, ui.text, Ui.MEDIUM);
-        title.setText(l.title(explain));
+        show(title, l.title(explain), explain);
         title.setLineSpacing(0, 1.15f);
-        direction(title, explain);
         texts.addView(title, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         TextView sub = ui.line(13, ui.sub, Ui.REGULAR);
         sub.setText(meta(l, withLanguage));

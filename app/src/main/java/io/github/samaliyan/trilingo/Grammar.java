@@ -316,6 +316,10 @@ final class Grammar {
                 tags.addAll(tagsFor(verb, lang, nouns, list));
                 if (lang == Lang.DE) tags.remove("de-noun");
             }
+            if (lang != l.source) {                     // a translation: only its specific lessons, not every verb lesson
+                tags.remove("de-verb");
+                tags.remove("en-verb");
+            }
             for (Lesson x : about(word, lang, tags, max)) if (!out.contains(x)) out.add(x);
             if (verb != null && !verb.equalsIgnoreCase(Text.clean(word)))
                 for (Lesson x : about(verb, lang, tags, max)) if (!out.contains(x)) out.add(x);
@@ -390,6 +394,48 @@ final class Grammar {
             return c != 0 ? c : Integer.compare(a.order, b.order);
         });
         return out;
+    }
+
+    // ------------------------------------------------------------------ Persian text with Latin words
+
+    private static final char LRI = (char) 0x2066, PDI = (char) 0x2069;
+
+    /**
+     * Persian text with German or English inside: each Latin run ("Ich sehe jeden Abend fern.") is wrapped in a
+     * left-to-right isolate, so its punctuation stays where it belongs instead of jumping to the other side.
+     * Brackets are left outside the runs so they still pair up with the Persian text around them.
+     */
+    static String isolateLatin(String s) {
+        StringBuilder b = new StringBuilder(s.length() + 16);
+        int i = 0, n = s.length();
+        while (i < n) {
+            char c = s.charAt(i);
+            if (!isLatinLetter(c)) {
+                b.append(c);
+                i++;
+                continue;
+            }
+            int j = i, lastStrong = i;
+            while (j < n && (isLatinLetter(s.charAt(j)) || inRun(s.charAt(j)))) {
+                if (isLatinLetter(s.charAt(j)) || Character.isDigit(s.charAt(j))) lastStrong = j;
+                j++;
+            }
+            int end = lastStrong + 1;                  // closing punctuation of the run: . ! ? … right after it
+            while (end < j && ".!?…".indexOf(s.charAt(end)) >= 0) end++;
+            b.append(LRI).append(s, i, end).append(PDI);
+            i = end;
+        }
+        return b.toString();
+    }
+
+    private static boolean isLatinLetter(char c) {
+        return Character.isLetter(c) && Character.UnicodeBlock.of(c) != Character.UnicodeBlock.ARABIC
+                && Character.UnicodeBlock.of(c) != Character.UnicodeBlock.ARABIC_PRESENTATION_FORMS_A
+                && Character.UnicodeBlock.of(c) != Character.UnicodeBlock.ARABIC_PRESENTATION_FORMS_B;
+    }
+
+    private static boolean inRun(char c) {
+        return c == ' ' || Character.isDigit(c) || "'’.,!?…-/+=→·&*\"„“".indexOf(c) >= 0;
     }
 
     // ------------------------------------------------------------------ names

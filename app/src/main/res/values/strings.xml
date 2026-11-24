@@ -119,6 +119,7 @@
     <string name="grammar_nothing">No lessons found</string>
     <string name="grammar_nothing_hint">Try a topic such as “Perfekt” or “passive”, or a word such as “fernsehen”.</string>
     <string name="grammar_table">Table</string>
+    <string name="grammar_tab_desc">%1$s grammar</string>
     <string name="grammar_related">Related lessons</string>
     <string name="grammar_for_word">Grammar for this word</string>
     <string name="grammar_all">All grammar lessons</string>
