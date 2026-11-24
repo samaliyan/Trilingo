@@ -183,7 +183,8 @@ public final class PracticeActivity extends Activity {
             o.setBackground(ui.ripple(ui.outline(ui.surface, ui.line, 14), 14));
             o.setClickable(true);
             o.setFocusable(true);
-            GrammarViews.direction(o, Lang.EN);
+            o.setTextDirection(View.TEXT_DIRECTION_LTR);
+            o.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
             buttons.add(o);
             b.addView(o, Page.full(ui.dp(8), 0));
             o.setOnClickListener(v -> {

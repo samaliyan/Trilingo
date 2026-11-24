@@ -211,10 +211,12 @@ public final class ReviewActivity extends Activity implements TextToSpeech.OnIni
             b.setBackground(ui.ripple(main ? ui.round(ui.accent, 18) : ui.outline(ui.surface, ui.line, 18), 18));
             TextView n = ui.text(16, main ? ui.onAccent : i == 0 ? ui.danger : ui.text, Ui.MEDIUM);
             n.setText(names[i]);
-            b.addView(n);
+            n.setGravity(Gravity.CENTER);
+            b.addView(n, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             TextView w = ui.text(12, main ? ui.onAccent : ui.sub, Ui.REGULAR);
             w.setText(when[i]);
-            b.addView(w);
+            w.setGravity(Gravity.CENTER);
+            b.addView(w, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             b.setContentDescription(getString(names[i]) + ", " + when[i]);
             b.setClickable(true);
             b.setFocusable(true);
