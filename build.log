@@ -1,0 +1,208 @@
+162 checks, 0 failures
+229 checks, 0 failures
+loaded 31117 EN, 35959 DE, 20813 FA words, 51012 nouns in 238 ms
+278 checks, 0 failures
+60 German and 49 English lessons
+2043 checks, 0 failures
+3045 checks, 0 failures
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.9/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preReleaseBuild UP-TO-DATE
+> Task :app:javaPreCompileRelease
+> Task :app:generateReleaseResValues
+> Task :app:checkReleaseAarMetadata
+> Task :app:mapReleaseSourceSetPaths
+> Task :app:generateReleaseResources
+> Task :app:packageReleaseResources
+> Task :app:createReleaseCompatibleScreenManifests
+> Task :app:extractDeepLinksRelease
+> Task :app:parseReleaseLocalResources
+> Task :app:mergeReleaseResources
+> Task :app:processReleaseMainManifest
+> Task :app:processReleaseManifest
+> Task :app:extractProguardFiles
+> Task :app:preReleaseUnitTestBuild UP-TO-DATE
+> Task :app:mergeReleaseJniLibFolders
+> Task :app:processReleaseManifestForPackage
+> Task :app:mergeReleaseNativeLibs
+> Task :app:processReleaseResources
+> Task :app:checkReleaseDuplicateClasses
+
+> Task :app:stripReleaseDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libmlkit_google_ocr_pipeline.so.
+
+> Task :app:compileReleaseJavaWithJavac
+Note: /home/runner/work/Trilingo/Trilingo/app/src/main/java/io/github/samaliyan/trilingo/MainActivity.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :app:generateReleaseLintReportModel
+> Task :app:bundleReleaseClassesToCompileJar
+> Task :app:generateReleaseUnitTestLintModel
+> Task :app:generateReleaseLintVitalReportModel
+> Task :app:extractReleaseNativeSymbolTables
+> Task :app:mergeReleaseNativeDebugMetadata NO-SOURCE
+> Task :app:mergeReleaseArtProfile
+> Task :app:expandReleaseArtProfileWildcards
+> Task :app:mergeReleaseGeneratedProguardFiles
+> Task :app:processReleaseJavaRes NO-SOURCE
+> Task :app:mergeReleaseJavaResource
+> Task :app:mergeReleaseStartupProfile
+> Task :app:lintAnalyzeReleaseUnitTest
+> Task :app:mergeReleaseShaders
+> Task :app:compileReleaseShaders NO-SOURCE
+> Task :app:generateReleaseAssets UP-TO-DATE
+> Task :app:mergeReleaseAssets
+> Task :app:compressReleaseAssets
+> Task :app:extractReleaseVersionControlInfo
+> Task :app:processApplicationManifestReleaseForBundle
+> Task :app:bundleReleaseResources
+> Task :app:collectReleaseDependencies
+> Task :app:sdkReleaseDependencyData
+> Task :app:validateSigningRelease
+> Task :app:writeReleaseAppMetadata
+> Task :app:writeReleaseSigningConfigVersions
+> Task :app:lintVitalAnalyzeRelease
+> Task :app:lintVitalReportRelease SKIPPED
+> Task :app:lintVitalRelease SKIPPED
+> Task :app:lintAnalyzeRelease
+
+> Task :app:lintReportRelease
+Wrote HTML report to file:///home/runner/work/Trilingo/Trilingo/app/build/reports/lint-results-release.html
+
+> Task :app:lintRelease
+> Task :app:minifyReleaseWithR8
+> Task :app:compileReleaseArtProfile
+> Task :app:shrinkReleaseRes
+> Task :app:optimizeReleaseResources
+> Task :app:packageRelease
+> Task :app:createReleaseApkListingFileRedirect
+> Task :app:assembleRelease
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_2-1795529247162.json
+
+BUILD SUCCESSFUL in 56s
+52 actionable tasks: 52 executed
+/home/runner/work/Trilingo/Trilingo/app/src/main/java/io/github/samaliyan/trilingo/ScanActivity.java:14: Warning: Avoid using android.media.ExifInterface; use androidx.exifinterface.media.ExifInterface instead [ExifInterface]
+import android.media.ExifInterface;
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "ExifInterface":
+   The android.media.ExifInterface implementation has some known security bugs
+   in older versions of Android. There is a new implementation available of
+   this library in the support library, which is preferable.
+
+/home/runner/work/Trilingo/Trilingo/app/src/main/java/io/github/samaliyan/trilingo/SettingsActivity.java:205: Warning: Use SwitchCompat from AppCompat or SwitchMaterial from Material library [UseSwitchCompatOrMaterialCode from androidx.appcompat]
+        final Switch sw = new Switch(this);
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "UseSwitchCompatOrMaterialCode":
+   Use SwitchCompat from AppCompat or SwitchMaterial from Material library
+
+   Vendor: Android Open Source Project
+   Identifier: androidx.appcompat
+   Feedback: https://issuetracker.google.com/issues/new?component=460343
+
+/home/runner/work/Trilingo/Trilingo/app/src/main/res/values/strings.xml:194: Warning: Formatting %d followed by words ("words"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="review_these">Review these %1$d words</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/Trilingo/Trilingo/app/src/main/res/values/strings.xml:196: Warning: Formatting %d followed by words ("words"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="exported">%1$d words exported. In Anki: File, Import.</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/Trilingo/Trilingo/app/src/main/res/values/strings.xml:236: Warning: Formatting %d followed by words ("correct"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="score">%1$d of %2$d correct</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/Trilingo/Trilingo/app/src/main/res/values/strings.xml:267: Warning: Formatting %d followed by words ("words"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="scan_photo_desc">Photo with %1$d words. Tap a word to translate it</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "PluralsCandidate":
+   This lint check looks for potential errors in internationalization where
+   you have translated a message which involves a quantity and it looks like
+   other parts of the string may need grammatical changes.
+
+   For example, rather than something like this:
+     <string name="try_again">Try again in %d seconds.</string>
+   you should be using a plural:
+      <plurals name="try_again">
+           <item quantity="one">Try again in %d second</item>
+           <item quantity="other">Try again in %d seconds</item>
+       </plurals>
+   This will ensure that in other languages the right set of translations are
+   provided for the different quantity classes.
+
+   (This check depends on some heuristics, so it may not accurately determine
+   whether a string really should be a quantity. You can use tools:ignore to
+   filter out false positives.
+
+   https://developer.android.com/guide/topics/resources/string-resource.html#Plurals
+
+/home/runner/work/Trilingo/Trilingo/app/src/main/res/values/colors.xml:10: Warning: The resource R.color.widget_line appears to be unused [UnusedResources]
+    <color name="widget_line">#FFE3E7ED</color>
+           ~~~~~~~~~~~~~~~~~~
+/home/runner/work/Trilingo/Trilingo/app/src/main/res/values/strings.xml:40: Warning: The resource R.string.examples_tab appears to be unused [UnusedResources]
+    <string name="examples_tab">%1$s examples: %2$s</string>
+            ~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "UnusedResources":
+   Unused resources make applications larger and slow down builds.
+
+
+   The unused resource check can ignore tests. If you want to include
+   resources that are only referenced from tests, consider packaging them in a
+   test source set instead.
+
+   You can include test sources in the unused resource check by setting the
+   system property lint.unused-resources.include-tests =true, and to exclude
+   them (usually for performance reasons), use
+   lint.unused-resources.exclude-tests =true.
+   ,
+
+/home/runner/work/Trilingo/Trilingo/app/src/main/java/io/github/samaliyan/trilingo/PracticeActivity.java:253: Warning: Custom view Flow is missing constructor used by tools: (Context) or (Context,AttributeSet) or (Context,AttributeSet,int) [ViewConstructor]
+    static final class Flow extends android.view.ViewGroup {
+                       ~~~~
+
+   Explanation for issues of type "ViewConstructor":
+   Some layout tools (such as the Android layout editor) need to find a
+   constructor with one of the following signatures:
+   * View(Context context)
+   * View(Context context, AttributeSet attrs)
+   * View(Context context, AttributeSet attrs, int defStyle)
+
+   If your custom view needs to perform initialization which does not apply
+   when used in a layout editor, you can surround the given code with a check
+   to see if View#isInEditMode() is false, since that method will return false
+   at runtime but true within a user interface editor.
+
+/home/runner/work/Trilingo/Trilingo/app/src/main/java/io/github/samaliyan/trilingo/CheckActivity.java:197: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+                            text.setText(cur.substring(0, start) + fixed + cur.substring(start + s.length()));
+                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/Trilingo/Trilingo/app/src/main/java/io/github/samaliyan/trilingo/MainActivity.java:1193: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+                pos.setText(s.pos.substring(0, 1).toUpperCase(Locale.ROOT) + s.pos.substring(1));
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/Trilingo/Trilingo/app/src/main/java/io/github/samaliyan/trilingo/NotebookActivity.java:139: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+        meta.setText(w.lang.label + (level == null ? "" : " · " + level) + (folder == null && !w.folder.isEmpty() ? " · " + w.folder : ""));
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/Trilingo/Trilingo/app/src/main/java/io/github/samaliyan/trilingo/PracticeActivity.java:165: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+        result.setText((ok ? getString(R.string.correct) : getString(R.string.wrong)) + (text.isEmpty() ? "" : "  " + text));
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/Trilingo/Trilingo/app/src/main/java/io/github/samaliyan/trilingo/ReviewActivity.java:127: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+        meta.setText(c.lang.label + (level == null ? "" : " · " + level) + (c.isNew() ? " · " + getString(R.string.new_word) : ""));
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/runner/work/Trilingo/Trilingo/app/src/main/java/io/github/samaliyan/trilingo/ReviewActivity.java:140: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+                art.setText(Nouns.article(info.genders.get(0)) + " " + info.noun);
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "SetTextI18n":
+   When calling TextView#setText
+   * Never call Number#toString() to format numbers; it will not handle
+   fraction separators and locale-specific digits properly. Consider using
+   String#format with proper format specifications (%d or %f) instead.
+   * Do not pass a string literal (e.g. "Hello") to display text. Hardcoded
+   text can not be properly translated to other languages. Consider using
+   Android resource strings instead.
+   * Do not build messages by concatenating text chunks. Such messages can not
+   be properly translated.
+
+   https://developer.android.com/guide/topics/resources/localization.html
+
+0 errors, 15 warnings
