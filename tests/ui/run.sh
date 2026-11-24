@@ -314,10 +314,10 @@ shot 09b_recent 1
 expect "Recent"; expect "house"; expect "Gift"
 expect_not "hous" "^hous$"
 expect_not "Schmeterling" "^Schmeterling$"
-longpress "Schmetterling"
+longpress "fernsehen"
 shot 10_remove_dialog
 tap_any "Remove" "REMOVE"
-expect_not "Schmetterling"
+expect_not "fernsehen"
 tap "house"
 shot 11_from_history 1
 expect "Haus" "Haus"
