@@ -645,9 +645,10 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
             content.addView(hidden);
             if (actions != null) content.addView(actions);
         } else {
+            // translation, its tools (examples, conjugation …), then the picture and the meaning
             for (Lookup.Result r : l.results) content.addView(card(l, r));
-            if (meaning) content.addView(picture);
             if (actions != null) content.addView(actions);
+            if (meaning) content.addView(picture);
             if (meaning) content.addView(meaningBox);
         }
 
@@ -804,16 +805,16 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
     /** "Translation | Meaning": which comes first. The choice is remembered. */
     private View modeSwitch(Lookup l, boolean detected, boolean corrected) {
         LinearLayout row = new LinearLayout(this);
-        row.setPadding(0, 0, 0, ui.dp(12));
+        row.setPadding(0, 0, 0, ui.dp(10));
         String[] names = {getString(R.string.mode_translation), getString(R.string.mode_meaning)};
         for (int i = 0; i < 2; i++) {
             boolean meaningMode = i == 1;
             boolean on = store.meaningFirst() == meaningMode;
-            TextView t = ui.text(14, on ? ui.onAccent : ui.text, Ui.MEDIUM);
+            TextView t = ui.text(13, on ? ui.onAccent : ui.text, Ui.MEDIUM);
             t.setText(names[i]);
             t.setGravity(Gravity.CENTER);
-            t.setMinHeight(ui.dp(40));
-            t.setBackground(ui.ripple(on ? ui.round(ui.accent, 20) : ui.outline(ui.surface, ui.line, 20), 20));
+            t.setMinHeight(ui.dp(34));
+            t.setBackground(ui.ripple(on ? ui.round(ui.accent, 17) : ui.outline(ui.surface, ui.line, 17), 17));
             t.setSelected(on);
             t.setContentDescription(getString(meaningMode ? R.string.mode_meaning_desc : R.string.mode_translation_desc));
             t.setOnClickListener(v -> {

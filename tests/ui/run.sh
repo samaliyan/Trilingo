@@ -56,10 +56,11 @@ expect "Type a word"
 # 2. English word → Persian + German, with meanings
 open_app
 type_text "house"
-wait_for "GERMAN" "" 20
+wait_for "PERSIAN" "" 20
 shot 02_english_house 1.5
-expect "PERSIAN"; expect "From English · detected"
+expect "From English · detected"
 back
+expect "GERMAN"
 expect "Haus" "Haus"
 expect "Noun" "^Noun$"
 
@@ -193,7 +194,7 @@ shot 03i_examples_persian 1
 back
 open_app
 type_text "house"
-wait_for "GERMAN" "" 20
+wait_for "PERSIAN" "" 20
 back
 expect "Examples"
 expect_not "Conjugation"      # "house" is mainly a noun

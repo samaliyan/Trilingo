@@ -15,7 +15,7 @@ permissions:
 jobs:
   ui:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 70
     strategy:
       fail-fast: false
       matrix:

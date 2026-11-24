@@ -107,7 +107,7 @@ final class MeaningView {
         img.setBackground(ui.round(0xFFFFFFFF, 12));
         img.setClipToOutline(true);
         img.setContentDescription(act.getString(R.string.picture_of, m.word));
-        card.addView(img, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ui.dp(190)));
+        card.addView(img, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ui.dp(170)));
         if (!m.imageCaption.isEmpty()) {
             TextView cap = ui.text(13, ui.sub, Ui.REGULAR);
             cap.setText(m.imageCaption);
