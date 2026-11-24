@@ -62,6 +62,33 @@ expect "PERSIAN"; expect "From English · detected"
 expect "Haus" "Haus"
 expect "Noun" "^Noun$"
 
+# 2a. Suggestions while typing, German articles, umlauts typed without dots
+clear_field
+type_text "dicti"
+wait_for "Translate dictionary" "" 8
+shot 02a_suggestions 0.5
+tap "Translate dictionary"
+wait_for "GERMAN" "" 20
+shot 02a2_dictionary_result 1
+expect "das Wörterbuch" "das Wörterbuch"
+open_app
+type_text "Haus"
+wait_for "German noun: das Haus" "" 20
+back
+shot 02a3_german_noun 1
+expect "die Häuser" "die Häuser"
+open_app
+type_text "mude"
+wait_for "Showing results for" "" 20
+back
+shot 02a4_umlaut_fixed 1
+expect "müde" "^müde$"
+expect "tired" "(?i)tired"
+open_app
+type_text "strasse"
+wait_for "Showing results for" "" 20
+expect "Straße" "^Straße$"
+
 # 2b. Misspelled word → "Did you mean", tap it
 clear_field
 type_text "hous"

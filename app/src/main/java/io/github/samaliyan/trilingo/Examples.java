@@ -58,18 +58,33 @@ final class Examples {
         return Text.hasLetter(c) && c.split(" ").length <= 3 && c.length() <= 40;
     }
 
-    static String url(String word, Lang src) {
+    /** Quality filters, best first: recorded by a person (proofread), written by a native speaker, any. */
+    static final String[] FILTERS = {"&has_audio=yes", "&is_native=yes", ""};
+
+    static String url(String word, Lang src, String filter) {
         String w = Text.clean(word);
         if (src == Lang.FA) w = Text.unifyPersian(w);
         String q = w.contains(" ") ? "\"" + w + "\"" : "=" + w;      // exact word, or the exact phrase
         Lang[] t = src.targets();
-        return "https://api.tatoeba.org/unstable/sentences?lang=" + code(src) + "&q=" + Services.enc(q)
+        return "https://api.tatoeba.org/v1/sentences?lang=" + code(src) + "&q=" + Services.enc(q)
                 + "&trans%3Alang=" + code(t[0]) + "%2C" + code(t[1])
-                + "&showtrans=matching&word_count=3-12&sort=relevance&limit=40";
+                + "&showtrans=matching&word_count=3-12&sort=relevance&limit=40&is_unapproved=no&is_orphan=no" + filter;
     }
 
-    /** Reads Tatoeba's answer and returns up to {@code max} examples, the most useful first. */
-    static List<Example> parse(String body, Lang src, int max) throws IOException {
+    /** A sentence with its translations and how good an example it is. */
+    static final class Candidate {
+        final Example example;
+        final boolean[] direct;
+        double score;
+
+        Candidate(Example e, boolean[] direct) {
+            this.example = e;
+            this.direct = direct;
+        }
+    }
+
+    /** Reads one Tatoeba answer. */
+    static List<Candidate> parse(String body, Lang src) throws IOException {
         List<Object> data;
         try {
             data = Json.arr(Json.obj(Json.parse(body)), "data");
@@ -78,18 +93,17 @@ final class Examples {
         }
         if (data == null) throw new IOException("bad answer");
         Lang[] targets = src.targets();
-        List<Example> out = new ArrayList<>();
-        List<Double> scores = new ArrayList<>();
-        Set<String> seen = new HashSet<>();
+        List<Candidate> out = new ArrayList<>();
         for (Object o : data) {
             Map<String, Object> m = Json.obj(o);
             String text = Text.clean(Json.str(m, "text"));
-            if (text.isEmpty() || !seen.add(Text.key(text).replaceAll("[.!?]+$", ""))) continue;
+            if (text.isEmpty()) continue;
             Map<Lang, String> tr = new LinkedHashMap<>();
-            double score = 0;
-            for (Lang l : targets) {
+            boolean[] direct = new boolean[2];
+            for (int k = 0; k < 2; k++) {
+                Lang l = targets[k];
                 String best = null;
-                boolean direct = false;
+                boolean d0 = false;
                 List<Object> ts = Json.arr(m, "translations");
                 if (ts != null) {
                     for (Object to : ts) {
@@ -98,28 +112,112 @@ final class Examples {
                         String tt = Text.clean(Json.str(tm, "text"));
                         if (tt.isEmpty()) continue;
                         boolean d = Boolean.TRUE.equals(tm == null ? null : tm.get("is_direct"));
-                        if (best == null || (d && !direct)) {
+                        if (best == null || (d && !d0)) {
                             best = tt;
-                            direct = d;
+                            d0 = d;
                         }
                     }
                 }
                 if (best != null) {
                     tr.put(l, best);
-                    score += direct ? 3 : 1;
+                    direct[k] = d0;
                 }
             }
-            int words = text.split(" ").length;
-            if (words >= 4 && words <= 9) score += 1;
-            if (text.endsWith(".")) score += 0.5;
-            if (text.endsWith("!")) score -= 0.5;
-            // keep the original order (relevance) among equal scores
-            int at = 0;
-            while (at < scores.size() && scores.get(at) >= score) at++;
-            scores.add(at, score);
-            out.add(at, new Example(text, tr));
+            out.add(new Candidate(new Example(text, tr), direct));
         }
-        return out.size() > max ? new ArrayList<>(out.subList(0, max)) : out;
+        return out;
+    }
+
+    /** Names that Tatoeba uses in very many sentences; such sentences make weaker examples. */
+    private static final Set<String> NAMES = new HashSet<>(java.util.Arrays.asList(
+            "tom", "mary", "john", "sami", "layla", "ken", "jack", "maria", "ziri", "yanni", "dan", "linda",
+            "mennad", "baya", "rima", "skura", "fadil", "dania", "jim", "bob", "alice", "muiriel", "taninna",
+            "mike", "jane", "bill", "kate", "lucy", "emily", "marika", "tatoeba"));
+
+    private static Set<String> wordSet(String s) {
+        Set<String> w = new HashSet<>();
+        for (String x : s.toLowerCase(Locale.ROOT).split("[^\\p{L}]+")) if (!x.isEmpty()) w.add(x);
+        return w;
+    }
+
+    /**
+     * Picks the best {@code max} examples. Good: both translations made by people, the translation uses
+     * the expected meaning ({@code expected}: words of the lookup's translations), 4–9 words, a plain
+     * statement, no recurring names. Very similar sentences are not shown twice.
+     * The candidates' order (quality filter, then relevance) breaks ties.
+     */
+    static List<Example> select(List<Candidate> all, Lang src, Map<Lang, Set<String>> expected, int max) {
+        Lang[] targets = src.targets();
+        List<Candidate> scored = new ArrayList<>();
+        Set<String> seen = new HashSet<>();
+        for (Candidate c : all) {
+            String t = c.example.text;
+            if (!seen.add(Text.key(t).replaceAll("[.!?]+$", ""))) continue;
+            double s = 0;
+            for (int k = 0; k < 2; k++) {
+                String tr = c.example.translations.get(targets[k]);
+                if (tr == null) continue;
+                s += c.direct[k] ? 3 : 1;
+                Set<String> exp = expected == null ? null : expected.get(targets[k]);
+                if (exp != null) {
+                    Set<String> tw = wordSet(tr);
+                    for (String e : exp) {
+                        if (tw.contains(e) || (e.contains(" ") && tr.toLowerCase(Locale.ROOT).contains(e))) {
+                            s += 2;
+                            break;
+                        }
+                    }
+                }
+            }
+            Set<String> ws = wordSet(t);
+            int words = t.split(" ").length;
+            if (words >= 4 && words <= 9) s += 1;
+            if (t.endsWith(".")) s += 0.5;
+            if (t.endsWith("!")) s -= 0.5;
+            for (String n : NAMES) if (ws.contains(n)) {
+                s -= 3;
+                break;
+            }
+            c.score = s;
+            int at = 0;
+            while (at < scored.size() && scored.get(at).score >= s) at++;
+            scored.add(at, c);
+        }
+        List<Example> out = new ArrayList<>();
+        List<Set<String>> chosen = new ArrayList<>();
+        for (Candidate c : scored) {
+            if (out.size() >= max) break;
+            Set<String> ws = wordSet(c.example.text);
+            boolean similar = false;
+            for (Set<String> o : chosen) {
+                Set<String> inter = new HashSet<>(ws);
+                inter.retainAll(o);
+                Set<String> union = new HashSet<>(ws);
+                union.addAll(o);
+                if (!union.isEmpty() && inter.size() * 1.0 / union.size() >= 0.5) similar = true;
+            }
+            if (similar) continue;
+            chosen.add(ws);
+            out.add(c.example);
+        }
+        return out;
+    }
+
+    /** Words of the lookup's translations, by language, for {@link #select}. */
+    static Map<Lang, Set<String>> expected(Lookup l) {
+        Map<Lang, Set<String>> m = new java.util.EnumMap<>(Lang.class);
+        if (l == null) return m;
+        for (Lookup.Result r : l.results) {
+            Set<String> s = new HashSet<>();
+            String main = r.text.toLowerCase(Locale.ROOT);
+            if (main.split(" ").length <= 3) s.add(main.startsWith("to ") ? main.substring(3) : main);
+            for (Lookup.Sense sense : r.senses) for (String t : sense.terms) {
+                String x = t.toLowerCase(Locale.ROOT);
+                s.add(x.startsWith("to ") ? x.substring(3) : x);
+            }
+            m.put(r.lang, s);
+        }
+        return m;
     }
 
     /**

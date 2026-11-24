@@ -86,6 +86,11 @@ final class Lookup {
         return !suggestion.isEmpty();
     }
 
+    /** The same lookup with a "Did you mean" suggestion. */
+    Lookup withSuggestion(String s) {
+        return new Lookup(query, source, results, service, time, s, baseForm);
+    }
+
     Lookup withTime(long t) {
         return new Lookup(query, source, results, service, t, suggestion, baseForm);
     }

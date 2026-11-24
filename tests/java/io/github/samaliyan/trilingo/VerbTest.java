@@ -380,38 +380,55 @@ public final class VerbTest {
                 + sentence("Das Haus ist neu.", "eng", "The house is new.", "true", "pes", "خانه نو است.", "true") + ","
                 + sentence("Ich sehe ein Haus.", "eng", "I see the house.", "false", "eng", "I see a house.", "true") + ","
                 + sentence("Das Haus ist neu!", "eng", "The house is new!", "true") + ","
-                + sentence("Wir haben ein sehr großes Haus am See gekauft.", "pes", "ما یک خانه خریدیم.", "false") + ","
-                + sentence("Ihr Haus ist riesig!", "eng", "Your house is massive!", "true", "pes", "خانه شما بسیار بزرگ است.", "true")
+                + sentence("Tom hat ein Haus gekauft.", "eng", "Tom bought a house.", "true", "pes", "تام خانه خرید.", "true") + ","
+                + sentence("Das Haus ist alt.", "eng", "The house is old.", "true", "pes", "خانه قدیمی است.", "true") + ","
+                + sentence("Er ist zu Haus.", "eng", "He is at home.", "true", "pes", "او در منزل است.", "true") + ","
+                + sentence("Wir haben ein sehr großes Haus am See gekauft.", "pes", "ما یک خانه خریدیم.", "false")
                 + "],\"paging\":{\"total\":5}}";
-        List<Examples.Example> ex = Examples.parse(body, Lang.DE, 3);
+        List<Examples.Candidate> c = Examples.parse(body, Lang.DE);
+        eq(8, c.size(), "all candidates read");
+        Map<Lang, java.util.Set<String>> exp = new java.util.EnumMap<>(Lang.class);
+        exp.put(Lang.EN, new java.util.HashSet<>(Arrays.asList("house", "building")));
+        exp.put(Lang.FA, new java.util.HashSet<>(Arrays.asList("خانه")));
+        List<Examples.Example> ex = Examples.select(c, Lang.DE, exp, 3);
         eq(3, ex.size(), "three examples");
-        eq("Das Haus ist neu.", ex.get(0).text, "best: both direct translations, statement");
-        eq("The house is new.", ex.get(0).translations.get(Lang.EN), "english translation");
+        eq("Das Haus ist neu.", ex.get(0).text, "best: direct translations with the expected meaning");
         eq("خانه نو است.", ex.get(0).translations.get(Lang.FA), "persian translation");
-        eq("Ihr Haus ist riesig!", ex.get(1).text, "second best");
-        eq("I see a house.", ex.get(2).translations.get(Lang.EN), "direct translation preferred");
+        ok(!ex.get(1).text.equals("Das Haus ist alt."), "very similar sentence skipped (Das Haus ist neu / alt)");
         for (Examples.Example e : ex) ok(!e.text.equals("Das Haus ist neu!"), "near-duplicate removed");
-        eq(0, Examples.parse("{\"data\":[]}", Lang.DE, 3).size(), "no examples");
+        // the same sentence with and without a recurring name: the one without wins
+        String twin = "{\"data\":[" + sentence("Tom kauft ein Haus.", "eng", "Tom buys a house.", "true") + ","
+                + sentence("Er kauft ein Haus.", "eng", "He buys a house.", "true") + "]}";
+        eq("Er kauft ein Haus.", Examples.select(Examples.parse(twin, Lang.DE), Lang.DE, exp, 1).get(0).text, "recurring name ranked down");
+        // the meaning that was looked up wins over another meaning
+        String meaning = "{\"data\":[" + sentence("Er ist zu Haus.", "eng", "He is at home.", "true") + ","
+                + sentence("Er sieht ein Haus.", "eng", "He sees a house.", "true") + "]}";
+        eq("Er sieht ein Haus.", Examples.select(Examples.parse(meaning, Lang.DE), Lang.DE, exp, 1).get(0).text, "expected meaning first");
+        eq(0, Examples.select(Examples.parse("{\"data\":[]}", Lang.DE), Lang.DE, exp, 3).size(), "no examples");
         boolean threw = false;
         try {
-            Examples.parse("<html>", Lang.EN, 3);
+            Examples.parse("<html>", Lang.EN);
         } catch (IOException e) {
             threw = true;
         }
         ok(threw, "bad answer rejected");
 
-        String url = Examples.url("Haus", Lang.DE);
-        ok(url.startsWith("https://api.tatoeba.org/unstable/sentences?lang=deu&q=%3DHaus&"), "url exact word: " + url);
-        ok(url.contains("trans%3Alang=eng%2Cpes") && url.contains("sort=relevance") && url.contains("word_count=3-12"), "url params");
-        ok(Examples.url("give up", Lang.EN).contains("q=%22give+up%22"), "phrase in quotes");
-        ok(Examples.url("خانه", Lang.FA).contains("lang=pes"), "persian code");
+        String url = Examples.url("Haus", Lang.DE, Examples.FILTERS[0]);
+        ok(url.startsWith("https://api.tatoeba.org/v1/sentences?lang=deu&q=%3DHaus&"), "url exact word: " + url);
+        ok(url.contains("trans%3Alang=eng%2Cpes") && url.contains("is_unapproved=no") && url.endsWith("&has_audio=yes"), "url params");
+        ok(Examples.url("give up", Lang.EN, "").contains("q=%22give+up%22"), "phrase in quotes");
+        ok(Examples.url("خانه", Lang.FA, "").contains("lang=pes"), "persian code");
         ok(Examples.suitable("house") && Examples.suitable("give up") && !Examples.suitable("I would like to go home"), "suitable");
         ok(!Examples.suitable("123"), "numbers not suitable");
+
+        Lookup l = lookup("Haus", Lang.DE, res(Lang.EN, "house", "noun", "house", "home", "building"), res(Lang.FA, "خانه", null), "");
+        Map<Lang, java.util.Set<String>> e2 = Examples.expected(l);
+        ok(e2.get(Lang.EN).contains("home") && e2.get(Lang.FA).contains("خانه"), "expected words from the lookup");
 
         List<int[]> f = Examples.find("Das Haus und das Haustier im Haus.", "haus");
         eq(2, f.size(), "whole words only");
         eq(4, f.get(0)[0], "first position");
-        f = Examples.find("خانه‌ها و خانه", "خانه");
+        f = Examples.find("خانه\u200Cها و خانه", "خانه");
         eq(2, f.size(), "persian substring matches");
     }
 }

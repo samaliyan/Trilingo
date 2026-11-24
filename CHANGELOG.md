@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3 — 2026-11-24
+
+- German articles: every German noun shows der / die / das (in colour) and its plural, also in the meanings list and for a typed German noun.
+- German words typed without ä, ö, ü or ß are understood: mude → müde, strasse → Straße, fuer → für.
+- Word suggestions while typing, in all three languages (dicti → dictionary). Tap one to translate it.
+- "Did you mean" now also works when the translation service has no correction (built-in word lists, all three languages).
+- Better examples: proofread sentences first (recorded by people or written by native speakers), the meaning you looked up first, no near-duplicates.
+
 ## 1.2 — 2026-11-23
 
 - **Examples**: a button under the result opens simple real sentences with the word (from Tatoeba),

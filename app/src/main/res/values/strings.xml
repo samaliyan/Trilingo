@@ -21,6 +21,10 @@
     <string name="did_you_mean">Did you mean</string>
     <string name="showing_results_for">Showing results for</string>
     <string name="did_you_mean_desc">Did you mean %1$s? Tap to translate it</string>
+    <string name="suggestion_desc">Translate %1$s</string>
+    <string name="plural">Plural</string>
+    <string name="singular">Singular</string>
+    <string name="german_noun_desc">German noun: %1$s %2$s</string>
     <string name="examples">Examples</string>
     <string name="examples_loading">Finding examples…</string>
     <string name="examples_none">No examples found for this word.</string>
@@ -78,6 +82,8 @@
     <string name="check_now">Check for updates now</string>
     <string name="version_value">Version %1$s (build %2$d)</string>
     <string name="source_code">Source code</string>
+    <string name="data_sources">Word data</string>
+    <string name="data_sources_value">German nouns: Wiktionary (CC BY-SA 4.0)\nWord lists: FrequencyWords (MIT)\nExample sentences: Tatoeba (CC BY 2.0 FR)</string>
     <string name="no_browser">No browser found</string>
 
     <!-- Updates -->

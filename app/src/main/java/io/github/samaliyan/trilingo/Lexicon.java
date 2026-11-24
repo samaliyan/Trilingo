@@ -1,0 +1,110 @@
+package io.github.samaliyan.trilingo;
+
+import android.content.Context;
+import android.content.res.AssetManager;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+/**
+ * The built-in word data (word lists of the three languages, German nouns), loaded once per process
+ * in the background. Until it is loaded every method answers "nothing", so the screen never waits for it.
+ */
+final class Lexicon {
+    private Lexicon() { }
+
+    private static volatile Words en, de, fa;
+    private static volatile Nouns nouns;
+    private static boolean started;
+    private static final List<Runnable> waiting = new ArrayList<>();
+
+    /** Starts loading (once); {@code done} runs on the loading thread when everything is there. */
+    static synchronized void load(Context c, Runnable done) {
+        if (nouns != null) {
+            if (done != null) done.run();
+            return;
+        }
+        if (done != null) waiting.add(done);
+        if (started) return;
+        started = true;
+        AssetManager am = c.getApplicationContext().getAssets();
+        new Thread(() -> {
+            try {
+                en = Words.read(Lang.EN, am.open("words_en.txt"));
+                de = Words.read(Lang.DE, am.open("words_de.txt"));
+                fa = Words.read(Lang.FA, am.open("words_fa.txt"));
+                nouns = Nouns.read(am.open("de_nouns.txt"));
+            } catch (IOException | RuntimeException e) {
+                // without the lists the app works as before (no suggestions, no articles)
+            }
+            List<Runnable> run;
+            synchronized (Lexicon.class) {
+                run = new ArrayList<>(waiting);
+                waiting.clear();
+            }
+            for (Runnable r : run) r.run();
+        }, "lexicon").start();
+    }
+
+    static Words words(Lang l) {
+        switch (l) {
+            case EN: return en;
+            case DE: return de;
+            default: return fa;
+        }
+    }
+
+    static Nouns nouns() {
+        return nouns;
+    }
+
+    /**
+     * Words that start with what is being typed: in the chosen language, or for automatic Latin text
+     * English and German together, most frequent first (the same word once).
+     */
+    static List<String> suggestions(String typed, Lang forced, int max) {
+        List<String> out = new ArrayList<>();
+        String t = Text.clean(typed);
+        if (t.length() < 2 || t.contains(" ")) return out;
+        if (forced != null || Text.hasPersian(t)) {
+            Words w = words(forced != null ? forced : Lang.FA);
+            if (w != null) out.addAll(w.complete(t, max));
+        } else {
+            Words a = en, b = de;
+            List<String> x = a == null ? new ArrayList<>() : a.complete(t, max);
+            List<String> y = b == null ? new ArrayList<>() : b.complete(t, max);
+            // merge by rank in their own list (both lists come from the same kind of source)
+            int i = 0, j = 0;
+            Map<String, String> seen = new LinkedHashMap<>();
+            while (seen.size() < max && (i < x.size() || j < y.size())) {
+                String pick;
+                if (j >= y.size() || (i < x.size() && a.rank(x.get(i)) <= b.rank(y.get(j)))) pick = x.get(i++);
+                else pick = y.get(j++);
+                seen.putIfAbsent(pick.toLowerCase(Locale.ROOT), pick);
+            }
+            out.addAll(seen.values());
+        }
+        // what is typed already is no suggestion
+        out.removeIf(s -> s.equalsIgnoreCase(t));
+        return out;
+    }
+
+    /** German umlaut correction of typed text (null if none), for automatic or German input. */
+    static Umlauts.Fix umlauts(String text, Lang forced) {
+        if (forced != null && forced != Lang.DE) return null;
+        return Umlauts.fix(text, de, forced == Lang.DE ? null : en);
+    }
+
+    /** The closest known word for a typo in this language, or null. */
+    static String closest(String typed, Lang lang) {
+        String t = Text.clean(typed);
+        // An English word written with a capital is usually a name: no guessing.
+        if (t.isEmpty() || (lang == Lang.EN && Character.isUpperCase(t.charAt(0)))) return null;
+        Words w = words(lang);
+        return w == null ? null : w.closest(typed);
+    }
+}

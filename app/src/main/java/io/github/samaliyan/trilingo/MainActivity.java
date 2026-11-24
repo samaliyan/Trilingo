@@ -69,6 +69,8 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
     private ImageButton clearBtn, pasteBtn;
     private ProgressBar busy;
     private LinearLayout content;
+    private HorizontalScrollView suggestScroll;
+    private LinearLayout suggestRow;
     private ScrollView scroll;
     private final TextView[] chips = new TextView[4];
 
@@ -107,6 +109,12 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         sheets = new DetailSheets(this, ui, this);
         // Builds the irregular-verb index once, off the screen thread, so the first result shows without delay.
         new Thread(() -> GermanVerbs.isKnownForm("habe"), "verbs").start();
+        // Word lists and German nouns; when they arrive, the shown result gets its articles.
+        Lexicon.load(this, () -> runOnUiThread(() -> {
+            if (isDestroyed()) return;
+            if (shown != null) showLookup(shown, forced == null, shownCorrected);
+            if (input.hasFocus()) updateSuggestions();
+        }));
         if (saved != null) forced = Lang.of(saved.getString("forced"));
 
         boolean hasText = incomingText(getIntent()) != null;
@@ -281,6 +289,15 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         top.addView(settings, new LinearLayout.LayoutParams(ui.dp(48), ui.dp(48)));
         root.addView(top);
 
+        // Word suggestions while typing (dicti → dictionary), right under the field
+        suggestScroll = new HorizontalScrollView(this);
+        suggestScroll.setHorizontalScrollBarEnabled(false);
+        suggestRow = new LinearLayout(this);
+        suggestRow.setPadding(ui.dp(12), ui.dp(2), ui.dp(12), ui.dp(2));
+        suggestScroll.addView(suggestRow);
+        suggestScroll.setVisibility(View.GONE);
+        root.addView(suggestScroll);
+
         // Source language chips
         HorizontalScrollView hs = new HorizontalScrollView(this);
         hs.setHorizontalScrollBarEnabled(false);
@@ -301,6 +318,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                 if (forced == l) return;
                 forced = l;
                 updateChips();
+                updateSuggestions();
                 if (!Text.clean(input.getText().toString()).isEmpty()) lookup(true);
             });
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -358,6 +376,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
 
     private void onTextChanged() {
         updateFieldButtons();
+        updateSuggestions();
         handler.removeCallbacks(typeTask);
         String q = Text.clean(input.getText().toString());
         if (q.equals(lastQuery) && shown != null) return;
@@ -370,6 +389,34 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
             return;
         }
         handler.postDelayed(typeTask, TYPE_DELAY);
+    }
+
+    /** Shows the words that start with what is being typed; tapping one translates it. */
+    private void updateSuggestions() {
+        List<String> words = input.hasFocus() ? Lexicon.suggestions(input.getText().toString(), forced, 6) : new java.util.ArrayList<>();
+        suggestRow.removeAllViews();
+        for (String w : words) {
+            TextView c = ui.text(15, ui.text, Ui.REGULAR);
+            c.setText(w);
+            c.setGravity(Gravity.CENTER);
+            c.setMinHeight(ui.dp(36));
+            c.setPadding(ui.dp(14), 0, ui.dp(14), 0);
+            c.setBackground(ui.ripple(ui.round(ui.accentSoft, 18), 18));
+            c.setContentDescription(getString(R.string.suggestion_desc, w));
+            c.setOnClickListener(v -> {
+                setInput(w);
+                suggestScroll.setVisibility(View.GONE);
+                lookup(true);
+                hideKeyboard();
+            });
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            lp.rightMargin = ui.dp(8);
+            lp.topMargin = ui.dp(4);
+            lp.bottomMargin = ui.dp(4);
+            suggestRow.addView(c, lp);
+        }
+        suggestScroll.setVisibility(words.isEmpty() ? View.GONE : View.VISIBLE);
+        suggestScroll.scrollTo(0, 0);
     }
 
     private boolean lastQueryShown() {
@@ -391,10 +438,16 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
             showMessage(getString(R.string.no_letters), null, false);
             return;
         }
-        Lookup cached = history.find(q, forced);
+        // German typed without ä/ö/ü/ß (mude → müde): fixed before anything else, without the network.
+        Umlauts.Fix uf = Lexicon.umlauts(q, forced);
+        final boolean umlautFixed = uf != null && uf.sure;
+        final String umlautHint = uf != null && !uf.sure ? uf.text : null;
+        final String query = umlautFixed ? uf.text : q;
+
+        Lookup cached = history.find(query, forced);
         if (cached != null) {
             busy.setVisibility(View.INVISIBLE);
-            showLookup(cached, forced == null, false);
+            showLookup(cached, forced == null, umlautFixed);
             shownFor = Text.key(q);
             scheduleSave(cached, now);
             return;
@@ -405,9 +458,15 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         new Thread(() -> {
             Lookup res = null;
             Engine.Failure fail = null;
-            boolean corrected = false;
+            boolean corrected = umlautFixed;
             try {
-                res = engine.translate(q, f, service, System.currentTimeMillis());
+                res = engine.translate(query, f, service, System.currentTimeMillis());
+                // No correction from the service for a word it does not know: the closest word of the built-in list.
+                if (!res.hasSuggestion() && echoes(res)) {
+                    String near = Lexicon.closest(query, res.source);
+                    if (near != null) res = res.withSuggestion(near);
+                }
+                if (!res.hasSuggestion() && umlautHint != null) res = res.withSuggestion(umlautHint);
                 // Misspelled and the "translation" only repeats it: show the corrected word's translation instead.
                 if (res.hasSuggestion() && echoes(res)) {
                     try {
@@ -504,6 +563,8 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         }
         content.addView(src);
 
+        View nounRow = typedNounRow(l);
+        if (nounRow != null) content.addView(nounRow);
         if (corrected) content.addView(correctedRow(l.query));
         else if (l.hasSuggestion()) content.addView(suggestionRow(l.suggestion));
 
@@ -563,7 +624,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
             LinearLayout b = ui.actionPill(Icons.Kind.EXAMPLES, getString(R.string.examples));
             b.setOnClickListener(v -> {
                 saveNow();
-                sheets.showExamples(l.query, l.source);
+                sheets.showExamples(l.query, l.source, l);
             });
             b.setGravity(Gravity.CENTER);
             row.addView(b, new LinearLayout.LayoutParams(0, ui.dp(48), 1));
@@ -616,6 +677,118 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         return row;
     }
 
+    // ------------------------------------------------------------------ German articles
+
+    /**
+     * Article and plural of a German noun from the built-in list. Words from the translation service count
+     * only when capitalised (German nouns always are); a typed word may be in lower case ({@code typed}).
+     */
+    private Nouns.Info germanNoun(String word, boolean typed) {
+        Nouns n = Lexicon.nouns();
+        String w = Text.clean(word);
+        if (n == null || w.isEmpty() || w.contains(" ")) return null;
+        if (!typed && !Character.isUpperCase(w.charAt(0))) return null;
+        return n.lookup(w);
+    }
+
+    private int articleColor(String article) {
+        switch (article) {
+            case "der": return ui.dark ? 0xFF7AB0FF : 0xFF2563EB;
+            case "die": return ui.dark ? 0xFFF87171 : 0xFFDC2626;
+            default: return ui.dark ? 0xFF4ADE80 : 0xFF16A34A;
+        }
+    }
+
+    /** "der", "die" or "das" in its colour (blue / red / green, as in most German textbooks). */
+    private CharSequence coloredArticles(String articles) {
+        android.text.SpannableStringBuilder b = new android.text.SpannableStringBuilder();
+        String[] parts = articles.split(" / ");
+        for (int i = 0; i < parts.length; i++) {
+            if (i > 0) b.append(" / ");
+            int st = b.length();
+            b.append(parts[i]);
+            b.setSpan(new android.text.style.ForegroundColorSpan(articleColor(parts[i])), st, b.length(), 0);
+            b.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), st, b.length(), 0);
+        }
+        return b;
+    }
+
+    /** "das Haus"; for a plural form ("Häuser") the plural article "die". */
+    private CharSequence withArticle(Nouns.Info n, String shownWord) {
+        boolean plural = !n.noun.equalsIgnoreCase(shownWord) && n.plurals.contains(shownWord);
+        android.text.SpannableStringBuilder b = new android.text.SpannableStringBuilder();
+        b.append(coloredArticles(plural ? "die" : n.articles()));
+        b.append(' ').append(shownWord);
+        return b;
+    }
+
+    /** Small line under a German noun: its plural (or its singular, when the plural is shown). */
+    private View otherNumber(Nouns.Info n, String shownWord) {
+        boolean plural = !n.noun.equalsIgnoreCase(shownWord) && n.plurals.contains(shownWord);
+        String other = plural ? n.noun : n.plural();
+        if (other.isEmpty() || other.equals(shownWord)) return null;
+        LinearLayout row = new LinearLayout(this);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        TextView label = ui.line(13, ui.sub, Ui.REGULAR);
+        label.setText(plural ? R.string.singular : R.string.plural);
+        row.addView(label);
+        TextView v = ui.line(15, ui.text, Ui.MEDIUM);
+        android.text.SpannableStringBuilder b = new android.text.SpannableStringBuilder();
+        b.append(coloredArticles(plural ? n.articles() : "die")).append(' ').append(other);
+        v.setText(b);
+        v.setTextIsSelectable(true);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.leftMargin = ui.dp(8);
+        row.addView(v, lp);
+        row.setPadding(0, ui.dp(4), 0, 0);
+        return row;
+    }
+
+    /** Noun meanings with their articles: "das Haus, das Heim, die Wohnung". */
+    private CharSequence nounsWithArticles(List<String> terms, String sep) {
+        android.text.SpannableStringBuilder b = new android.text.SpannableStringBuilder();
+        for (int i = 0; i < terms.size(); i++) {
+            if (i > 0) b.append(sep);
+            String t = terms.get(i);
+            Nouns.Info n = germanNoun(t, false);
+            if (n != null) b.append(withArticle(n, t));
+            else b.append(t);
+        }
+        return b;
+    }
+
+    /** For a German noun that was typed: "das Haus · Plural die Häuser" under the language line. */
+    private View typedNounRow(Lookup l) {
+        if (l.source != Lang.DE) return null;
+        String q = Text.clean(l.query);
+        if (q.isEmpty() || q.contains(" ")) return null;
+        boolean nounMeaning = Character.isUpperCase(q.charAt(0));
+        for (Lookup.Result r : l.results) {
+            if (!r.senses.isEmpty() && r.senses.get(0).pos.toLowerCase(Locale.ROOT).startsWith("noun")) nounMeaning = true;
+            if (!r.senses.isEmpty() && !r.senses.get(0).pos.toLowerCase(Locale.ROOT).startsWith("noun")
+                    && !Character.isUpperCase(q.charAt(0))) return null;
+        }
+        if (!nounMeaning) return null;
+        Nouns.Info n = germanNoun(q, true);
+        if (n == null) return null;
+        String shown = Character.toUpperCase(q.charAt(0)) + q.substring(1);
+        LinearLayout box = new LinearLayout(this);
+        box.setOrientation(LinearLayout.VERTICAL);
+        box.setBackground(ui.round(ui.surface, 18));
+        box.setPadding(ui.dp(18), ui.dp(12), ui.dp(18), ui.dp(12));
+        TextView word = ui.text(22, ui.text, Ui.REGULAR);
+        word.setText(withArticle(n, shown));
+        word.setTextIsSelectable(true);
+        box.addView(word);
+        View other = otherNumber(n, shown);
+        if (other != null) box.addView(other);
+        box.setContentDescription(getString(R.string.german_noun_desc, n.articles(), n.noun));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.bottomMargin = ui.dp(12);
+        box.setLayoutParams(lp);
+        return box;
+    }
+
     private View card(Lookup l, Lookup.Result r) {
         LinearLayout c = new LinearLayout(this);
         c.setOrientation(LinearLayout.VERTICAL);
@@ -642,13 +815,18 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         c.addView(head);
 
         TextView main = ui.text(r.text.length() > 60 ? 18 : 24, ui.text, Ui.REGULAR);
-        main.setText(r.text);
+        Nouns.Info noun = r.lang == Lang.DE ? germanNoun(r.text, false) : null;
+        main.setText(noun != null ? withArticle(noun, r.text) : r.text);
         main.setTextIsSelectable(true);
         main.setLineSpacing(0, 1.2f);
         Ui.bidi(main);
         LinearLayout.LayoutParams mp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mp.rightMargin = ui.dp(12);
         c.addView(main, mp);
+        if (noun != null) {
+            View other = otherNumber(noun, r.text);
+            if (other != null) c.addView(other);
+        }
 
         String sep = r.lang == Lang.FA ? "\u060C " : ", ";
         for (Lookup.Sense s : r.senses) {
@@ -665,7 +843,8 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                 lp.rightMargin = ui.dp(12);
             }
             TextView terms = ui.text(16, ui.text, Ui.REGULAR);
-            terms.setText(String.join(sep, s.terms));
+            boolean germanNouns = r.lang == Lang.DE && s.pos.toLowerCase(Locale.ROOT).startsWith("noun");
+            terms.setText(germanNouns ? nounsWithArticles(s.terms, sep) : String.join(sep, s.terms));
             terms.setTextIsSelectable(true);
             terms.setLineSpacing(0, 1.25f);
             Ui.bidi(terms);
@@ -931,5 +1110,6 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (im != null) im.hideSoftInputFromWindow(input.getWindowToken(), 0);
         input.clearFocus();
+        if (suggestScroll != null) suggestScroll.setVisibility(View.GONE);
     }
 }

@@ -47,13 +47,14 @@ final class DetailSheets {
 
     // ------------------------------------------------------------------ Examples
 
-    void showExamples(String word, Lang src) {
+    /** @param lookup the shown result: its translations tell which meaning the examples should have */
+    void showExamples(String word, Lang src, Lookup lookup) {
         Sheet sheet = new Sheet(act, ui, act.getString(R.string.examples), word);
         sheet.show();
-        loadExamples(sheet, word, src);
+        loadExamples(sheet, word, src, Examples.expected(lookup));
     }
 
-    private void loadExamples(Sheet sheet, String word, Lang src) {
+    private void loadExamples(Sheet sheet, String word, Lang src, Map<Lang, java.util.Set<String>> expected) {
         String key = src.code + "|" + Text.key(word);
         List<Examples.Example> cached = cache.get(key);
         if (cached != null) {
@@ -64,20 +65,32 @@ final class DetailSheets {
         new Thread(() -> {
             List<Examples.Example> list = null;
             boolean offline = false;
-            try {
-                String body = Engine.NET.get(Examples.url(word, src), Engine.TIMEOUT);
-                list = Examples.parse(body, src, Examples.MAX);
-                list = fillMissing(list, src);
-            } catch (IOException e) {
-                offline = e instanceof java.net.UnknownHostException || e instanceof java.net.ConnectException;
+            // The three quality levels are asked for at the same time; the best sentences come first.
+            List<java.util.concurrent.Future<String>> answers = new ArrayList<>();
+            java.util.concurrent.ExecutorService pool = java.util.concurrent.Executors.newFixedThreadPool(Examples.FILTERS.length);
+            for (String f : Examples.FILTERS) answers.add(pool.submit(() -> Engine.NET.get(Examples.url(word, src, f), Engine.TIMEOUT)));
+            pool.shutdown();
+            List<Examples.Candidate> all = new ArrayList<>();
+            int ok = 0;
+            IOException last = null;
+            for (java.util.concurrent.Future<String> a : answers) {
+                try {
+                    all.addAll(Examples.parse(a.get(), src));
+                    ok++;
+                } catch (Exception e) {
+                    Throwable c = e instanceof java.util.concurrent.ExecutionException ? e.getCause() : e;
+                    if (c instanceof IOException) last = (IOException) c;
+                }
             }
+            if (ok > 0) list = fillMissing(Examples.select(all, src, expected, Examples.MAX), src);
+            else offline = last instanceof java.net.UnknownHostException || last instanceof java.net.ConnectException;
             final List<Examples.Example> res = list;
             final boolean off = offline;
             act.runOnUiThread(() -> {
                 if (act.isFinishing() || act.isDestroyed() || !sheet.isShowing()) return;
                 if (res == null) {
                     sheet.message(act.getString(off ? R.string.error_offline : R.string.examples_failed), null,
-                            act.getString(R.string.retry), v -> loadExamples(sheet, word, src));
+                            act.getString(R.string.retry), v -> loadExamples(sheet, word, src, expected));
                     return;
                 }
                 cache.put(key, res);

@@ -118,6 +118,7 @@ public final class SettingsActivity extends Activity {
                 v -> updater.check(false));
 
         section(R.string.section_about);
+        item(getString(R.string.data_sources), getString(R.string.data_sources_value), v -> { });
         item(getString(R.string.source_code), Updater.REPO_URL.replace("https://", ""), v -> {
             try {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Updater.REPO_URL)));
