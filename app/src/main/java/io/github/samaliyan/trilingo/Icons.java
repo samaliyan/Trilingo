@@ -15,7 +15,7 @@ import android.graphics.drawable.Drawable;
 final class Icons {
     private Icons() { }
 
-    enum Kind { BACK, CLOSE, SETTINGS, COPY, SPEAK, PASTE, SEARCH, SHARE, EXAMPLES, TABLE }
+    enum Kind { BACK, CLOSE, SETTINGS, COPY, SPEAK, PASTE, SEARCH, SHARE, EXAMPLES, TABLE, FAMILY }
 
     static Drawable of(Kind kind, int color) {
         return new IconDrawable(kind, color);
@@ -138,6 +138,20 @@ final class Icons {
                     line(c, 4, 9.5f, 20, 9.5f);
                     line(c, 4, 14.75f, 20, 14.75f);
                     line(c, 10, 9.5f, 10, 20);
+                    break;
+                case FAMILY:
+                    // one word branching into three (verb → its phrasal verbs)
+                    c.drawCircle(5.5f, 12, 2.5f, fill);
+                    line(c, 8, 12, 12, 12);
+                    path.moveTo(12, 6);
+                    path.lineTo(12, 18);
+                    c.drawPath(path, stroke);
+                    line(c, 12, 6, 15.5f, 6);
+                    line(c, 12, 12, 15.5f, 12);
+                    line(c, 12, 18, 15.5f, 18);
+                    c.drawCircle(18.5f, 6, 2, stroke);
+                    c.drawCircle(18.5f, 12, 2, stroke);
+                    c.drawCircle(18.5f, 18, 2, stroke);
                     break;
             }
             c.restore();

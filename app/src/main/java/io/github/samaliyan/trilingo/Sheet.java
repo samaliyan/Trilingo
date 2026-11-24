@@ -29,6 +29,8 @@ final class Sheet {
     /** Scrolling content. */
     final LinearLayout body;
     final ScrollView scroll;
+    /** Identifies the content being loaded, so a late answer for an older tab is not shown. */
+    Object token;
     private final Ui ui;
 
     Sheet(Activity a, Ui ui, String title, String subtitle) {

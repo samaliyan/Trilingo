@@ -148,6 +148,32 @@ final class Ui {
         return b;
     }
 
+    /** Square-ish button with the icon above its label, for a row of equal actions. */
+    android.widget.LinearLayout actionTile(Icons.Kind kind, CharSequence label) {
+        android.widget.LinearLayout b = new android.widget.LinearLayout(ctx);
+        b.setOrientation(android.widget.LinearLayout.VERTICAL);
+        b.setGravity(Gravity.CENTER);
+        b.setPadding(dp(6), dp(10), dp(6), dp(10));
+        b.setMinimumHeight(dp(68));
+        android.widget.ImageView icon = new android.widget.ImageView(ctx);
+        icon.setImageDrawable(Icons.of(kind, accent));
+        icon.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        b.addView(icon, new android.widget.LinearLayout.LayoutParams(dp(22), dp(22)));
+        TextView t = text(13, text, MEDIUM);
+        t.setText(label);
+        t.setMaxLines(1);
+        t.setGravity(Gravity.CENTER);
+        android.widget.LinearLayout.LayoutParams tp = new android.widget.LinearLayout.LayoutParams(
+                android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+        tp.topMargin = dp(6);
+        b.addView(t, tp);
+        b.setBackground(ripple(outline(surface, line, 18), 18));
+        b.setContentDescription(label);
+        b.setClickable(true);
+        b.setFocusable(true);
+        return b;
+    }
+
     /** Filled or quiet pill button. */
     TextView pill(CharSequence label, boolean filled) {
         TextView b = text(14, filled ? onAccent : accent, MEDIUM);

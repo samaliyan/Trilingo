@@ -32,6 +32,12 @@
     <string name="examples_failed">Could not load examples.</string>
     <string name="examples_source">Sentences from Tatoeba (tatoeba.org)</string>
     <string name="conjugation">Conjugation</string>
+    <string name="phrasal_verbs">Phrasal verbs</string>
+    <string name="prefix_verbs">Prefix verbs</string>
+    <string name="phrasal_title">Phrasal verbs</string>
+    <string name="family_hint_en">Verb + small word, with a new meaning. Tap one to translate it.</string>
+    <string name="family_hint_de">German has no phrasal verbs; prefix verbs do the same job (kommen → ankommen). Tap one to translate it.</string>
+    <string name="examples_tab">%1$s examples: %2$s</string>
     <string name="conjugation_tab">%1$s: %2$s</string>
     <string name="close">Close</string>
     <string name="clipboard_empty">Nothing to paste</string>

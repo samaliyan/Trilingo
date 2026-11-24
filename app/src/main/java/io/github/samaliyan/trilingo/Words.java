@@ -130,6 +130,35 @@ final class Words {
         return lo;
     }
 
+    // ------------------------------------------------------------------ language
+
+    /**
+     * English or German for Latin text: a word only one of the two lists has decides ("Haus" → German,
+     * which the translation service sometimes takes for English). Null when unsure (both have it,
+     * e.g. "Gift", or neither), so the translation service decides.
+     */
+    static Lang guessLatin(Words en, Words de, String text) {
+        if (en == null || de == null || text == null || Text.hasPersian(text)) return null;
+        int onlyEn = 0, onlyDe = 0, words = 0;
+        for (String t : Text.clean(text).split("[^A-Za-zÄÖÜäöüß]+")) {
+            if (t.length() < 2) continue;
+            words++;
+            int re = en.rank(t), rd = de.rank(t);
+            if (re >= 0 && rd < 0) onlyEn++;
+            else if (rd >= 0 && re < 0) onlyDe++;
+            else if (re >= 0) {                       // in both lists: much more common in one of them?
+                if ((long) rd * 20 < re) onlyDe++;
+                else if ((long) re * 20 < rd) onlyEn++;
+            }
+        }
+        if (words == 0 || words > 12) return null;
+        if (onlyDe > 0 && onlyEn == 0) return Lang.DE;
+        if (onlyEn > 0 && onlyDe == 0) return Lang.EN;
+        if (onlyDe >= 2 * onlyEn + 2) return Lang.DE;
+        if (onlyEn >= 2 * onlyDe + 2) return Lang.EN;
+        return null;
+    }
+
     // ------------------------------------------------------------------ spelling
 
     private static final String LATIN = "abcdefghijklmnopqrstuvwxyz";

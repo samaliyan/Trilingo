@@ -19,6 +19,7 @@ final class Lexicon {
 
     private static volatile Words en, de, fa;
     private static volatile Nouns nouns;
+    private static volatile Phrasal phrasal;
     private static boolean started;
     private static final List<Runnable> waiting = new ArrayList<>();
 
@@ -37,6 +38,7 @@ final class Lexicon {
                 en = Words.read(Lang.EN, am.open("words_en.txt"));
                 de = Words.read(Lang.DE, am.open("words_de.txt"));
                 fa = Words.read(Lang.FA, am.open("words_fa.txt"));
+                phrasal = Phrasal.read(am.open("phrasal_en.txt"));
                 nouns = Nouns.read(am.open("de_nouns.txt"));
             } catch (IOException | RuntimeException e) {
                 // without the lists the app works as before (no suggestions, no articles)
@@ -60,6 +62,28 @@ final class Lexicon {
 
     static Nouns nouns() {
         return nouns;
+    }
+
+    static Phrasal phrasal() {
+        return phrasal;
+    }
+
+    /**
+     * The verb families to show for a lookup's verbs: English phrasal verbs and German prefix verbs.
+     * Empty when there are none (or the lists are not loaded yet).
+     */
+    static Map<Lang, List<Phrasal.Entry>> families(Map<Lang, String> verbs) {
+        Map<Lang, List<Phrasal.Entry>> out = new LinkedHashMap<>();
+        Phrasal p = phrasal;
+        if (p != null && verbs.containsKey(Lang.EN)) {
+            List<Phrasal.Entry> e = p.english(verbs.get(Lang.EN));
+            if (!e.isEmpty()) out.put(Lang.EN, e);
+        }
+        if (de != null && verbs.containsKey(Lang.DE)) {
+            List<Phrasal.Entry> g = Phrasal.german(verbs.get(Lang.DE), de, 14);
+            if (g.size() >= 2) out.put(Lang.DE, g);
+        }
+        return out;
     }
 
     /**
@@ -91,6 +115,15 @@ final class Lexicon {
         // what is typed already is no suggestion
         out.removeIf(s -> s.equalsIgnoreCase(t));
         return out;
+    }
+
+    /**
+     * English or German for Latin text, from the word lists: a word only one of the languages has decides
+     * ("Haus" → German, which the translation service sometimes takes for English). Null when unsure
+     * (both have it, e.g. "Gift"), so the service decides.
+     */
+    static Lang guessLatin(String text) {
+        return Words.guessLatin(en, de, text);
     }
 
     /** German umlaut correction of typed text (null if none), for automatic or German input. */

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -47,15 +48,93 @@ final class DetailSheets {
 
     // ------------------------------------------------------------------ Examples
 
-    /** @param lookup the shown result: its translations tell which meaning the examples should have */
-    void showExamples(String word, Lang src, Lookup lookup) {
-        Sheet sheet = new Sheet(act, ui, act.getString(R.string.examples), word);
+    // ------------------------------------------------------------------ tabs (shared)
+
+    /** Row of equal tabs: a small language label over a word; {@code onSelect} gets the index. */
+    private LinearLayout tabBar(List<Lang> langs, List<String> words, int selected, java.util.function.IntConsumer onSelect) {
+        LinearLayout tabs = new LinearLayout(act);
+        tabs.setPadding(ui.dp(16), ui.dp(4), ui.dp(16), ui.dp(8));
+        for (int i = 0; i < langs.size(); i++) {
+            boolean on = i == selected;
+            LinearLayout tab = new LinearLayout(act);
+            tab.setOrientation(LinearLayout.VERTICAL);
+            tab.setGravity(Gravity.CENTER);
+            tab.setPadding(ui.dp(6), ui.dp(8), ui.dp(6), ui.dp(8));
+            tab.setMinimumHeight(ui.dp(60));
+            tab.setBackground(ui.ripple(on ? ui.outline(ui.accentSoft, ui.accent, 16) : ui.outline(ui.surface, ui.line, 16), 16));
+            tab.setSelected(on);
+            TextView lang = ui.line(11, on ? ui.accent : ui.sub, Ui.MEDIUM);
+            lang.setText(langs.get(i).label.toUpperCase(Locale.ROOT));
+            lang.setLetterSpacing(0.08f);
+            lang.setGravity(Gravity.CENTER);
+            TextView word = ui.line(16, ui.text, Ui.MEDIUM);
+            word.setText(words.get(i));
+            word.setGravity(Gravity.CENTER);
+            tab.addView(lang);
+            tab.addView(word);
+            tab.setContentDescription(act.getString(R.string.conjugation_tab, langs.get(i).label, words.get(i)));
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+            if (i > 0) lp.leftMargin = ui.dp(8);
+            final int index = i;
+            tab.setOnClickListener(v -> onSelect.accept(index));
+            tabs.addView(tab, lp);
+        }
+        return tabs;
+    }
+
+    // ------------------------------------------------------------------ Examples
+
+    /** Words to show examples for: the typed word, and its English / German / Persian translation when short. */
+    private static Map<Lang, String> exampleWords(Lookup l) {
+        Map<Lang, String> m = new java.util.LinkedHashMap<>();
+        if (Examples.suitable(l.query)) m.put(l.source, Text.clean(l.query));
+        for (Lookup.Result r : l.results) {
+            String w = Text.clean(r.text);
+            if (r.lang == Lang.EN && w.toLowerCase(Locale.ROOT).startsWith("to ")) w = w.substring(3);
+            if (Examples.suitable(w) && !m.containsKey(r.lang)) m.put(r.lang, w);
+        }
+        return m;
+    }
+
+    boolean hasExamples(Lookup l) {
+        return !exampleWords(l).isEmpty();
+    }
+
+    /** What the examples in {@code tab} should mean: the lookup's words in the other languages. */
+    private static Map<Lang, java.util.Set<String>> expectedFor(Lookup l, Lang tab) {
+        Map<Lang, java.util.Set<String>> m = Examples.expected(l);
+        java.util.Set<String> src = new java.util.HashSet<>();
+        src.add(Text.clean(l.query).toLowerCase(Locale.ROOT));
+        if (!l.baseForm.isEmpty()) src.add(l.baseForm.toLowerCase(Locale.ROOT));
+        m.put(l.source, src);
+        m.remove(tab);
+        return m;
+    }
+
+    /**
+     * Examples of the typed word and (in tabs) of its translations, so there are English sentences
+     * for a German word too.
+     */
+    void showExamples(Lookup l) {
+        Map<Lang, String> words = exampleWords(l);
+        if (words.isEmpty()) return;
+        List<Lang> langs = new ArrayList<>(words.keySet());
+        List<String> ws = new ArrayList<>(words.values());
+        Sheet sheet = new Sheet(act, ui, act.getString(R.string.examples), langs.size() == 1 ? ws.get(0) : null);
+        selectExampleTab(sheet, l, langs, ws, 0);
         sheet.show();
-        loadExamples(sheet, word, src, Examples.expected(lookup));
+    }
+
+    private void selectExampleTab(Sheet sheet, Lookup l, List<Lang> langs, List<String> ws, int index) {
+        sheet.top.removeAllViews();
+        if (langs.size() > 1) sheet.top.addView(tabBar(langs, ws, index, i -> selectExampleTab(sheet, l, langs, ws, i)));
+        sheet.scroll.scrollTo(0, 0);
+        loadExamples(sheet, ws.get(index), langs.get(index), expectedFor(l, langs.get(index)));
     }
 
     private void loadExamples(Sheet sheet, String word, Lang src, Map<Lang, java.util.Set<String>> expected) {
         String key = src.code + "|" + Text.key(word);
+        sheet.token = key;
         List<Examples.Example> cached = cache.get(key);
         if (cached != null) {
             renderExamples(sheet, word, src, cached);
@@ -87,7 +166,7 @@ final class DetailSheets {
             final List<Examples.Example> res = list;
             final boolean off = offline;
             act.runOnUiThread(() -> {
-                if (act.isFinishing() || act.isDestroyed() || !sheet.isShowing()) return;
+                if (act.isFinishing() || act.isDestroyed() || !sheet.isShowing() || !key.equals(sheet.token)) return;
                 if (res == null) {
                     sheet.message(act.getString(off ? R.string.error_offline : R.string.examples_failed), null,
                             act.getString(R.string.retry), v -> loadExamples(sheet, word, src, expected));
@@ -191,6 +270,126 @@ final class DetailSheets {
             sp.setSpan(new ForegroundColorSpan(ui.accent), r[0], r[1], Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         return sp;
+    }
+
+    // ------------------------------------------------------------------ Phrasal / prefix verbs
+
+    /** Translations of phrasal and prefix verbs already loaded in this session. */
+    private final Map<String, Lookup> familyCache = new ConcurrentHashMap<>();
+
+    /**
+     * English phrasal verbs (give up, give in …) and German prefix verbs (ankommen, mitkommen …) of the
+     * looked-up verb, in tabs. Each row shows the meaning and the Persian translation; tapping one
+     * translates it on the main screen.
+     */
+    void showFamilies(Map<Lang, List<Phrasal.Entry>> families, Map<Lang, String> verbs, Lang source,
+                      java.util.function.Consumer<String> open) {
+        List<Lang> langs = new ArrayList<>(families.keySet());
+        if (langs.isEmpty()) return;
+        if (langs.contains(source)) {          // the typed language first
+            langs.remove(source);
+            langs.add(0, source);
+        }
+        List<String> base = new ArrayList<>();
+        for (Lang l : langs) base.add(verbs.get(l));
+        Sheet sheet = new Sheet(act, ui, act.getString(langs.contains(Lang.EN) ? R.string.phrasal_title : R.string.prefix_verbs),
+                langs.size() == 1 ? base.get(0) : null);
+        selectFamilyTab(sheet, families, langs, base, 0, open);
+        sheet.show();
+    }
+
+    private void selectFamilyTab(Sheet sheet, Map<Lang, List<Phrasal.Entry>> families, List<Lang> langs, List<String> base,
+                                 int index, java.util.function.Consumer<String> open) {
+        sheet.top.removeAllViews();
+        if (langs.size() > 1) sheet.top.addView(tabBar(langs, base, index, i -> selectFamilyTab(sheet, families, langs, base, i, open)));
+        Lang lang = langs.get(index);
+        List<Phrasal.Entry> list = families.get(lang);
+        sheet.token = lang;
+        sheet.body.removeAllViews();
+        sheet.scroll.scrollTo(0, 0);
+
+        TextView hint = ui.text(13, ui.sub, Ui.REGULAR);
+        hint.setText(lang == Lang.EN ? R.string.family_hint_en : R.string.family_hint_de);
+        hint.setLineSpacing(0, 1.2f);
+        hint.setPadding(ui.dp(6), 0, ui.dp(6), ui.dp(10));
+        sheet.body.addView(hint);
+
+        LinearLayout card = new LinearLayout(act);
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setBackground(ui.round(ui.surface, 18));
+        List<TextView[]> rows = new ArrayList<>();
+        for (Phrasal.Entry e : list) {
+            LinearLayout row = new LinearLayout(act);
+            row.setOrientation(LinearLayout.VERTICAL);
+            row.setPadding(ui.dp(18), ui.dp(12), ui.dp(18), ui.dp(12));
+            row.setMinimumHeight(ui.dp(60));
+            row.setBackground(ui.ripple(null, 0));
+            TextView verb = ui.line(17, ui.text, Ui.MEDIUM);
+            verb.setText(e.verb);
+            row.addView(verb);
+            TextView meaning = ui.text(14, ui.sub, Ui.REGULAR);
+            meaning.setText(e.meaning);
+            meaning.setVisibility(e.meaning.isEmpty() ? View.GONE : View.VISIBLE);
+            LinearLayout.LayoutParams mp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            mp.topMargin = ui.dp(2);
+            row.addView(meaning, mp);
+            TextView fa = ui.text(15, ui.text, Ui.REGULAR);
+            Ui.bidi(fa);
+            fa.setVisibility(View.GONE);
+            LinearLayout.LayoutParams fp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            fp.topMargin = ui.dp(2);
+            row.addView(fa, fp);
+            row.setContentDescription(e.verb);
+            row.setOnClickListener(v -> {
+                sheet.dialog.dismiss();
+                open.accept(e.verb);
+            });
+            card.addView(row);
+            rows.add(new TextView[]{meaning, fa});
+        }
+        sheet.body.addView(card);
+
+        // Meanings: English for German prefix verbs, Persian for all; four at a time, filled in as they arrive.
+        java.util.concurrent.ExecutorService pool = java.util.concurrent.Executors.newFixedThreadPool(4);
+        for (int i = 0; i < list.size(); i++) {
+            final Phrasal.Entry e = list.get(i);
+            final TextView[] views = rows.get(i);
+            final String key = lang.code + "|" + e.verb;
+            Lookup cached = familyCache.get(key);
+            if (cached != null) {
+                fillFamilyRow(views, cached, lang);
+                continue;
+            }
+            pool.submit(() -> {
+                Lookup t;
+                try {
+                    t = host.engine().translate(e.verb, lang, host.service(), System.currentTimeMillis());
+                } catch (Engine.Failure x) {
+                    return;
+                }
+                familyCache.put(key, t);
+                act.runOnUiThread(() -> {
+                    if (act.isFinishing() || act.isDestroyed() || !sheet.isShowing() || sheet.token != lang) return;
+                    fillFamilyRow(views, t, lang);
+                });
+            });
+        }
+        pool.shutdown();
+    }
+
+    private void fillFamilyRow(TextView[] views, Lookup t, Lang lang) {
+        Lookup.Result fa = t.result(Lang.FA);
+        if (fa != null && !fa.text.isEmpty()) {
+            views[1].setText(fa.summary(1));
+            views[1].setVisibility(View.VISIBLE);
+        }
+        if (lang == Lang.DE && views[0].getText().length() == 0) {
+            Lookup.Result en = t.result(Lang.EN);
+            if (en != null && !en.text.isEmpty()) {
+                views[0].setText(en.summary(2));
+                views[0].setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     // ------------------------------------------------------------------ Conjugation

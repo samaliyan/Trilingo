@@ -109,12 +109,6 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         sheets = new DetailSheets(this, ui, this);
         // Builds the irregular-verb index once, off the screen thread, so the first result shows without delay.
         new Thread(() -> GermanVerbs.isKnownForm("habe"), "verbs").start();
-        // Word lists and German nouns; when they arrive, the shown result gets its articles.
-        Lexicon.load(this, () -> runOnUiThread(() -> {
-            if (isDestroyed()) return;
-            if (shown != null) showLookup(shown, forced == null, shownCorrected);
-            if (input.hasFocus()) updateSuggestions();
-        }));
         if (saved != null) forced = Lang.of(saved.getString("forced"));
 
         boolean hasText = incomingText(getIntent()) != null;
@@ -123,6 +117,13 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                 : WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE));
         build();
         updateChips();
+        // Word lists and German nouns (loaded once per process, in the background). The callback may run
+        // at once when they are already loaded, so it comes after build(); it posts to the screen thread.
+        Lexicon.load(this, () -> handler.post(() -> {
+            if (isDestroyed() || input == null) return;
+            if (shown != null) showLookup(shown, forced == null, shownCorrected);
+            if (input.hasFocus()) updateSuggestions();
+        }));
         // After a rotation the restored text triggers onTextChanged by itself (shown again from the history).
         if (saved == null) {
             wantKeyboard = !hasText;
@@ -347,6 +348,13 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         root.addView(scroll, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
         setContentView(root);
         updateFieldButtons();
+        // Suggestions belong to typing: when the keyboard closes (Back, scrolling …) they go away.
+        root.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            android.graphics.Rect r = new android.graphics.Rect();
+            root.getWindowVisibleDisplayFrame(r);
+            boolean keyboard = root.getRootView().getHeight() - r.bottom > ui.dp(150);
+            if (!keyboard && suggestScroll.getVisibility() == View.VISIBLE) suggestScroll.setVisibility(View.GONE);
+        });
     }
 
     private void updateChips() {
@@ -454,13 +462,15 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         }
         busy.setVisibility(View.VISIBLE);
         final Lang f = forced;
+        // Automatic: a word only German (or only English) has is decided here; the rest by the service.
+        final Lang source = f != null ? f : Lexicon.guessLatin(query);
         final int service = store.service();
         new Thread(() -> {
             Lookup res = null;
             Engine.Failure fail = null;
             boolean corrected = umlautFixed;
             try {
-                res = engine.translate(query, f, service, System.currentTimeMillis());
+                res = engine.translate(query, source, service, System.currentTimeMillis());
                 // No correction from the service for a word it does not know: the closest word of the built-in list.
                 if (!res.hasSuggestion() && echoes(res)) {
                     String near = Lexicon.closest(query, res.source);
@@ -470,7 +480,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                 // Misspelled and the "translation" only repeats it: show the corrected word's translation instead.
                 if (res.hasSuggestion() && echoes(res)) {
                     try {
-                        Lookup fixed = engine.translate(res.suggestion, f, service, System.currentTimeMillis());
+                        Lookup fixed = engine.translate(res.suggestion, f != null ? f : Lexicon.guessLatin(res.suggestion), service, System.currentTimeMillis());
                         res = fixed;
                         corrected = true;
                     } catch (Engine.Failure ignored) {
@@ -615,32 +625,53 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
      * each shown only when it has something to show.
      */
     private View actionRow(Lookup l) {
-        boolean examples = Examples.suitable(l.query);
+        boolean examples = sheets.hasExamples(l);
         java.util.Map<Lang, String> verbs = Verbs.of(l);
-        if (!examples && verbs.isEmpty()) return null;
-        LinearLayout row = new LinearLayout(this);
-        row.setPadding(0, 0, 0, ui.dp(12));
+        java.util.Map<Lang, List<Phrasal.Entry>> families = Lexicon.families(verbs);
+        List<View> tiles = new java.util.ArrayList<>();
         if (examples) {
-            LinearLayout b = ui.actionPill(Icons.Kind.EXAMPLES, getString(R.string.examples));
+            LinearLayout b = ui.actionTile(Icons.Kind.EXAMPLES, getString(R.string.examples));
             b.setOnClickListener(v -> {
                 saveNow();
-                sheets.showExamples(l.query, l.source, l);
+                sheets.showExamples(l);
             });
-            b.setGravity(Gravity.CENTER);
-            row.addView(b, new LinearLayout.LayoutParams(0, ui.dp(48), 1));
+            tiles.add(b);
         }
         if (!verbs.isEmpty()) {
-            LinearLayout b = ui.actionPill(Icons.Kind.TABLE, getString(R.string.conjugation));
+            LinearLayout b = ui.actionTile(Icons.Kind.TABLE, getString(R.string.conjugation));
             b.setOnClickListener(v -> {
                 saveNow();
                 sheets.showConjugation(verbs, l.source);
             });
-            b.setGravity(Gravity.CENTER);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ui.dp(48), 1);
-            if (examples) lp.leftMargin = ui.dp(10);
-            row.addView(b, lp);
+            tiles.add(b);
+        }
+        if (!families.isEmpty()) {
+            boolean english = families.containsKey(Lang.EN);
+            LinearLayout b = ui.actionTile(Icons.Kind.FAMILY, getString(english ? R.string.phrasal_verbs : R.string.prefix_verbs));
+            b.setOnClickListener(v -> {
+                saveNow();
+                sheets.showFamilies(families, verbs, l.source, this::openWord);
+            });
+            tiles.add(b);
+        }
+        if (tiles.isEmpty()) return null;
+        LinearLayout row = new LinearLayout(this);
+        row.setPadding(0, 0, 0, ui.dp(12));
+        for (int i = 0; i < tiles.size(); i++) {
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+            if (i > 0) lp.leftMargin = ui.dp(10);
+            row.addView(tiles.get(i), lp);
         }
         return row;
+    }
+
+    /** Translates a word chosen in a panel (a phrasal verb, a prefix verb). */
+    private void openWord(String word) {
+        forced = null;
+        updateChips();
+        setInput(word);
+        lookup(true);
+        hideKeyboard();
     }
 
     // DetailSheets.Host
@@ -699,6 +730,14 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         }
     }
 
+    /** The plural "die" is not feminine: shown in a neutral colour. */
+    private CharSequence pluralArticle() {
+        android.text.SpannableStringBuilder b = new android.text.SpannableStringBuilder("die");
+        b.setSpan(new android.text.style.ForegroundColorSpan(ui.sub), 0, 3, 0);
+        b.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, 3, 0);
+        return b;
+    }
+
     /** "der", "die" or "das" in its colour (blue / red / green, as in most German textbooks). */
     private CharSequence coloredArticles(String articles) {
         android.text.SpannableStringBuilder b = new android.text.SpannableStringBuilder();
@@ -717,7 +756,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
     private CharSequence withArticle(Nouns.Info n, String shownWord) {
         boolean plural = !n.noun.equalsIgnoreCase(shownWord) && n.plurals.contains(shownWord);
         android.text.SpannableStringBuilder b = new android.text.SpannableStringBuilder();
-        b.append(coloredArticles(plural ? "die" : n.articles()));
+        b.append(plural ? pluralArticle() : coloredArticles(n.articles()));
         b.append(' ').append(shownWord);
         return b;
     }
@@ -734,7 +773,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         row.addView(label);
         TextView v = ui.line(15, ui.text, Ui.MEDIUM);
         android.text.SpannableStringBuilder b = new android.text.SpannableStringBuilder();
-        b.append(coloredArticles(plural ? n.articles() : "die")).append(' ').append(other);
+        b.append(plural ? coloredArticles(n.articles()) : pluralArticle()).append(' ').append(other);
         v.setText(b);
         v.setTextIsSelectable(true);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);

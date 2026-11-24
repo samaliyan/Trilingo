@@ -108,6 +108,41 @@ public final class WordsTest {
         eq(null, nouns.lookup("das Haus"), "phrase is not looked up");
         eq(null, nouns.lookup(""), "empty");
 
+        // ---------------------------------------------------------------- English or German?
+        eq(Lang.DE, Words.guessLatin(en, de, "Haus"), "Haus is German");
+        eq(Lang.DE, Words.guessLatin(en, de, "Schmetterling"), "Schmetterling is German");
+        eq(Lang.EN, Words.guessLatin(en, de, "house"), "house is English");
+        eq(Lang.EN, Words.guessLatin(en, de, "dictionary"), "dictionary is English");
+        eq(Lang.DE, Words.guessLatin(en, de, "ich habe keine Zeit"), "German sentence");
+        eq(Lang.EN, Words.guessLatin(en, de, "I have no time"), "English sentence");
+        eq(null, Words.guessLatin(en, de, "Siavash"), "unknown name: the service decides");
+        eq(null, Words.guessLatin(en, de, "خانه"), "persian: not this");
+        eq(null, Words.guessLatin(null, de, "Haus"), "lists not loaded");
+
+        // ---------------------------------------------------------------- phrasal / prefix verbs
+        Phrasal ph = Phrasal.read(new FileInputStream(ASSETS + "phrasal_en.txt"));
+        List<Phrasal.Entry> pe = ph.english("give");
+        ok(pe.size() >= 4, "give has phrasal verbs");
+        ok(pe.stream().anyMatch(e -> e.verb.equals("give up") && e.meaning.contains("quit")), "give up = quit");
+        ok(ph.english("to give").size() == pe.size(), "to give → give");
+        ok(ph.english("give up").size() == pe.size(), "a phrasal verb shows its family");
+        eq("stop trying; quit", ph.meaning("give up"), "meaning of give up");
+        ok(ph.english("house").isEmpty(), "noun: none");
+        ok(ph.english("look").stream().anyMatch(e -> e.verb.equals("look forward to")), "three-word phrasal verb");
+        List<Phrasal.Entry> ge = Phrasal.german("kommen", de, 14);
+        List<String> gv = new java.util.ArrayList<>();
+        for (Phrasal.Entry e : ge) gv.add(e.verb);
+        ok(gv.contains("bekommen") && gv.contains("ankommen"), "kommen → bekommen, ankommen: " + gv);
+        ok(!gv.contains("kommen"), "the verb itself is not listed");
+        List<Phrasal.Entry> ge2 = Phrasal.german("ankommen", de, 14);
+        ok(ge2.size() == ge.size(), "ankommen shows the kommen family");
+        ok(Phrasal.german("Haus", de, 14).isEmpty(), "noun: none");
+        // every line of the list is well formed
+        for (String line : java.nio.file.Files.readAllLines(java.nio.file.Paths.get(ASSETS + "phrasal_en.txt"))) {
+            if (line.isEmpty() || line.startsWith("#")) continue;
+            ok(line.matches("[a-z]+( [a-z]+){1,3}\\|[^|]+"), "phrasal line: " + line);
+        }
+
         System.out.println(checks + " checks, " + failures + " failures");
         if (failures > 0) System.exit(1);
     }

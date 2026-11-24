@@ -89,6 +89,44 @@ type_text "strasse"
 wait_for "Showing results for" "" 20
 expect "Straße" "^Straße$"
 
+# 2a5. Phrasal verbs (English) and prefix verbs (German); examples also for the English translation
+open_app
+type_text "give"
+wait_for "PERSIAN" "" 20
+back
+wait_for "Phrasal verbs" "" 5
+tap "Phrasal verbs"
+sleep 2
+shot 02a5_phrasal_verbs 1
+expect "give up" "^give up$"
+expect "stop trying; quit"
+tap "give up" "^give up$"
+wait_for "From English" "^From English" 20
+shot 02a6_give_up_result 1
+open_app
+type_text "kommen"
+wait_for "ENGLISH" "" 20
+back
+tap "Prefix verbs" "^(Phrasal verbs|Prefix verbs)$"
+sleep 3
+shot 02a7_prefix_verbs 1
+expect "ankommen" "^ankommen$"
+expect "German has no phrasal verbs" "^German has no phrasal verbs"
+back
+open_app
+type_text "Haus"
+wait_for "ENGLISH" "" 20
+back
+tap "Examples"
+wait_for "English tab" "^English: " 10
+tap "English tab" "^English: "
+wait_for "Sentences from Tatoeba (tatoeba.org)" "" 25
+shot 02a8_examples_english_tab 1
+expect "house" "(?i).*\\bhouse\\b.*"
+back
+clear_field
+type_text "x"
+
 # 2b. Misspelled word → "Did you mean", tap it
 clear_field
 type_text "hous"

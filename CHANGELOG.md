@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.4 — 2026-11-24
+
+- Phrasal verbs: for English verbs, a button shows the common phrasal verbs (give → give up, give in …) with their meaning and Persian translation. Tap one to translate it.
+- German prefix verbs: German has no phrasal verbs, but prefix verbs do the same job (kommen → ankommen, mitkommen, bekommen …); they are listed the same way.
+- Examples in every language: the Examples panel has a tab for the word and for its translations, so a German word also gets English example sentences.
+- Short German words are recognised as German more reliably ("Haus" was sometimes taken for English).
+- The plural article "die" is shown in a neutral colour (it is not the feminine "die").
+- Fixed: the app could close after turning the phone or changing the theme.
+- Suggestions while typing disappear when the keyboard closes.
+
 ## 1.3 — 2026-11-24
 
 - German articles: every German noun shows der / die / das (in colour) and its plural, also in the meanings list and for a typed German noun.
