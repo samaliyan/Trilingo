@@ -20,12 +20,13 @@ final class Lexicon {
     private static volatile Words en, de, fa;
     private static volatile Nouns nouns;
     private static volatile Phrasal phrasal;
+    private static volatile Grammar grammar;
     private static boolean started;
     private static final List<Runnable> waiting = new ArrayList<>();
 
     /** Starts loading (once); {@code done} runs on the loading thread when everything is there. */
     static synchronized void load(Context c, Runnable done) {
-        if (nouns != null) {
+        if (grammar != null) {                         // set last: everything is loaded
             if (done != null) done.run();
             return;
         }
@@ -43,6 +44,7 @@ final class Lexicon {
             } catch (IOException | RuntimeException e) {
                 // without the lists the app works as before (no suggestions, no articles)
             }
+            grammar = readGrammar(am);
             List<Runnable> run;
             synchronized (Lexicon.class) {
                 run = new ArrayList<>(waiting);
@@ -66,6 +68,40 @@ final class Lexicon {
 
     static Phrasal phrasal() {
         return phrasal;
+    }
+
+    /** The grammar lessons (assets/grammar/*.txt), or null while loading. */
+    static Grammar grammar() {
+        return grammar;
+    }
+
+    private static Grammar readGrammar(AssetManager am) {
+        List<Grammar.Lesson> all = new ArrayList<>();
+        try {
+            String[] files = am.list("grammar");
+            if (files != null) {
+                java.util.Arrays.sort(files);
+                for (int i = 0; i < files.length; i++)
+                    if (files[i].endsWith(".txt")) all.addAll(Grammar.parse(am.open("grammar/" + files[i]), i * 1000));
+            }
+        } catch (IOException | RuntimeException e) {
+            // no lessons: the Grammar screen says so
+        }
+        return new Grammar(all);
+    }
+
+    /** Lessons for a looked-up word (empty while loading). */
+    static List<Grammar.Lesson> lessonsFor(Lookup l, Map<Lang, String> verbs, int max) {
+        Grammar g = grammar;
+        if (g == null) return new ArrayList<>();
+        return g.forLookup(l, verbs, nouns, de, en, max);
+    }
+
+    /** Lessons for what is typed in the grammar search. */
+    static List<Grammar.Lesson> searchGrammar(String query) {
+        Grammar g = grammar;
+        if (g == null) return new ArrayList<>();
+        return g.search(query, nouns, de, en);
     }
 
     /**

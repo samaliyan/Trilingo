@@ -1,0 +1,435 @@
+# English A1. Examples: English | Persian | German
+
+=== en-be
+level: A1
+cat: verbs
+title.fa: فعل to be: am، is، are
+title.en: The verb to be: am, is, are
+title.de: Das Verb to be: am, is, are
+keys: be, am, is, are, I'm, you're, isn't, aren't, بودن, هستم, sein
+words: be, am, is, are, isn't, aren't, i'm, you're, he's, she's, it's, we're, they're
+see: en-present-simple, en-past-simple, en-there-is
+--- fa
+to be یعنی «بودن» و سه شکل در زمان حال دارد: I am، he/she/it is، you/we/they are.
+
+• منفی: بعدش not: I am not، she is not (isn't)، they are not (aren't)
+• سؤال: فعل اول جمله: Are you tired? Is he at home?
+• در گفتار معمولاً کوتاه می‌شود: I'm، you're، he's، it's، we're، they're
+
+برای سن، حس و حال، شغل، ملیت و جا از be استفاده می‌شود: I am 30 (نه I have 30)، I'm hungry، She's a nurse، We're from Iran.
+--- en
+to be has three present forms: I am, he/she/it is, you/we/they are.
+
+• negative: add not: I am not, she is not (isn't), they are not (aren't)
+• question: put the verb first: Are you tired? Is he at home?
+• in speech use short forms: I'm, you're, he's, it's, we're, they're
+
+Use be for age, feelings, jobs, nationality and location: I'm 30, I'm hungry, She's a nurse, We're from Iran.
+--- de
+to be = sein: I am, he/she/it is, you/we/they are. Verneinung mit not (isn't, aren't), Frage durch Umstellung (Are you …?). Mit be sagt man auch das Alter: I am 30 (nicht „I have 30“).
+--- table
+Person | positive | negative | question
+I | I am (I'm) | I'm not | Am I …?
+he / she / it | is ('s) | isn't | Is he …?
+you / we / they | are ('re) | aren't | Are you …?
+--- examples
+I'm tired today. | امروز خسته‌ام. | Ich bin heute müde.
+She is a doctor. | او پزشک است. | Sie ist Ärztin.
+Are you from Germany? | اهل آلمان هستی؟ | Kommst du aus Deutschland?
+We aren't at home. | ما خانه نیستیم. | Wir sind nicht zu Hause.
+My son is ten years old. | پسرم ده ساله است. | Mein Sohn ist zehn Jahre alt.
+
+=== en-present-simple
+level: A1
+cat: tenses
+title.fa: حال ساده (Present simple): I work، she works
+title.en: Present simple: I work, she works
+title.de: Present simple: I work, she works
+keys: present simple, simple present, حال ساده, عادت, routine, does, doesn't, -s, he she it, Gewohnheit
+tags: en-verb
+see: en-present-continuous, en-questions-do, en-adverbs-frequency
+--- fa
+حال ساده برای عادت‌ها، کارهای تکراری، حقیقت‌ها و برنامه‌های ثابت است: I drink tea every morning. Water boils at 100 degrees.
+
+• برای he، she، it فعل ‎-s‎ می‌گیرد: She works، He lives. (go → goes، watch → watches، study → studies، have → has)
+• منفی: don't / doesn't + فعل ساده: I don't smoke. She doesn't eat meat. (بعد از doesn't دیگر ‎-s‎ نمی‌آید)
+• سؤال: Do / Does + فاعل + فعل ساده: Do you like coffee? Does he work here?
+
+یادت باشد: «من دارم کار می‌کنم» (الان) با حال ساده گفته نمی‌شود؛ برای آن present continuous لازم است.
+--- en
+Use the present simple for habits, repeated actions, facts and fixed schedules: I drink tea every morning. Water boils at 100 degrees.
+
+• he/she/it add -s: She works, He lives (goes, watches, studies, has)
+• negative: don't / doesn't + base verb: She doesn't eat meat (no -s after doesn't)
+• question: Do / Does + subject + base verb: Does he work here?
+
+For actions happening right now, use the present continuous.
+--- de
+Present simple: Gewohnheiten, Fakten, Fahrpläne. 3. Person Singular mit -s (she works). Verneinung mit don't/doesn't, Fragen mit do/does + Grundform. Für „gerade jetzt“ nimmt man das present continuous.
+--- table
+ | positive | negative | question
+I / you / we / they | work | don't work | Do you work?
+he / she / it | works | doesn't work | Does she work?
+--- examples
+I live in Tehran. | در تهران زندگی می‌کنم. | Ich wohne in Teheran.
+She speaks three languages. | او سه زبان صحبت می‌کند. | Sie spricht drei Sprachen.
+He doesn't drink coffee. | او قهوه نمی‌خورد. | Er trinkt keinen Kaffee.
+Do you work on Saturdays? | شنبه‌ها کار می‌کنی؟ | Arbeitest du samstags?
+The shop opens at nine. | مغازه ساعت نه باز می‌شود. | Der Laden öffnet um neun.
+
+=== en-present-continuous
+level: A1
+cat: tenses
+title.fa: حال استمراری (Present continuous): I am working
+title.en: Present continuous: I am working
+title.de: Present continuous: I am working
+keys: present continuous, progressive, حال استمراری, دارم, now, right now, -ing, am is are + ing, Verlaufsform, gerade
+tags: en-verb
+see: en-present-simple, en-be, en-future
+--- fa
+حال استمراری = am/is/are + فعل ‎-ing‎. برای:
+• کاری که همین الان در جریان است: I'm reading a book. Look, it's raining!
+• کاری موقتی در این روزها: She's working in Berlin this month.
+• برنامه‌ی قطعی آینده: We're meeting Ali tomorrow.
+
+قواعد ‎-ing‎: come → coming (حذف e)، sit → sitting (دو برابر شدن حرف آخر)، lie → lying.
+
+بعضی فعل‌ها (فعل‌های حالت) معمولاً استمراری نمی‌شوند: know، like، want، need، believe، understand. نگو I'm knowing، بگو I know.
+--- en
+Present continuous = am/is/are + verb-ing. Use it for:
+• actions happening now: I'm reading a book. Look, it's raining!
+• temporary situations: She's working in Berlin this month.
+• fixed future arrangements: We're meeting Ali tomorrow.
+
+Spelling: come → coming, sit → sitting, lie → lying.
+
+State verbs are usually not continuous: know, like, want, need, believe, understand (I know, not I'm knowing).
+--- de
+Present continuous (am/is/are + -ing): Handlung gerade jetzt, vorübergehende Situation, feste Pläne. Zustandsverben (know, like, want) nicht in der Verlaufsform. Im Deutschen gibt es diese Form nicht; man sagt „gerade“.
+--- examples
+I'm cooking dinner right now. | الان دارم شام درست می‌کنم. | Ich koche gerade Abendessen.
+What are you doing? | داری چه کار می‌کنی؟ | Was machst du gerade?
+She isn't working today. | امروز کار نمی‌کند. | Sie arbeitet heute nicht.
+They're staying with friends this week. | این هفته پیش دوستانشان می‌مانند. | Sie wohnen diese Woche bei Freunden.
+We're flying to Berlin on Friday. | جمعه به برلین پرواز می‌کنیم. | Wir fliegen am Freitag nach Berlin.
+
+=== en-questions-do
+level: A1
+cat: questions
+title.fa: ساختن سؤال در انگلیسی: do، does، did و کلمه‌های پرسشی
+title.en: Making questions: do, does, did and question words
+title.de: Fragen bilden: do, does, did und Fragewörter
+keys: question, سؤال, do, does, did, what, where, when, who, why, how, which, how much, how many, Frage
+words: what, where, when, who, why, how, which, whose
+see: en-present-simple, en-be, en-question-tags
+--- fa
+در انگلیسی، برای سؤال یک فعل کمکی باید قبل از فاعل بیاید:
+• اگر جمله be یا فعل کمکی (can، will، have) دارد، همان جلو می‌آید: Is she here? Can you swim?
+• در غیر این صورت do / does / did اضافه می‌شود و فعل اصلی ساده می‌ماند: Do you live here? Where does he work? What did you buy?
+
+کلمه‌های پرسشی: what (چه)، where (کجا)، when (کی)، who (چه کسی)، why (چرا)، how (چطور)، which (کدام)، whose (مال چه کسی)، how much (چقدر، برای غیرقابل‌شمارش)، how many (چند تا).
+
+استثنا: وقتی who یا what خودش فاعل است، do لازم نیست: Who lives here? What happened?
+--- en
+English questions need an auxiliary before the subject:
+• with be or another auxiliary (can, will, have), move it to the front: Is she here? Can you swim?
+• otherwise add do / does / did and keep the main verb in the base form: Where does he work? What did you buy?
+
+Question words: what, where, when, who, why, how, which, whose, how much (uncountable), how many (countable).
+
+Exception: when who/what is the subject, no do: Who lives here? What happened?
+--- de
+Fragen brauchen ein Hilfsverb vor dem Subjekt: be/can/will usw. umstellen, sonst do/does/did + Grundform. Ist who/what das Subjekt, braucht man kein do.
+--- examples
+Do you speak German? | آلمانی صحبت می‌کنی؟ | Sprichst du Deutsch?
+Where does your sister live? | خواهرت کجا زندگی می‌کند؟ | Wo wohnt deine Schwester?
+How many children do they have? | چند تا بچه دارند؟ | Wie viele Kinder haben sie?
+What did you do yesterday? | دیروز چه کار کردی؟ | Was hast du gestern gemacht?
+Who called you? | چه کسی به تو زنگ زد؟ | Wer hat dich angerufen?
+
+=== en-articles
+level: A1
+cat: articles
+title.fa: حرف تعریف: a، an، the
+title.en: Articles: a, an, the
+title.de: Artikel: a, an, the
+keys: article, a, an, the, حرف تعریف, یک, zero article, Artikel
+words: a, an, the
+see: en-countable, en-plural
+--- fa
+• a / an = یک، برای اسم مفرد قابل‌شمارش که اولین بار گفته می‌شود: I have a car. an قبل از «صدای» حرف صدادار: an apple، an hour (h خوانده نمی‌شود)، ولی a university (صدای «یو»).
+• the = همان، معین: چیزی که هر دو می‌دانیم کدام است، یا بار دوم: I have a car. The car is red. و برای چیزهای یکتا: the sun، the internet.
+• بدون حرف تعریف: برای حرف کلی با اسم جمع یا غیرقابل‌شمارش: I like cats. Water is important. و همچنین اسم شهر و کشور و زبان: in Germany، I speak English.
+
+برای شغل حتماً a لازم است: She is a teacher (نه She is teacher).
+--- en
+• a / an = one, for a singular countable noun mentioned for the first time: I have a car. Use an before a vowel sound: an apple, an hour, but a university.
+• the = a specific thing both people know, something mentioned before, or something unique: The car is red. the sun, the internet.
+• no article for general statements with plural or uncountable nouns (I like cats. Water is important), and for most countries, cities and languages.
+
+Jobs need a: She is a teacher.
+--- de
+a/an = unbestimmter Artikel (an vor Vokallaut). the = bestimmter Artikel für alle Genera. Allgemeine Aussagen im Plural oder bei unzählbaren Nomen ohne Artikel. Berufe mit a: She is a teacher.
+--- examples
+I'm reading a book. The book is about history. | دارم یک کتاب می‌خوانم. کتاب درباره‌ی تاریخ است. | Ich lese ein Buch. Das Buch handelt von Geschichte.
+She's an engineer. | او مهندس است. | Sie ist Ingenieurin.
+Can you close the door, please? | می‌شود لطفاً در را ببندی؟ | Kannst du bitte die Tür schließen?
+I love music. | موسیقی را دوست دارم. | Ich liebe Musik.
+It takes an hour by train. | با قطار یک ساعت طول می‌کشد. | Mit dem Zug dauert es eine Stunde.
+
+=== en-plural
+level: A1
+cat: nouns
+title.fa: جمع اسم‌ها و جمع‌های بی‌قاعده
+title.en: Plural nouns and irregular plurals
+title.de: Plural im Englischen und unregelmäßige Formen
+keys: plural, جمع, -s, -es, -ies, irregular plural, children, men, women, people, feet, teeth, Plural
+words: children, men, women, people, feet, teeth, mice, knives, wives
+see: en-articles, en-countable
+--- fa
+بیشتر اسم‌ها با ‎-s‎ جمع می‌شوند: book → books.
+• بعد از s، sh، ch، x و o اغلب ‎-es‎: bus → buses، watch → watches، box → boxes، potato → potatoes
+• صامت + y → ‎-ies‎: city → cities (ولی day → days)
+• ‎-f / -fe‎ → ‎-ves‎: knife → knives، wife → wives، leaf → leaves
+
+جمع‌های بی‌قاعده‌ی مهم: man → men، woman → women، child → children، person → people، foot → feet، tooth → teeth، mouse → mice. چند اسم مفرد و جمعشان یکی است: sheep، fish.
+--- en
+Most nouns add -s. Add -es after s, sh, ch, x and often o (buses, watches, potatoes); consonant + y → -ies (cities, but days); -f/-fe → -ves (knives, leaves).
+
+Irregular: men, women, children, people, feet, teeth, mice. Same form: sheep, fish.
+--- de
+Plural meist mit -s; -es nach Zischlauten; -y → -ies; -f(e) → -ves. Unregelmäßig: men, women, children, people, feet, teeth, mice.
+--- table
+singular | plural
+book | books
+bus | buses
+city | cities
+knife | knives
+man / woman | men / women
+child | children
+person | people
+foot / tooth | feet / teeth
+--- examples
+I have two children. | دو بچه دارم. | Ich habe zwei Kinder.
+There are many people here. | اینجا آدم زیادی هست. | Hier sind viele Leute.
+My feet hurt. | پاهایم درد می‌کند. | Mir tun die Füße weh.
+The boxes are in the car. | جعبه‌ها در ماشین‌اند. | Die Kisten sind im Auto.
+Brush your teeth! | مسواک بزن! | Putz dir die Zähne!
+
+=== en-pronouns-possessive
+level: A1
+cat: pronouns
+title.fa: ضمیرها: I / me / my / mine
+title.en: Pronouns: I / me / my / mine
+title.de: Pronomen: I / me / my / mine
+keys: pronoun, ضمیر, I me my mine, subject, object, possessive, ملکی, his her their, Pronomen, myself
+words: me, my, mine, him, his, her, hers, us, our, ours, them, their, theirs, your, yours, its
+see: en-be, en-reflexive
+--- fa
+انگلیسی برای هر شخص چهار شکل دارد:
+• فاعلی (قبل از فعل): I، you، he، she، it، we، they
+• مفعولی (بعد از فعل و حرف اضافه): me، you، him، her، it، us، them: Call me. With them.
+• صفت ملکی (قبل از اسم): my، your، his، her، its، our، their: my car
+• ضمیر ملکی (به‌تنهایی): mine، yours، his، hers، ours، theirs: The car is mine.
+
+دقت کن: its (مال آن) بدون آپاستروف است؛ it's یعنی it is. و his برای مرد، her برای زن است، بر اساس صاحب.
+--- en
+Each person has four forms: subject (I, he, they), object (me, him, them), possessive adjective (my, his, their + noun) and possessive pronoun (mine, his, theirs – alone).
+
+Careful: its (possessive) has no apostrophe; it's = it is.
+--- de
+Subjekt: I, you, he, she, it, we, they; Objekt: me, you, him, her, it, us, them; Possessivbegleiter: my, your, his, her, its, our, their; Possessivpronomen: mine, yours, his, hers, ours, theirs. Englisch unterscheidet keinen Dativ und Akkusativ.
+--- table
+subject | object | possessive | pronoun
+I | me | my | mine
+you | you | your | yours
+he | him | his | his
+she | her | her | hers
+it | it | its | –
+we | us | our | ours
+they | them | their | theirs
+--- examples
+Can you help me? | می‌توانی کمکم کنی؟ | Kannst du mir helfen?
+This is my brother. His name is Reza. | این برادر من است. اسمش رضاست. | Das ist mein Bruder. Er heißt Reza.
+Is this bag yours? | این کیف مال توست؟ | Ist das deine Tasche?
+I see them every day. | هر روز می‌بینمشان. | Ich sehe sie jeden Tag.
+The dog is eating its food. | سگ دارد غذایش را می‌خورد. | Der Hund frisst sein Futter.
+
+=== en-there-is
+level: A1
+cat: other
+title.fa: there is / there are (وجود دارد، هست)
+title.en: there is / there are
+title.de: there is / there are (es gibt)
+keys: there is, there are, there's, is there, are there, هست, وجود دارد, es gibt
+words: there
+see: en-be, en-countable
+--- fa
+برای گفتن اینکه چیزی جایی هست: there is + اسم مفرد یا غیرقابل‌شمارش، there are + اسم جمع.
+
+• There is a bank near here. There's some milk in the fridge.
+• There are two chairs in the room.
+• منفی: There isn't / There aren't any …
+• سؤال: Is there …? Are there …?
+• گذشته: there was / there were
+
+برخلاف آلمانی (es gibt)، فعل با اسم بعدی جمع یا مفرد می‌شود.
+--- en
+To say something exists somewhere: there is + singular/uncountable noun, there are + plural noun. Negative: there isn't / aren't any. Question: Is there …? Are there …? Past: there was / were.
+--- de
+there is (Singular, unzählbar) / there are (Plural) = es gibt. Anders als im Deutschen richtet sich das Verb nach dem Nomen. Vergangenheit: there was/were.
+--- examples
+There's a good restaurant on this street. | در این خیابان یک رستوران خوب هست. | In dieser Straße gibt es ein gutes Restaurant.
+There are thirty students in my class. | در کلاس ما سی دانشجو هست. | In meiner Klasse sind dreißig Studenten.
+Is there a pharmacy near here? | این نزدیکی داروخانه هست؟ | Gibt es hier in der Nähe eine Apotheke?
+There isn't any sugar left. | دیگر شکر نمانده. | Es ist kein Zucker mehr da.
+There were a lot of people at the party. | در مهمانی آدم زیادی بود. | Auf der Party waren viele Leute.
+
+=== en-can
+level: A1
+cat: verbs
+title.fa: can و can't: توانستن، اجازه، درخواست
+title.en: can and can't: ability, permission, requests
+title.de: can und can't
+keys: can, can't, cannot, could, توانستن, ability, permission, request, können, dürfen
+words: can, can't, cannot, could
+see: en-modals-obligation, en-questions-do, en-modals-advice
+--- fa
+can برای توانایی (I can swim)، اجازه (You can sit here) و درخواست (Can you help me?) است.
+
+• برای همه‌ی شخص‌ها یک شکل است (بدون ‎-s‎): she can.
+• بعدش فعل ساده بدون to: I can speak (نه can to speak).
+• منفی: can't / cannot. سؤال: Can you …?
+• گذشته: could / couldn't: I couldn't sleep.
+• Could you …? مؤدبانه‌تر از Can you … ? است.
+--- en
+can expresses ability (I can swim), permission (You can sit here) and requests (Can you help me?).
+
+• same form for all persons (she can), followed by the base verb without to.
+• negative can't / cannot; question Can you …?
+• past: could / couldn't. Could you …? is more polite.
+--- de
+can = können/dürfen. Eine Form für alle Personen, danach Grundform ohne to. Vergangenheit could. Could you …? ist höflicher.
+--- examples
+I can speak a little German. | کمی آلمانی بلدم. | Ich kann ein bisschen Deutsch.
+Can I open the window? | می‌توانم پنجره را باز کنم؟ | Darf ich das Fenster öffnen?
+She can't come today. | امروز نمی‌تواند بیاید. | Sie kann heute nicht kommen.
+Could you speak more slowly, please? | ممکن است لطفاً آهسته‌تر صحبت کنید؟ | Könnten Sie bitte langsamer sprechen?
+When I was young, I could run very fast. | جوان که بودم، خیلی تند می‌دویدم. | Als ich jung war, konnte ich sehr schnell laufen.
+
+=== en-imperative
+level: A1
+cat: verbs
+title.fa: فعل امر در انگلیسی: Open the door، Don't worry، Let's go
+title.en: The imperative: Open the door, Don't worry, Let's go
+title.de: Der Imperativ im Englischen
+keys: imperative, امر, دستور, don't, let's, please, Imperativ
+words: let's, don't, please
+see: en-can
+--- fa
+فعل امر همان شکل ساده‌ی فعل است، بدون فاعل: Sit down. Open the window.
+• منفی: Don't + فعل: Don't worry. Don't touch that!
+• پیشنهاد برای «بیا با هم …»: Let's + فعل: Let's go! Let's not argue.
+• با please مؤدب‌تر می‌شود: Please wait here.
+
+برای یک نفر و چند نفر و مؤدبانه یک شکل است.
+--- en
+The imperative is the base verb without a subject: Sit down. Negative: Don't + verb. Suggestions: Let's + verb (Let's go!). please makes it polite. One form for everyone.
+--- de
+Imperativ = Grundform ohne Subjekt; Verneinung mit don't; Vorschlag mit let's. Es gibt nur eine Form (keine Unterscheidung du/ihr/Sie).
+--- examples
+Please sit down. | لطفاً بنشینید. | Bitte setzen Sie sich.
+Don't forget your keys! | کلیدهایت را فراموش نکن! | Vergiss deine Schlüssel nicht!
+Let's have a break. | بیا استراحت کنیم. | Lass uns eine Pause machen.
+Turn left at the traffic lights. | سر چراغ راهنمایی بپیچ چپ. | Biegen Sie an der Ampel links ab.
+Don't worry, everything is fine. | نگران نباش، همه چیز خوب است. | Mach dir keine Sorgen, alles ist gut.
+
+=== en-prepositions-time-place
+level: A1
+cat: prepositions
+title.fa: حرف اضافه‌های زمان و مکان: in، on، at
+title.en: Prepositions of time and place: in, on, at
+title.de: Präpositionen der Zeit und des Ortes: in, on, at
+keys: in on at, preposition, حرف اضافه, time, place, زمان, مکان, Präposition, at home, on Monday, in July
+words: in, on, at
+see: en-articles
+--- fa
+زمان:
+• at + ساعت و لحظه: at 7 o'clock، at night، at the weekend (British)
+• on + روز و تاریخ: on Monday، on 5 May، on my birthday
+• in + ماه، فصل، سال و بخش‌های روز: in July، in winter، in 2025، in the morning
+
+مکان:
+• at + یک نقطه یا محل فعالیت: at home، at work، at the bus stop
+• on + سطح: on the table، on the wall، on the second floor
+• in + داخل یک فضا: in the box، in the room، in Tehran
+
+قاعده‌ی کمکی: at کوچک‌ترین، on متوسط، in بزرگ‌ترین.
+--- en
+Time: at + clock times (at 7, at night); on + days and dates (on Monday, on 5 May); in + months, seasons, years, parts of the day (in July, in 2025, in the morning).
+
+Place: at + a point or activity place (at home, at work); on + a surface (on the table, on the wall); in + inside a space (in the box, in Tehran).
+--- de
+Zeit: at (Uhrzeit), on (Tag, Datum), in (Monat, Jahreszeit, Jahr, Tageszeit). Ort: at (Punkt), on (Oberfläche), in (Innenraum, Stadt, Land).
+--- examples
+The meeting is at 10 o'clock on Monday. | جلسه دوشنبه ساعت ده است. | Das Meeting ist am Montag um 10 Uhr.
+I was born in 1985. | من در سال ۱۹۸۵ به دنیا آمدم. | Ich bin 1985 geboren.
+Your keys are on the table. | کلیدهایت روی میز است. | Deine Schlüssel liegen auf dem Tisch.
+She's at work. | او سر کار است. | Sie ist auf der Arbeit.
+We live in a small flat in the city centre. | ما در یک آپارتمان کوچک در مرکز شهر زندگی می‌کنیم. | Wir wohnen in einer kleinen Wohnung im Stadtzentrum.
+
+=== en-countable
+level: A1
+cat: nouns
+title.fa: اسم‌های قابل‌شمارش و غیرقابل‌شمارش: some، any، much، many
+title.en: Countable and uncountable nouns: some, any, much, many
+title.de: Zählbare und unzählbare Nomen: some, any, much, many
+keys: countable, uncountable, قابل شمارش, some, any, much, many, a lot of, a few, a little, how much, how many, zählbar
+words: some, any, much, many, few, little, lot
+see: en-articles, en-there-is, en-plural
+--- fa
+• قابل‌شمارش: می‌شود شمرد و جمع دارد: an apple، two apples.
+• غیرقابل‌شمارش: جمع ندارد و a نمی‌گیرد: water، money، information، advice، furniture، bread. (نگو an information یا advices)
+
+کلمه‌های مقدار:
+• some (مقداری، در جمله‌ی مثبت و درخواست) / any (در منفی و سؤال): I have some money. Do you have any questions?
+• many (قابل‌شمارش) / much (غیرقابل‌شمارش)، بیشتر در منفی و سؤال: How many people? How much time?
+• a lot of برای هر دو، بیشتر در جمله‌ی مثبت.
+• a few (چند تا، قابل‌شمارش) / a little (کمی، غیرقابل‌شمارش).
+--- en
+Countable nouns can be counted (an apple, two apples). Uncountable nouns have no plural and no a: water, money, information, advice, furniture, bread.
+
+Quantity words: some (positive) / any (negative, questions); many (countable) / much (uncountable), mostly in negatives and questions; a lot of for both; a few (countable) / a little (uncountable).
+--- de
+Unzählbare Nomen (information, advice, money) haben keinen Plural und kein a. some/any, many (zählbar)/much (unzählbar), a lot of, a few/a little.
+--- examples
+Could I have some water, please? | می‌شود لطفاً کمی آب بدهید؟ | Könnte ich bitte etwas Wasser haben?
+We don't have any bread. | نان نداریم. | Wir haben kein Brot.
+How much money do you need? | چقدر پول لازم داری؟ | Wie viel Geld brauchst du?
+I have a few friends in Berlin. | چند تا دوست در برلین دارم. | Ich habe ein paar Freunde in Berlin.
+Can you give me some advice? | می‌توانی راهنمایی‌ام کنی؟ | Kannst du mir einen Rat geben?
+
+=== en-this-that
+level: A1
+cat: pronouns
+title.fa: this، that، these، those (این، آن)
+title.en: this, that, these, those
+title.de: this, that, these, those
+keys: this, that, these, those, این, آن, اینها, آنها, dieser, jener
+words: this, that, these, those
+see: en-articles
+--- fa
+• this (این، نزدیک، مفرد) / these (این‌ها، نزدیک، جمع)
+• that (آن، دور، مفرد) / those (آن‌ها، دور، جمع)
+
+می‌توانند قبل از اسم بیایند (this book) یا به‌تنهایی (Is this yours?). در تلفن: Hello, this is Sara. برای چیزی که همین الان گفته شده هم that به کار می‌رود: That's a good idea!
+--- en
+this / these = near (singular / plural); that / those = far (singular / plural). Use them before a noun or alone. On the phone: This is Sara. That also refers to something just said: That's a good idea!
+--- de
+this/these = nah, that/those = fern; Singular/Plural. Auch allein möglich: That's a good idea!
+--- examples
+This coffee is very hot. | این قهوه خیلی داغ است. | Dieser Kaffee ist sehr heiß.
+Are these your glasses? | این‌ها عینک توست؟ | Ist das deine Brille?
+Who is that man? | آن مرد کیست؟ | Wer ist der Mann da?
+Those shoes are expensive. | آن کفش‌ها گران‌اند. | Die Schuhe da sind teuer.
+That's a great idea! | فکر خیلی خوبی است! | Das ist eine tolle Idee!

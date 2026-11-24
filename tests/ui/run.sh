@@ -198,6 +198,81 @@ back
 expect "Examples"
 expect_not "Conjugation"      # "house" is mainly a noun
 
+# 3j. German examples for a word typed in lower case (Tatoeba needs "Tisch", not "tisch")
+open_app
+type_text "tisch"
+wait_for "ENGLISH" "" 20
+back
+tap "Examples"
+wait_for "example sentences" "([.!?]$)|^No examples found" 40
+shot 03j_examples_tisch 1
+expect "a sentence with Tisch" "(?i).*\\btisch.*[.!?]$"
+expect_not "No examples found"
+back
+
+# 3k. Grammar: the Grammar button of a word (fernsehen → separable verbs), the lesson, the Grammar screen and its search
+open_app
+type_text "fernsehen"
+wait_for "ENGLISH" "" 20
+back
+wait_for "Grammar" "^Grammar$" 8
+shot 03k_fernsehen_actions 1
+tap "Grammar" "^Grammar$"
+sleep 1
+shot 03l_grammar_for_word 1
+expect "Grammar for this word"
+expect "separable verbs lesson" ".*fernsehen.*anrufen.*"
+tap "separable verbs lesson" "^فعل.*جداشدنی.*"
+sleep 1.5
+shot 03m_lesson_persian 1
+expect "Ich sehe jeden Abend fern."
+expect "Persian explanation" ".*fern.*ته جمله.*"
+adb shell input swipe 540 1700 540 400 300; sleep 0.8
+adb shell input swipe 540 1700 540 400 300; sleep 0.8
+shot 03n_lesson_scrolled 1
+adb shell input swipe 540 1700 540 400 300; sleep 0.8
+adb shell input swipe 540 1700 540 400 300; sleep 0.8
+shot 03o_lesson_end 1
+tap "Explanations in Persian. Change"
+tap "English" "^English$"
+sleep 1
+shot 03p_lesson_english 1
+expect "Separable verbs (like fernsehen, anrufen)"
+back                     # lesson
+back                     # panel
+tap "Grammar lessons"
+sleep 1.5
+shot 03q_grammar_screen 1
+expect "German" "^German$"
+expect "first German lesson" "^Personal pronouns, sein and haben$"
+tap "English" "^English$"
+sleep 1
+shot 03r_grammar_english_list 1
+expect "first English lesson" "^The verb to be: am, is, are$"
+tap "Search a topic or a word"
+type_text "fernsehen"
+sleep 1.5
+shot 03s_search_word 1
+expect "Separable verbs (like fernsehen, anrufen)"
+tap "Clear"
+type_text "passive"
+sleep 1.5
+shot 03t_search_topic 1
+expect "The passive: is made, was built, has been done"
+tap "Clear"
+type_text "trennbar"
+sleep 1.5
+expect "Separable verbs (like fernsehen, anrufen)"
+tap "Clear"
+type_text "qqqzzz"
+sleep 1
+shot 03u_search_nothing 1
+expect "No lessons found"
+tap "Explanations in English. Change"
+tap "Persian" "^Persian$"
+back; back
+open_app
+
 # 4. Ambiguous word: auto vs forced German ("Gift" = poison in German)
 clear_field
 type_text "Gift"

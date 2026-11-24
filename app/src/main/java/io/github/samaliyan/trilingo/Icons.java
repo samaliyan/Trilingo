@@ -15,7 +15,7 @@ import android.graphics.drawable.Drawable;
 final class Icons {
     private Icons() { }
 
-    enum Kind { BACK, CLOSE, SETTINGS, COPY, SPEAK, PASTE, SEARCH, SHARE, EXAMPLES, TABLE, FAMILY }
+    enum Kind { BACK, CLOSE, SETTINGS, COPY, SPEAK, PASTE, SEARCH, SHARE, EXAMPLES, TABLE, FAMILY, BOOK, CHEVRON }
 
     static Drawable of(Kind kind, int color) {
         return new IconDrawable(kind, color);
@@ -152,6 +152,25 @@ final class Icons {
                     c.drawCircle(18.5f, 6, 2, stroke);
                     c.drawCircle(18.5f, 12, 2, stroke);
                     c.drawCircle(18.5f, 18, 2, stroke);
+                    break;
+                case BOOK:
+                    // an open book: two pages meeting at the spine
+                    path.moveTo(12, 6.5f);
+                    path.quadTo(8.5f, 4.5f, 3.5f, 5);
+                    path.lineTo(3.5f, 18);
+                    path.quadTo(8.5f, 17.5f, 12, 19.5f);
+                    path.quadTo(15.5f, 17.5f, 20.5f, 18);
+                    path.lineTo(20.5f, 5);
+                    path.quadTo(15.5f, 4.5f, 12, 6.5f);
+                    path.close();
+                    c.drawPath(path, stroke);
+                    line(c, 12, 6.5f, 12, 19.5f);
+                    break;
+                case CHEVRON:
+                    path.moveTo(9.5f, 6);
+                    path.lineTo(15.5f, 12);
+                    path.lineTo(9.5f, 18);
+                    c.drawPath(path, stroke);
                     break;
             }
             c.restore();

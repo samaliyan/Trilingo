@@ -285,9 +285,12 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         field.addView(pasteBtn, new LinearLayout.LayoutParams(ui.dp(46), ui.dp(46)));
 
         top.addView(field, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+        ImageButton grammar = ui.iconButton(Icons.Kind.BOOK, ui.text, getString(R.string.grammar_open));
+        grammar.setOnClickListener(v -> startActivity(new Intent(this, GrammarActivity.class)));
+        top.addView(grammar, new LinearLayout.LayoutParams(ui.dp(44), ui.dp(48)));
         ImageButton settings = ui.iconButton(Icons.Kind.SETTINGS, ui.text, getString(R.string.settings));
         settings.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
-        top.addView(settings, new LinearLayout.LayoutParams(ui.dp(48), ui.dp(48)));
+        top.addView(settings, new LinearLayout.LayoutParams(ui.dp(44), ui.dp(48)));
         root.addView(top);
 
         // Word suggestions while typing (dicti → dictionary), right under the field
@@ -654,15 +657,52 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
             });
             tiles.add(b);
         }
+        List<Grammar.Lesson> lessons = Lexicon.lessonsFor(l, verbs, 8);
+        if (!lessons.isEmpty()) {
+            LinearLayout b = ui.actionTile(Icons.Kind.BOOK, getString(R.string.grammar));
+            b.setOnClickListener(v -> {
+                saveNow();
+                showGrammar(l, lessons);
+            });
+            tiles.add(b);
+        }
         if (tiles.isEmpty()) return null;
-        LinearLayout row = new LinearLayout(this);
-        row.setPadding(0, 0, 0, ui.dp(12));
+        // up to three in a row; four as two rows of two, so every label fits
+        LinearLayout box = new LinearLayout(this);
+        box.setOrientation(LinearLayout.VERTICAL);
+        box.setPadding(0, 0, 0, ui.dp(12));
+        int perRow = tiles.size() == 4 ? 2 : tiles.size();
+        LinearLayout row = null;
         for (int i = 0; i < tiles.size(); i++) {
+            if (i % perRow == 0) {
+                row = new LinearLayout(this);
+                LinearLayout.LayoutParams rp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                if (i > 0) rp.topMargin = ui.dp(10);
+                box.addView(row, rp);
+            }
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
-            if (i > 0) lp.leftMargin = ui.dp(10);
+            if (i % perRow > 0) lp.leftMargin = ui.dp(10);
             row.addView(tiles.get(i), lp);
         }
-        return row;
+        return box;
+    }
+
+    /** The grammar lessons about the looked-up word (e.g. separable verbs for "fernsehen"). */
+    private void showGrammar(Lookup l, List<Grammar.Lesson> lessons) {
+        Sheet sheet = new Sheet(this, ui, getString(R.string.grammar_for_word), Text.clean(l.query));
+        Lang explain = store.explainLang();
+        for (Grammar.Lesson x : lessons)
+            sheet.body.addView(GrammarViews.row(this, ui, x, explain, true, v -> GrammarViews.open(this, x)));
+        TextView all = ui.pill(getString(R.string.grammar_all), false);
+        all.setOnClickListener(v -> {
+            sheet.dialog.dismiss();
+            startActivity(new Intent(this, GrammarActivity.class));
+        });
+        LinearLayout.LayoutParams ap = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ap.topMargin = ui.dp(4);
+        ap.gravity = Gravity.CENTER_HORIZONTAL;
+        sheet.body.addView(all, ap);
+        sheet.show();
     }
 
     /** Translates a word chosen in a panel (a phrasal verb, a prefix verb). */

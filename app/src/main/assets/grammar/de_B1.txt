@@ -1,0 +1,565 @@
+# German B1. Examples: German | Persian | English
+
+=== de-praeteritum
+level: B1
+cat: tenses
+title.fa: گذشته‌ی ساده (Präteritum) در متن‌های نوشتاری
+title.en: The Präteritum (written past)
+title.de: Das Präteritum
+keys: Präteritum, Imperfekt, simple past, گذشته ساده, ماضی مطلق, ging, kam, machte, sagte, داستان
+tags: de-strong-verb
+see: de-perfekt, de-praeteritum-basic, de-plusquamperfekt
+--- fa
+Präteritum گذشته‌ی «نوشتاری» است: در داستان، کتاب، اخبار و گزارش. در گفتار بیشتر Perfekt می‌گویند (به جز sein، haben، مُدال‌ها و چند فعل مثل es gab، ich dachte، ich wusste).
+
+ساختن:
+• باقاعده: ریشه + te + پسوند: machen → ich machte، du machtest، wir machten
+• بی‌قاعده: ریشه‌ی جدید، بدون te؛ ich و er پسوند ندارند: gehen → ging، kommen → kam، sehen → sah، finden → fand، bleiben → blieb
+• مختلط (حرف صدادار عوض می‌شود ولی te می‌گیرد): denken → dachte، bringen → brachte، wissen → wusste، kennen → kannte
+
+فعل‌های جداشدنی در Präteritum هم جدا می‌شوند: Der Zug kam pünktlich an.
+
+بخش Conjugation برنامه برای هر فعل، شکل Präteritum را نشان می‌دهد.
+--- en
+The Präteritum is the "written" past: stories, books, news and reports. In conversation people mostly use the Perfekt (except sein, haben, modals and a few verbs like es gab, ich dachte, ich wusste).
+
+Forming it:
+• regular: stem + te + ending: ich machte, du machtest, wir machten
+• irregular: new stem, no te; ich and er have no ending: gehen → ging, kommen → kam, sehen → sah, finden → fand
+• mixed (vowel change + te): denken → dachte, bringen → brachte, wissen → wusste, kennen → kannte
+
+Separable verbs split here too: Der Zug kam pünktlich an. The Conjugation panel shows the Präteritum of every verb.
+--- de
+Das Präteritum ist die Vergangenheitsform der geschriebenen Sprache (Erzählungen, Berichte). Regelmäßig: Stamm + -te- (machte); unregelmäßig: Stammwechsel ohne -te- (ging, kam); Mischverben: dachte, brachte, wusste.
+--- table
+Person | machen | gehen | denken
+ich | machte | ging | dachte
+du | machtest | gingst | dachtest
+er / sie / es | machte | ging | dachte
+wir | machten | gingen | dachten
+ihr | machtet | gingt | dachtet
+sie / Sie | machten | gingen | dachten
+--- examples
+Es war einmal ein König. | روزی روزگاری پادشاهی بود. | Once upon a time there was a king.
+Sie öffnete die Tür und ging hinaus. | در را باز کرد و بیرون رفت. | She opened the door and went out.
+Der Zug kam mit zehn Minuten Verspätung an. | قطار با ده دقیقه تأخیر رسید. | The train arrived ten minutes late.
+Ich dachte, du wärst schon weg. | فکر کردم رفته‌ای. | I thought you had already left.
+Früher gab es hier einen Bahnhof. | قبلاً اینجا یک ایستگاه قطار بود. | There used to be a station here.
+
+=== de-plusquamperfekt
+level: B1
+cat: tenses
+title.fa: گذشته‌ی بعید (Plusquamperfekt): hatte gemacht، war gegangen
+title.en: The past perfect: hatte gemacht, war gegangen
+title.de: Das Plusquamperfekt
+keys: Plusquamperfekt, past perfect, گذشته بعید, ماضی بعید, hatte, war, nachdem, vorher
+see: de-perfekt, de-praeteritum, de-temporal-clauses
+--- fa
+Plusquamperfekt کاری را نشان می‌دهد که قبل از یک کار دیگر در گذشته انجام شده بود. ساختار: hatte یا war (گذشته‌ی haben/sein) + Partizip II.
+
+Als ich ankam, war der Zug schon abgefahren (وقتی رسیدم، قطار رفته بود).
+
+انتخاب hatte یا war همان قانون Perfekt است. این زمان خیلی با nachdem (بعد از اینکه) می‌آید: Nachdem er gegessen hatte, ging er schlafen.
+--- en
+The past perfect describes something that happened before another past event: hatte or war + past participle.
+
+Als ich ankam, war der Zug schon abgefahren (When I arrived, the train had already left).
+
+hatte or war follows the Perfekt rule. It is often used with nachdem: Nachdem er gegessen hatte, ging er schlafen.
+--- de
+Plusquamperfekt = hatte/war + Partizip II. Es beschreibt Vorzeitigkeit in der Vergangenheit, oft mit nachdem.
+--- examples
+Ich hatte meinen Schlüssel vergessen. | کلیدم را جا گذاشته بودم. | I had forgotten my key.
+Als wir ankamen, hatte der Film schon begonnen. | وقتی رسیدیم، فیلم شروع شده بود. | When we arrived, the film had already started.
+Nachdem sie das Studium beendet hatte, zog sie nach Berlin. | بعد از اینکه درسش را تمام کرده بود، به برلین رفت. | After she had finished her studies, she moved to Berlin.
+Er war nie vorher in Deutschland gewesen. | قبلاً هیچ‌وقت آلمان نبوده بود. | He had never been to Germany before.
+Wir hatten uns lange nicht gesehen. | مدت زیادی همدیگر را ندیده بودیم. | We hadn't seen each other for a long time.
+
+=== de-relative-clauses
+level: B1
+cat: sentences
+title.fa: جمله‌ی موصولی: der Mann, der …، das Buch, das …
+title.en: Relative clauses: der Mann, der … / das Buch, das …
+title.de: Relativsätze
+keys: Relativsatz, relative clause, جمله موصولی, که, der die das, dem, den, dessen, deren, who, which, wo, was
+words: dessen, deren, denen, welcher
+see: de-weil-dass, de-dative, de-genitive
+--- fa
+جمله‌ی موصولی یک اسم را توصیف می‌کند (مثل «که» در فارسی): Der Mann, der dort steht, ist mein Lehrer.
+
+ضمیر موصولی شبیه der/die/das است:
+• جنس و تعداد را از اسمی که توصیف می‌کند می‌گیرد (der Mann → der).
+• حالت (Nominativ، Akkusativ، Dativ) را از نقشش در جمله‌ی موصولی: Der Mann, den ich kenne (من او را می‌شناسم ← Akkusativ). Der Mann, dem ich helfe (Dativ).
+• با حرف اضافه، حرف اضافه اول می‌آید: die Frau, mit der ich arbeite.
+
+فعل مثل هر جمله‌ی وابسته به آخر می‌رود و جمله با ویرگول جدا می‌شود. فرق‌های مهم با der: در Dativ جمع denen، و در Genitiv dessen (مذکر/خنثی) و deren (مؤنث/جمع): der Mann, dessen Auto kaputt ist.
+
+بعد از alles، etwas، nichts و das از was استفاده می‌شود: Alles, was du sagst. برای مکان می‌شود wo گفت: die Stadt, wo ich wohne.
+--- en
+A relative clause describes a noun (who/which/that): Der Mann, der dort steht, ist mein Lehrer.
+
+The relative pronoun looks like der/die/das:
+• gender and number come from the noun it refers to (der Mann → der).
+• the case comes from its role inside the relative clause: der Mann, den ich kenne (accusative); der Mann, dem ich helfe (dative).
+• a preposition goes first: die Frau, mit der ich arbeite.
+
+The verb goes to the end; commas around the clause. Differences from der: dative plural denen, genitive dessen / deren (whose): der Mann, dessen Auto kaputt ist.
+
+After alles, etwas, nichts, das → was: Alles, was du sagst. For places wo is possible: die Stadt, wo ich wohne.
+--- de
+Relativpronomen: Genus und Numerus vom Bezugswort, Kasus von der Funktion im Relativsatz. Besondere Formen: denen (Dat. Pl.), dessen, deren (Genitiv). Nach alles, etwas, nichts: was. Verb am Ende.
+--- table
+ | maskulin | feminin | neutral | Plural
+Nominativ | der | die | das | die
+Akkusativ | den | die | das | die
+Dativ | dem | der | dem | denen
+Genitiv | dessen | deren | dessen | deren
+--- examples
+Das ist die Frau, die neben mir wohnt. | این خانمی است که کنار من زندگی می‌کند. | That's the woman who lives next door to me.
+Der Film, den wir gestern gesehen haben, war super. | فیلمی که دیروز دیدیم عالی بود. | The film we saw yesterday was great.
+Die Kollegen, mit denen ich arbeite, sind sehr nett. | همکارانی که با آن‌ها کار می‌کنم خیلی خوب‌اند. | The colleagues I work with are very nice.
+Ich habe einen Freund, dessen Vater Arzt ist. | دوستی دارم که پدرش دکتر است. | I have a friend whose father is a doctor.
+Das ist alles, was ich weiß. | این همه‌ی چیزی است که می‌دانم. | That's all I know.
+
+=== de-infinitive-zu
+level: B1
+cat: verbs
+title.fa: مصدر با zu: Ich habe keine Zeit, zu …
+title.en: Infinitive with zu
+title.de: Infinitiv mit zu
+keys: zu Infinitiv, infinitive, مصدر, zu, anzufangen, Lust haben, versuchen, vergessen, es ist wichtig
+see: de-um-zu-damit, de-separable-verbs, de-modal-verbs
+--- fa
+بعد از بسیاری از فعل‌ها، اسم‌ها و عبارت‌ها، فعل دوم به صورت zu + مصدر در آخر جمله می‌آید: Ich versuche, pünktlich zu sein.
+
+بعد از این‌ها زیاد می‌آید:
+• فعل‌ها: versuchen، vergessen، anfangen، aufhören، vorhaben، hoffen، beginnen
+• عبارت‌ها: Lust haben، Zeit haben، keine Angst haben
+• es ist + صفت: Es ist wichtig, …، Es ist schwer, …
+
+بعد از فعل‌های مُدال، werden، lassen و فعل‌های حرکتی (gehen، kommen) zu نمی‌آید: Ich kann schwimmen. Ich gehe einkaufen.
+
+در فعل‌های جداشدنی zu وسط می‌آید: Ich habe vergessen, dich anzurufen.
+--- en
+After many verbs, nouns and expressions, a second verb comes at the end as zu + infinitive: Ich versuche, pünktlich zu sein.
+
+Common triggers: versuchen, vergessen, anfangen, aufhören, vorhaben, hoffen; Lust haben, Zeit haben; es ist wichtig / schwer …
+
+No zu after modal verbs, werden, lassen and verbs of motion: Ich kann schwimmen. Ich gehe einkaufen.
+
+With separable verbs zu goes in the middle: Ich habe vergessen, dich anzurufen.
+--- de
+zu + Infinitiv nach Verben (versuchen, vergessen, anfangen …), Nomen (Lust, Zeit) und es ist + Adjektiv. Kein zu nach Modalverben, werden, lassen. Bei trennbaren Verben: anzurufen.
+--- examples
+Ich habe keine Lust, heute zu kochen. | امروز حوصله‌ی آشپزی ندارم. | I don't feel like cooking today.
+Es ist wichtig, jeden Tag zu üben. | مهم است که هر روز تمرین کنیم. | It's important to practise every day.
+Vergiss nicht, die Tür abzuschließen! | یادت نرود در را قفل کنی! | Don't forget to lock the door!
+Er hat angefangen, Deutsch zu lernen. | شروع کرده آلمانی یاد بگیرد. | He has started learning German.
+Wir haben vor, im Sommer zu heiraten. | قصد داریم تابستان ازدواج کنیم. | We plan to get married in the summer.
+
+=== de-um-zu-damit
+level: B1
+cat: sentences
+title.fa: هدف: um … zu و damit (برای اینکه)
+title.en: Purpose: um … zu and damit (in order to)
+title.de: Finalsätze: um … zu und damit
+keys: um zu, damit, purpose, in order to, هدف, برای اینکه, تا, Finalsatz, wozu
+words: um, damit, wozu
+see: de-infinitive-zu, de-weil-dass
+--- fa
+برای گفتن هدف («برای اینکه») دو راه هست:
+
+• um … zu + مصدر: وقتی فاعل هر دو بخش یکی است: Ich lerne Deutsch, um in Deutschland zu arbeiten.
+• damit + جمله‌ی وابسته: وقتی فاعل‌ها فرق دارند (و می‌شود وقتی یکی است هم): Ich spreche langsam, damit du mich verstehst.
+
+سؤالش Wozu? یا Warum? است. بعد از um … zu فعل مُدال نمی‌آید (نگو um … können zu).
+--- en
+Two ways to express purpose:
+• um … zu + infinitive when both parts have the same subject: Ich lerne Deutsch, um in Deutschland zu arbeiten.
+• damit + subordinate clause when the subjects differ (also possible when they are the same): Ich spreche langsam, damit du mich verstehst.
+--- de
+Finalsätze: um … zu bei gleichem Subjekt, damit bei verschiedenen Subjekten (Verb am Ende). Frage: Wozu?
+--- examples
+Ich spare Geld, um ein Auto zu kaufen. | پول جمع می‌کنم تا ماشین بخرم. | I'm saving money to buy a car.
+Er steht früh auf, um den Bus nicht zu verpassen. | زود بیدار می‌شود تا اتوبوس را از دست ندهد. | He gets up early so as not to miss the bus.
+Ich erkläre es noch einmal, damit alle es verstehen. | دوباره توضیح می‌دهم تا همه بفهمند. | I'll explain it again so that everyone understands.
+Wir gehen früh los, damit wir pünktlich sind. | زود راه می‌افتیم که به موقع برسیم. | We're leaving early so that we're on time.
+Wozu brauchst du das? | این را برای چه لازم داری؟ | What do you need that for?
+
+=== de-passive
+level: B1
+cat: passive
+title.fa: جمله‌ی مجهول (Passiv): wird gemacht، wurde gebaut
+title.en: The passive: wird gemacht, wurde gebaut
+title.de: Das Passiv (Vorgangspassiv)
+keys: Passiv, passive, مجهول, werden, wird gemacht, wurde, worden, von, durch, Vorgangspassiv
+see: de-future, de-passive-advanced, de-perfekt
+--- fa
+در جمله‌ی مجهول، خود کار مهم است نه انجام‌دهنده‌اش. ساختار: werden (صرف‌شده) + Partizip II (آخر جمله).
+
+• حال: Das Haus wird gebaut (خانه دارد ساخته می‌شود).
+• گذشته‌ی ساده: Das Haus wurde 1990 gebaut.
+• Perfekt: Das Haus ist gebaut worden (در مجهول worden، نه geworden، و همیشه با sein).
+• با فعل مُدال: Das Haus muss renoviert werden.
+
+انجام‌دهنده اگر لازم باشد با von + Dativ می‌آید: Das Bild wurde von Picasso gemalt. مفعول جمله‌ی معلوم فاعلِ مجهول می‌شود (Akkusativ → Nominativ): Man repariert den Wagen → Der Wagen wird repariert.
+--- en
+In the passive the action matters, not who does it: werden (conjugated) + past participle (at the end).
+
+• present: Das Haus wird gebaut.
+• past: Das Haus wurde 1990 gebaut.
+• Perfekt: Das Haus ist gebaut worden (worden, not geworden; always with sein).
+• with a modal: Das Haus muss renoviert werden.
+
+The agent, if needed, comes with von + dative. The accusative object of the active sentence becomes the subject: Man repariert den Wagen → Der Wagen wird repariert.
+--- de
+Vorgangspassiv: werden + Partizip II. Präsens: wird gebaut, Präteritum: wurde gebaut, Perfekt: ist gebaut worden, mit Modalverb: muss gebaut werden. Agens mit von + Dativ.
+--- table
+Zeit | Aktiv | Passiv
+Präsens | Man repariert das Auto. | Das Auto wird repariert.
+Präteritum | Man reparierte das Auto. | Das Auto wurde repariert.
+Perfekt | Man hat das Auto repariert. | Das Auto ist repariert worden.
+Modalverb | Man muss das Auto reparieren. | Das Auto muss repariert werden.
+--- examples
+In Österreich wird Deutsch gesprochen. | در اتریش به آلمانی صحبت می‌شود. | German is spoken in Austria.
+Das Museum wurde 1905 eröffnet. | موزه در سال ۱۹۰۵ افتتاح شد. | The museum was opened in 1905.
+Mein Fahrrad ist gestohlen worden. | دوچرخه‌ام دزدیده شده است. | My bike has been stolen.
+Die Rechnung muss bis Freitag bezahlt werden. | صورتحساب باید تا جمعه پرداخت شود. | The bill must be paid by Friday.
+Das Buch wurde von einer jungen Autorin geschrieben. | این کتاب را یک نویسنده‌ی جوان نوشته است. | The book was written by a young author.
+
+=== de-genitive
+level: B1
+cat: cases
+title.fa: حالت ملکی (Genitiv): des Mannes، der Frau
+title.en: The genitive case: des Mannes, der Frau
+title.de: Der Genitiv
+keys: Genitiv, genitive, ملکی, اضافه, des, eines, -s, -es, wessen, von, whose, of
+words: des, eines, wessen, wegen, trotz, während, statt
+see: de-dative, de-prep-genitive, de-relative-clauses
+--- fa
+Genitiv مالکیت را نشان می‌دهد (مثل کسره‌ی اضافه در فارسی: ماشینِ پدر): das Auto des Vaters.
+
+• مذکر و خنثی: des / eines، و خود اسم ‎-s‎ یا ‎-es‎ می‌گیرد: des Mannes، des Kindes، des Autos
+• مؤنث و جمع: der / einer: der Frau، der Kinder
+
+با اسم خاص فقط ‎-s‎ می‌آید و قبل از اسم: Peters Auto، Saras Bruder (بدون آپاستروف).
+
+در گفتار به جای Genitiv خیلی وقت‌ها von + Dativ می‌گویند: das Auto von meinem Vater. Genitiv در نوشتار و بعد از حرف اضافه‌های wegen، trotz، während و statt رایج است.
+--- en
+The genitive shows possession (of): das Auto des Vaters.
+
+• masculine and neuter: des / eines, and the noun adds -s or -es: des Mannes, des Kindes
+• feminine and plural: der / einer: der Frau, der Kinder
+
+With names just add -s before the noun: Peters Auto (no apostrophe).
+
+In speech von + dative often replaces it: das Auto von meinem Vater. The genitive is common in writing and after wegen, trotz, während, statt.
+--- de
+Genitiv: des/eines + -(e)s (m, n), der/einer (f, Pl). Namen: Peters Auto. Mündlich oft von + Dativ. Frage: Wessen?
+--- table
+ | maskulin | feminin | neutral | Plural
+Genitiv | des Mannes | der Frau | des Kindes | der Kinder
+unbestimmt | eines Mannes | einer Frau | eines Kindes | –
+--- examples
+Das ist das Auto meines Vaters. | این ماشین پدرم است. | This is my father's car.
+Saras Bruder wohnt in Wien. | برادر سارا در وین زندگی می‌کند. | Sara's brother lives in Vienna.
+Am Ende des Tages war ich sehr müde. | آخر روز خیلی خسته بودم. | At the end of the day I was very tired.
+Die Farbe der Wände gefällt mir nicht. | رنگ دیوارها را دوست ندارم. | I don't like the colour of the walls.
+Wessen Tasche ist das? | این کیف مال کیست؟ | Whose bag is this?
+
+=== de-prep-genitive
+level: B1
+cat: prepositions
+title.fa: حرف اضافه‌های Genitiv: wegen، trotz، während، statt
+title.en: Genitive prepositions: wegen, trotz, während, statt
+title.de: Präpositionen mit Genitiv
+keys: wegen, trotz, während, statt, anstatt, innerhalb, außerhalb, aufgrund, به خاطر, با وجود, Genitiv Präposition
+words: wegen, trotz, während, statt, anstatt, innerhalb, außerhalb, aufgrund
+see: de-genitive, de-concessive
+--- fa
+این حرف اضافه‌ها در زبان رسمی Genitiv می‌گیرند:
+• wegen = به خاطرِ (علت): wegen des Regens
+• trotz = با وجودِ: trotz des Regens
+• während = در طولِ: während des Essens
+• statt / anstatt = به جای: statt eines Autos
+• innerhalb / außerhalb = داخل / خارجِ (زمان یا مکان): innerhalb einer Woche
+• aufgrund = بر اساس، به دلیلِ
+
+در گفتار خیلی‌ها بعد از wegen و trotz از Dativ استفاده می‌کنند (wegen dem Regen)، که غیررسمی است.
+--- en
+In standard German these prepositions take the genitive: wegen (because of), trotz (despite), während (during), statt/anstatt (instead of), innerhalb/außerhalb (within/outside), aufgrund (due to).
+
+In casual speech many people use the dative after wegen and trotz (wegen dem Regen) – informal.
+--- de
+Mit Genitiv: wegen, trotz, während, (an)statt, innerhalb, außerhalb, aufgrund. Umgangssprachlich oft mit Dativ.
+--- examples
+Wegen des Streiks fahren heute keine Züge. | به خاطر اعتصاب امروز قطاری حرکت نمی‌کند. | Because of the strike no trains are running today.
+Trotz des schlechten Wetters sind wir gewandert. | با وجود هوای بد، پیاده‌روی کردیم. | Despite the bad weather we went hiking.
+Während des Unterrichts darf man nicht telefonieren. | در طول کلاس نباید با تلفن صحبت کرد. | You can't make phone calls during the lesson.
+Statt eines Kuchens habe ich Kekse gekauft. | به جای کیک، بیسکویت خریدم. | Instead of a cake I bought biscuits.
+Bitte antworten Sie innerhalb einer Woche. | لطفاً ظرف یک هفته جواب دهید. | Please reply within a week.
+
+=== de-konjunktiv2
+level: B1
+cat: conditionals
+title.fa: جمله‌ی شرطی غیرواقعی و آرزو (Konjunktiv II): wenn ich … wäre
+title.en: Unreal conditions and wishes (Konjunktiv II): wenn ich … wäre
+title.de: Konjunktiv II: irreale Bedingungen und Wünsche
+keys: Konjunktiv II, conditional, شرطی, آرزو, wish, if I were, würde, wäre, hätte, wenn, irreal, Ratschlag
+words: wäre, hätte, würde, könnte, müsste, sollte, dürfte
+see: de-konjunktiv-polite, de-konjunktiv2-past, de-weil-dass
+--- fa
+Konjunktiv II برای چیزهای غیرواقعی یا خیالی به کار می‌رود (مثل «اگر … بودم» در فارسی).
+
+ساختن:
+• برای بیشتر فعل‌ها: würde + مصدر: Ich würde reisen.
+• sein → wäre، haben → hätte، و مُدال‌ها: könnte، müsste، dürfte، sollte (با اوملاوت، به جز sollte و wollte)
+• چند فعل پرکاربرد شکل خودشان را دارند: gehen → ginge، kommen → käme، wissen → wüsste، geben → gäbe
+
+کاربردها:
+• شرط غیرواقعی: Wenn ich Zeit hätte, würde ich mehr lesen.
+• آرزو: Wenn ich doch reich wäre! / Ich wünschte, ich hätte mehr Zeit.
+• توصیه: An deiner Stelle würde ich zum Arzt gehen. / Du solltest mehr schlafen.
+
+برای گذشته، درس «شرطی گذشته» را ببین.
+--- en
+The Konjunktiv II expresses unreal or imaginary situations ("if I were …").
+
+Forming it:
+• most verbs: würde + infinitive: Ich würde reisen.
+• sein → wäre, haben → hätte, modals → könnte, müsste, dürfte, sollte
+• a few common verbs have their own form: ginge, käme, wüsste, gäbe
+
+Uses:
+• unreal conditions: Wenn ich Zeit hätte, würde ich mehr lesen.
+• wishes: Wenn ich doch reich wäre! / Ich wünschte, ich hätte mehr Zeit.
+• advice: An deiner Stelle würde ich zum Arzt gehen. / Du solltest mehr schlafen.
+--- de
+Konjunktiv II: würde + Infinitiv; bei sein, haben, Modalverben und einigen starken Verben eigene Formen (wäre, hätte, könnte, käme, wüsste). Für irreale Bedingungen, Wünsche und Ratschläge.
+--- table
+Person | sein | haben | werden | können
+ich | wäre | hätte | würde | könnte
+du | wärst | hättest | würdest | könntest
+er / sie / es | wäre | hätte | würde | könnte
+wir | wären | hätten | würden | könnten
+ihr | wärt | hättet | würdet | könntet
+sie / Sie | wären | hätten | würden | könnten
+--- examples
+Wenn ich mehr Geld hätte, würde ich ein Haus kaufen. | اگر پول بیشتری داشتم، خانه می‌خریدم. | If I had more money, I would buy a house.
+Wenn ich du wäre, würde ich das nicht machen. | اگر جای تو بودم، این کار را نمی‌کردم. | If I were you, I wouldn't do that.
+Ich wünschte, ich könnte besser Deutsch sprechen. | کاش می‌توانستم بهتر آلمانی صحبت کنم. | I wish I could speak German better.
+Du solltest mehr Wasser trinken. | بهتر است آب بیشتری بخوری. | You should drink more water.
+Wenn ich das nur wüsste! | کاش این را می‌دانستم! | If only I knew that!
+
+=== de-indirect-questions
+level: B1
+cat: questions
+title.fa: سؤال غیرمستقیم: Weißt du, wo …? / ob …
+title.en: Indirect questions: Weißt du, wo …? / ob …
+title.de: Indirekte Fragen
+keys: indirekte Frage, indirect question, سؤال غیرمستقیم, ob, whether, if, Können Sie mir sagen, Wissen Sie
+words: ob
+see: de-questions, de-weil-dass
+--- fa
+سؤال غیرمستقیم یک جمله‌ی وابسته است، پس فعل به آخر می‌رود. این شکل مؤدب‌تر است.
+
+• سؤال با کلمه‌ی پرسشی: کلمه‌ی پرسشی همان می‌ماند: Wo ist der Bahnhof? → Können Sie mir sagen, wo der Bahnhof ist?
+• سؤال بله/خیر: با ob (آیا / که آیا): Kommt er? → Ich weiß nicht, ob er kommt.
+
+اشتباه رایج: به جای ob از wenn استفاده نکن (در انگلیسی if برای هر دو است).
+--- en
+An indirect question is a subordinate clause, so the verb goes to the end. It sounds more polite.
+
+• W-questions keep the question word: Können Sie mir sagen, wo der Bahnhof ist?
+• yes/no questions use ob (whether/if): Ich weiß nicht, ob er kommt.
+
+Common mistake: don't use wenn for "if" here – it must be ob.
+--- de
+Indirekte Fragen sind Nebensätze (Verb am Ende). W-Fragen behalten das Fragewort, Ja/Nein-Fragen werden mit ob eingeleitet.
+--- examples
+Wissen Sie, wann der Zug abfährt? | می‌دانید قطار کی حرکت می‌کند؟ | Do you know when the train leaves?
+Ich weiß nicht, ob ich morgen Zeit habe. | نمی‌دانم فردا وقت دارم یا نه. | I don't know if I'll have time tomorrow.
+Kannst du mir sagen, wie spät es ist? | می‌توانی بگویی ساعت چند است؟ | Can you tell me what time it is?
+Er fragt, ob wir mitkommen. | می‌پرسد آیا ما هم می‌آییم. | He's asking whether we're coming along.
+Ich frage mich, warum sie nicht angerufen hat. | از خودم می‌پرسم چرا زنگ نزد. | I wonder why she didn't call.
+
+=== de-verbs-prepositions
+level: B1
+cat: verbs
+title.fa: فعل با حرف اضافه‌ی ثابت: warten auf، denken an … و darauf / worauf
+title.en: Verbs with prepositions: warten auf, denken an … and darauf / worauf
+title.de: Verben mit Präpositionen, da- und wo-Wörter
+keys: Präpositionalverb, verb preposition, warten auf, denken an, sich freuen auf, sich interessieren für, Angst haben vor, darauf, daran, worauf, woran, dafür, wofür, da-Wort, wo-Wort
+words: darauf, daran, dafür, damit, davon, darüber, worauf, woran, wofür, womit, wovon, worüber, warten, denken, träumen, sprechen
+see: de-reflexive-verbs, de-two-way-prepositions
+--- fa
+بسیاری از فعل‌ها همیشه با یک حرف اضافه‌ی مشخص می‌آیند و حالت بعدش هم ثابت است. این‌ها را باید همراه فعل حفظ کرد:
+• warten auf + Akk (منتظر … بودن)
+• denken an + Akk (به … فکر کردن)
+• sich freuen auf + Akk (منتظر چیزی در آینده بودن) / sich freuen über + Akk (از چیزی خوشحال بودن)
+• sich interessieren für + Akk (علاقه داشتن به)
+• Angst haben vor + Dat (ترسیدن از)
+• sprechen über + Akk / mit + Dat (صحبت کردن درباره / با)
+• träumen von + Dat، teilnehmen an + Dat، sich kümmern um + Akk
+
+برای چیزها (نه آدم‌ها) به جای «حرف اضافه + ضمیر» از da + حرف اضافه استفاده می‌شود: Ich warte auf den Bus → Ich warte darauf. در سؤال هم wo + حرف اضافه: Worauf wartest du? اگر حرف اضافه با حرف صدادار شروع شود، r اضافه می‌شود: darauf، woran.
+
+برای آدم‌ها: حرف اضافه + ضمیر / کلمه‌ی پرسشی: Ich warte auf ihn. Auf wen wartest du?
+--- en
+Many verbs always go with a fixed preposition and case – learn them together: warten auf + Akk, denken an + Akk, sich freuen auf / über + Akk, sich interessieren für + Akk, Angst haben vor + Dat, sprechen über / mit, träumen von, teilnehmen an, sich kümmern um.
+
+For things (not people) replace "preposition + pronoun" with da + preposition: Ich warte darauf. In questions use wo + preposition: Worauf wartest du? Add r before a vowel: darauf, woran.
+
+For people use preposition + pronoun: Ich warte auf ihn. Auf wen wartest du?
+--- de
+Verben mit fester Präposition (warten auf, denken an, sich freuen auf/über, sich interessieren für, Angst haben vor …). Bei Sachen: da(r)- + Präposition (darauf) und in Fragen wo(r)- (worauf). Bei Personen: Präposition + Pronomen (auf ihn, auf wen).
+--- table
+Verb | Sache | Frage (Sache) | Person
+warten auf | darauf | Worauf? | auf ihn / Auf wen?
+denken an | daran | Woran? | an sie / An wen?
+sich interessieren für | dafür | Wofür? | für ihn / Für wen?
+sprechen über | darüber | Worüber? | über sie / Über wen?
+Angst haben vor | davor | Wovor? | vor ihm / Vor wem?
+--- examples
+Ich warte seit einer Stunde auf den Bus. | یک ساعت است منتظر اتوبوسم. | I've been waiting for the bus for an hour.
+Denk bitte daran, Brot zu kaufen! | لطفاً یادت باشد نان بخری! | Please remember to buy bread!
+Worüber habt ihr gesprochen? | درباره‌ی چه صحبت کردید؟ | What did you talk about?
+Sie interessiert sich sehr für Kunst. | او خیلی به هنر علاقه دارد. | She is very interested in art.
+Ich freue mich schon auf die Ferien. | از الان منتظر تعطیلاتم. | I'm already looking forward to the holidays.
+
+=== de-temporal-clauses
+level: B1
+cat: sentences
+title.fa: جمله‌های زمانی: als، wenn، während، bevor، nachdem، seit، bis
+title.en: Time clauses: als, wenn, während, bevor, nachdem, seit, bis
+title.de: Temporalsätze: als, wenn, während, bevor, nachdem
+keys: Temporalsatz, als wenn, when, وقتی, هنگامی که, während, bevor, nachdem, seitdem, bis, sobald, solange
+words: als, wenn, während, bevor, nachdem, seit, seitdem, bis, sobald, solange
+see: de-weil-dass, de-plusquamperfekt
+--- fa
+als یا wenn؟ هر دو یعنی «وقتی»:
+• als: یک اتفاق یک‌باره در گذشته: Als ich ein Kind war, … / Als ich ankam, …
+• wenn: در حال و آینده، و در گذشته برای کارهای تکراری («هر وقت»): Wenn ich nach Hause komme, … / Immer wenn er kam, …
+
+بقیه:
+• während (در حالی که، همزمان)، bevor (قبل از اینکه)، nachdem (بعد از اینکه؛ معمولاً با زمان قبل‌تر: Perfekt یا Plusquamperfekt)
+• seit/seitdem (از وقتی که)، bis (تا وقتی که)، sobald (به محض اینکه)، solange (تا زمانی که)
+
+همه جمله‌ی وابسته می‌سازند، پس فعل آخر می‌آید.
+--- en
+als or wenn – both mean "when":
+• als: a single event in the past: Als ich ein Kind war, … / Als ich ankam, …
+• wenn: present and future, and repeated events in the past ("whenever"): Wenn ich nach Hause komme, … / Immer wenn er kam, …
+
+Others: während (while), bevor (before), nachdem (after – usually with an earlier tense), seit/seitdem (since), bis (until), sobald (as soon as), solange (as long as). All take verb-final order.
+--- de
+als: einmalig in der Vergangenheit; wenn: Gegenwart/Zukunft und wiederholt in der Vergangenheit. Weitere: während, bevor, nachdem (Vorzeitigkeit), seit(dem), bis, sobald, solange.
+--- examples
+Als ich in Berlin ankam, regnete es. | وقتی به برلین رسیدم، باران می‌آمد. | When I arrived in Berlin, it was raining.
+Wenn ich nach Hause komme, koche ich zuerst. | وقتی به خانه می‌رسم، اول آشپزی می‌کنم. | When I get home, I cook first.
+Bevor du gehst, mach bitte das Licht aus. | قبل از اینکه بروی، لطفاً چراغ را خاموش کن. | Before you go, please turn off the light.
+Nachdem wir gegessen hatten, gingen wir spazieren. | بعد از اینکه غذا خوردیم، قدم زدیم. | After we had eaten, we went for a walk.
+Ruf mich an, sobald du da bist. | به محض اینکه رسیدی، زنگ بزن. | Call me as soon as you're there.
+
+=== de-two-part-conjunctions
+level: B1
+cat: sentences
+title.fa: حرف ربط‌های دوقسمتی: sowohl … als auch، weder … noch، entweder … oder
+title.en: Two-part conjunctions: sowohl … als auch, weder … noch, entweder … oder
+title.de: Zweiteilige Konnektoren
+keys: zweiteilig, both and, neither nor, either or, sowohl als auch, weder noch, entweder oder, nicht nur sondern auch, je desto, zwar aber, هم هم, نه نه, یا یا
+words: sowohl, weder, noch, entweder, desto, umso, zwar
+see: de-conjunctions, de-comparison
+--- fa
+• sowohl … als auch = هم … هم: Er spricht sowohl Deutsch als auch Englisch.
+• nicht nur … sondern auch = نه تنها … بلکه: Sie ist nicht nur klug, sondern auch nett.
+• weder … noch = نه … نه: Ich trinke weder Kaffee noch Tee.
+• entweder … oder = یا … یا: Entweder kommst du mit oder du bleibst hier.
+• zwar … aber = درست است که … ولی: Das Auto ist zwar alt, aber es fährt gut.
+• je … desto/umso = هرچه … بیشتر: Je mehr ich lerne, desto besser spreche ich. (بعد از je فعل آخر می‌آید، بعد از desto فعل بلافاصله)
+--- en
+• sowohl … als auch = both … and
+• nicht nur … sondern auch = not only … but also
+• weder … noch = neither … nor
+• entweder … oder = either … or
+• zwar … aber = admittedly … but
+• je … desto/umso = the more … the more: Je mehr ich lerne, desto besser spreche ich. (verb last after je, verb right after desto)
+--- de
+sowohl … als auch, nicht nur … sondern auch, weder … noch, entweder … oder, zwar … aber, je + Komparativ (Verb am Ende) … desto/umso + Komparativ (Verb folgt).
+--- examples
+Ich spreche sowohl Persisch als auch Deutsch. | هم فارسی صحبت می‌کنم هم آلمانی. | I speak both Persian and German.
+Er hat weder Zeit noch Geld. | نه وقت دارد نه پول. | He has neither time nor money.
+Entweder wir fahren mit dem Zug oder wir nehmen das Auto. | یا با قطار می‌رویم یا با ماشین. | Either we go by train or we take the car.
+Die Wohnung ist zwar klein, aber sehr gemütlich. | آپارتمان درست است که کوچک است، ولی خیلی دنج است. | The flat is small, but very cosy.
+Je früher wir anfangen, desto schneller sind wir fertig. | هرچه زودتر شروع کنیم، زودتر تمام می‌شود. | The earlier we start, the sooner we're done.
+
+=== de-n-declension
+level: B1
+cat: nouns
+title.fa: اسم‌های مذکر با پسوند ‎-n: den Kollegen، dem Studenten
+title.en: Weak masculine nouns (n-declension): den Kollegen
+title.de: N-Deklination
+keys: n-Deklination, weak nouns, Kollege, Student, Mensch, Herr, Junge, Name, Nachbar, Kunde, Präsident, اسم ضعیف
+words: Kollege, Student, Mensch, Herr, Junge, Nachbar, Kunde, Name, Präsident, Löwe, Affe, Journalist, Tourist, Polizist
+see: de-nominative-accusative, de-dative, de-genitive
+--- fa
+گروهی از اسم‌های مذکر در همه‌ی حالت‌ها به جز Nominativ مفرد، ‎-n‎ یا ‎-en‎ می‌گیرند: der Kollege → den Kollegen، dem Kollegen، des Kollegen.
+
+کدام اسم‌ها؟
+• اسم‌های مذکری که به ‎-e‎ تمام می‌شوند و برای آدم یا حیوان‌اند: der Kollege، der Junge، der Kunde، der Löwe
+• اسم‌های مذکر خارجی با ‎-ent، ‎-ant، ‎-ist، ‎-at، ‎-oge: der Student، der Präsident، der Journalist، der Polizist
+• چند اسم دیگر: der Mensch، der Herr (Herrn)، der Nachbar، der Bauer
+
+چند اسم (der Name، der Gedanke، der Glaube) در Genitiv ‎-ns‎ می‌گیرند: des Namens.
+--- en
+Some masculine nouns add -n or -en in every case except the nominative singular: der Kollege → den Kollegen, dem Kollegen, des Kollegen.
+
+Which ones? Masculine nouns in -e for people and animals (der Kollege, der Junge, der Kunde, der Löwe); foreign masculine nouns in -ent, -ant, -ist, -at, -oge (der Student, der Präsident, der Journalist); and a few more (der Mensch, der Herr → Herrn, der Nachbar). A few (der Name, der Gedanke) take -ns in the genitive.
+--- de
+N-Deklination: maskuline Nomen auf -e (Personen, Tiere), Fremdwörter auf -ent, -ant, -ist, -at, -oge sowie Mensch, Herr, Nachbar. Sie haben in allen Kasus außer Nominativ Singular die Endung -(e)n.
+--- table
+Kasus | Singular | Plural
+Nominativ | der Kollege | die Kollegen
+Akkusativ | den Kollegen | die Kollegen
+Dativ | dem Kollegen | den Kollegen
+Genitiv | des Kollegen | der Kollegen
+--- examples
+Ich frage meinen Kollegen. | از همکارم می‌پرسم. | I'll ask my colleague.
+Kennst du den neuen Studenten? | دانشجوی جدید را می‌شناسی؟ | Do you know the new student?
+Sehr geehrter Herr Müller, … | آقای مولر عزیز، … | Dear Mr Müller, …
+Ich habe mit dem Nachbarn gesprochen. | با همسایه صحبت کردم. | I spoke to the neighbour.
+Der Polizist hat dem Touristen geholfen. | پلیس به گردشگر کمک کرد. | The policeman helped the tourist.
+
+=== de-lassen
+level: B1
+cat: verbs
+title.fa: فعل lassen: اجازه دادن، گذاشتن، دادن کاری به کسی دیگر
+title.en: The verb lassen: let, leave, have something done
+title.de: Das Verb lassen
+keys: lassen, let, leave, have something done, اجازه دادن, گذاشتن, دادن به کسی برای انجام, sich lassen
+words: lassen, lasse, lässt, ließ, gelassen
+see: de-modal-verbs, de-passive-alternatives
+--- fa
+lassen چند معنی مهم دارد:
+• جا گذاشتن / رها کردن: Ich lasse das Auto zu Hause.
+• اجازه دادن: Lass mich schlafen! (بگذار بخوابم!)
+• دادن کاری به کس دیگر برای انجام (مثل have something done): Ich lasse mein Auto reparieren (ماشینم را می‌دهم تعمیر کنند). Ich lasse mir die Haare schneiden.
+• sich lassen = «قابل … بودن»: Das lässt sich leicht erklären (به‌راحتی می‌شود توضیحش داد).
+
+مثل فعل مُدال، فعل دوم بدون zu در آخر می‌آید. صرف: ich lasse، du lässt، er lässt. در Perfekt با فعل دیگر: Ich habe mein Auto reparieren lassen.
+--- en
+lassen has several key meanings:
+• leave: Ich lasse das Auto zu Hause.
+• let/allow: Lass mich schlafen!
+• have something done by someone else: Ich lasse mein Auto reparieren. Ich lasse mir die Haare schneiden.
+• sich lassen = "can be …": Das lässt sich leicht erklären.
+
+Like a modal, the second verb goes to the end without zu. Perfekt with another verb: Ich habe mein Auto reparieren lassen.
+--- de
+lassen: zurücklassen, erlauben, veranlassen (etwas machen lassen), sich lassen = Passiversatz (Das lässt sich machen). Infinitiv ohne zu; Perfekt: hat … machen lassen.
+--- examples
+Ich lasse mein Handy reparieren. | گوشی‌ام را می‌دهم تعمیر کنند. | I'm having my phone repaired.
+Lass mich bitte in Ruhe! | لطفاً راحتم بگذار! | Please leave me alone!
+Meine Eltern lassen mich nicht allein reisen. | پدر و مادرم نمی‌گذارند تنها سفر کنم. | My parents don't let me travel alone.
+Ich habe meinen Schirm im Bus liegen lassen. | چترم را در اتوبوس جا گذاشتم. | I left my umbrella on the bus.
+Das Fenster lässt sich nicht öffnen. | این پنجره باز نمی‌شود. | The window won't open.

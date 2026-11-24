@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.5 — 2026-11-24
+
+- **Grammar**: a new Grammar screen (book button at the top) with 60 German and 49 English lessons from A1 to C1 — explanation, table, examples with Persian and English/German translations, and related lessons.
+- Explanations in Persian, English or German (button at the top right of the Grammar screen).
+- Search lessons by topic in any of the three languages (Perfekt, passive, جداشدنی, trennbar) or by a word: fernsehen finds separable verbs.
+- A looked-up word gets a **Grammar** button with its lessons (fernsehen → separable verbs, Tisch → articles and plural, went → irregular verbs).
+- Fixed: German example sentences were often missing when the word was typed in lower case (tisch).
+
 ## 1.4 — 2026-11-24
 
 - Phrasal verbs: for English verbs, a button shows the common phrasal verbs (give → give up, give in …) with their meaning and Persian translation. Tap one to translate it.

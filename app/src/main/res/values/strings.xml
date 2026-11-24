@@ -111,4 +111,22 @@
     <string name="widget_description">Search bar for quick translation, with your recent words</string>
     <string name="widget_hint">Translate a word</string>
     <string name="widget_langs">EN · DE · FA</string>
+    <string name="grammar">Grammar</string>
+    <string name="grammar_open">Grammar lessons</string>
+    <string name="grammar_search_hint">Search a topic or a word</string>
+    <string name="grammar_german">German</string>
+    <string name="grammar_english">English</string>
+    <string name="grammar_nothing">No lessons found</string>
+    <string name="grammar_nothing_hint">Try a topic such as “Perfekt” or “passive”, or a word such as “fernsehen”.</string>
+    <string name="grammar_table">Table</string>
+    <string name="grammar_related">Related lessons</string>
+    <string name="grammar_for_word">Grammar for this word</string>
+    <string name="grammar_all">All grammar lessons</string>
+    <string name="explain_in">Explain in</string>
+    <string name="explain_in_desc">Explanations in %1$s. Change</string>
+    <string name="loading">Loading…</string>
+    <plurals name="lessons_found">
+        <item quantity="one">%d lesson</item>
+        <item quantity="other">%d lessons</item>
+    </plurals>
 </resources>

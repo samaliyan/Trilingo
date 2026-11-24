@@ -15,6 +15,7 @@ final class Store {
     private static final String FILE = "trilingo";
     private static final String K_THEME = "theme", K_SERVICE = "service", K_SAVE_HISTORY = "saveHistory";
     private static final String K_AUTO_UPD = "autoUpdate", K_LAST_UPD = "lastUpdateCheck";
+    private static final String K_EXPLAIN = "grammarExplain", K_GRAMMAR_LANG = "grammarLang";
 
     private static History history;
 
@@ -69,5 +70,24 @@ final class Store {
 
     void setLastUpdateCheck(long t) {
         p.edit().putLong(K_LAST_UPD, t).apply();
+    }
+
+    /** Language the grammar lessons are explained in (Persian, English or German). */
+    Lang explainLang() {
+        Lang l = Lang.of(p.getString(K_EXPLAIN, "fa"));
+        return l == null ? Lang.FA : l;
+    }
+
+    void setExplainLang(Lang l) {
+        p.edit().putString(K_EXPLAIN, l.code).apply();
+    }
+
+    /** Which grammar the Grammar screen shows: German or English. */
+    Lang grammarLang() {
+        return Lang.EN.code.equals(p.getString(K_GRAMMAR_LANG, "de")) ? Lang.EN : Lang.DE;
+    }
+
+    void setGrammarLang(Lang l) {
+        p.edit().putString(K_GRAMMAR_LANG, l.code).apply();
     }
 }

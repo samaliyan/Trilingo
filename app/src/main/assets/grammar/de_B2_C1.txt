@@ -1,0 +1,441 @@
+# German B2 and C1. Examples: German | Persian | English
+
+=== de-konjunktiv2-past
+level: B2
+cat: conditionals
+title.fa: شرطی گذشته (Konjunktiv II گذشته): hätte gemacht، wäre gegangen
+title.en: Past unreal conditions: hätte gemacht, wäre gegangen
+title.de: Konjunktiv II der Vergangenheit
+keys: Konjunktiv II Vergangenheit, third conditional, شرطی نوع سوم, hätte gemacht, wäre gegangen, regret, پشیمانی, hätte machen sollen
+see: de-konjunktiv2, de-perfekt
+--- fa
+برای چیزی که در گذشته اتفاق نیفتاد (پشیمانی، خیال درباره‌ی گذشته): hätte یا wäre + Partizip II. انتخاب hätte/wäre همان قانون Perfekt است.
+
+• Wenn ich das gewusst hätte, wäre ich gekommen (اگر این را می‌دانستم، می‌آمدم).
+• Ich hätte früher anfangen sollen (باید زودتر شروع می‌کردم). با فعل مُدال، دو مصدر پشت هم در آخر جمله می‌آیند.
+• Fast wäre ich zu spät gekommen (نزدیک بود دیر برسم).
+--- en
+For things that did not happen in the past (regrets, imagined past): hätte or wäre + past participle (same choice as in the Perfekt).
+
+• Wenn ich das gewusst hätte, wäre ich gekommen (If I had known, I would have come).
+• Ich hätte früher anfangen sollen (I should have started earlier) – with a modal, two infinitives at the end.
+• Fast wäre ich zu spät gekommen (I almost came too late).
+--- de
+Konjunktiv II Vergangenheit: hätte/wäre + Partizip II. Mit Modalverb: hätte + Infinitiv + Modalverb im Infinitiv (hätte kommen sollen).
+--- examples
+Wenn du angerufen hättest, hätte ich dich abgeholt. | اگر زنگ زده بودی، دنبالت می‌آمدم. | If you had called, I would have picked you up.
+Ich hätte das nicht sagen sollen. | نباید این را می‌گفتم. | I shouldn't have said that.
+Ohne deine Hilfe hätte ich es nicht geschafft. | بدون کمک تو موفق نمی‌شدم. | Without your help I wouldn't have managed.
+Wären wir früher losgefahren, hätten wir den Zug erreicht. | اگر زودتر راه افتاده بودیم، به قطار می‌رسیدیم. | If we had left earlier, we would have caught the train.
+Fast hätte ich es vergessen. | نزدیک بود فراموش کنم. | I almost forgot.
+
+=== de-konjunktiv1
+level: B2
+cat: verbs
+title.fa: نقل قول غیرمستقیم (Konjunktiv I): er sagt, er sei krank
+title.en: Reported speech (Konjunktiv I): er sagt, er sei krank
+title.de: Indirekte Rede: Konjunktiv I
+keys: Konjunktiv I, indirekte Rede, reported speech, نقل قول, سی, sei, habe, werde, Nachrichten, اخبار
+words: sei, seien, habe, werde, könne, müsse
+see: de-konjunktiv2, de-indirect-questions
+--- fa
+در اخبار و متن‌های رسمی، حرف دیگران را با Konjunktiv I نقل می‌کنند تا معلوم باشد این حرف خودِ نویسنده نیست: Der Minister sagte, er sei zufrieden.
+
+ساختن: ریشه‌ی مصدر + پسوند. در عمل بیشتر سوم‌شخص مفرد به کار می‌رود: er komme، er habe، er könne، er werde. sein کاملاً بی‌قاعده است: ich sei، du seist، er sei، wir seien، sie seien.
+
+• گذشته: habe/sei + Partizip II: Er sagte, er habe den Brief nicht bekommen.
+• آینده: werde + مصدر.
+• اگر شکل Konjunktiv I با زمان حال یکی شود (بیشتر در جمع: sie haben)، به جای آن Konjunktiv II می‌آید: Sie sagten, sie hätten keine Zeit.
+
+در گفتار معمولی به جای این ساختار، زمان حال یا Konjunktiv II یا dass می‌گویند.
+--- en
+News and formal texts report other people's words in the Konjunktiv I, which shows that the writer is only reporting: Der Minister sagte, er sei zufrieden.
+
+Form: infinitive stem + ending; mainly used in the third person singular: er komme, er habe, er könne, er werde. sein is irregular: ich sei, er sei, sie seien.
+
+• past: habe/sei + participle: Er sagte, er habe den Brief nicht bekommen.
+• future: werde + infinitive.
+• where Konjunktiv I looks like the present (mostly plural), use Konjunktiv II: Sie sagten, sie hätten keine Zeit.
+
+In everyday speech people use the indicative or Konjunktiv II instead.
+--- de
+Indirekte Rede in Medien und formellen Texten: Konjunktiv I (er sei, er habe, er komme). Vergangenheit: habe/sei + Partizip II; Zukunft: werde + Infinitiv. Ist Konjunktiv I gleich dem Indikativ, nimmt man Konjunktiv II.
+--- examples
+Der Sprecher sagte, die Lage sei unter Kontrolle. | سخنگو گفت اوضاع تحت کنترل است. | The spokesman said the situation was under control.
+Sie behauptet, sie habe nichts gewusst. | ادعا می‌کند چیزی نمی‌دانسته است. | She claims she knew nothing.
+Er erklärte, er werde zurücktreten. | او اعلام کرد که استعفا خواهد داد. | He announced he would resign.
+Laut Polizei sei niemand verletzt worden. | به گفته‌ی پلیس کسی زخمی نشده است. | According to the police, nobody was injured.
+Die Kunden sagten, sie hätten zu lange gewartet. | مشتری‌ها گفتند خیلی منتظر مانده‌اند. | The customers said they had waited too long.
+
+=== de-passive-advanced
+level: B2
+cat: passive
+title.fa: مجهول پیشرفته: مجهول حالتی (ist geöffnet) و مجهول بدون فاعل
+title.en: More passive: state passive (ist geöffnet) and impersonal passive
+title.de: Zustandspassiv und unpersönliches Passiv
+keys: Zustandspassiv, state passive, sein Passiv, ist geschlossen, unpersönliches Passiv, es wird getanzt, Passiv mit Modalverb Perfekt
+see: de-passive, de-passive-alternatives
+--- fa
+• مجهول فرایندی (werden): خود عمل: Die Tür wird geöffnet (در دارد باز می‌شود).
+• مجهول حالتی (sein + Partizip II): نتیجه‌ی عمل، یعنی حالت: Die Tür ist geöffnet (در باز است). Das Geschäft ist sonntags geschlossen.
+
+مجهول بدون فاعل: با فعل‌هایی که مفعول Akkusativ ندارند هم می‌شود مجهول ساخت. اگر جای اول خالی باشد، es می‌آید: Es wird hier viel gearbeitet / Hier wird viel gearbeitet. با فعل‌های Dativ، مفعول Dativ می‌ماند: Mir wurde geholfen.
+
+مجهول با مُدال در Perfekt: Das hätte gemacht werden müssen. (معمولاً در نوشتار)
+--- en
+• Process passive (werden): the action: Die Tür wird geöffnet (the door is being opened).
+• State passive (sein + participle): the resulting state: Die Tür ist geöffnet (the door is open). Das Geschäft ist sonntags geschlossen.
+
+Impersonal passive: verbs without an accusative object can be passive too; if position 1 is empty, es fills it: Es wird hier viel gearbeitet / Hier wird viel gearbeitet. Dative objects stay dative: Mir wurde geholfen.
+--- de
+Vorgangspassiv (werden + P II) beschreibt den Prozess, Zustandspassiv (sein + P II) das Resultat. Unpersönliches Passiv ohne Subjekt (Hier wird getanzt; Es wird gefeiert). Dativobjekte bleiben im Dativ (Mir wurde geholfen).
+--- examples
+Das Restaurant ist montags geschlossen. | رستوران دوشنبه‌ها تعطیل است. | The restaurant is closed on Mondays.
+Der Tisch ist schon gedeckt. | میز چیده شده است. | The table is already laid.
+Bei uns wird viel gelacht. | پیش ما زیاد خندیده می‌شود (زیاد می‌خندیم). | There's a lot of laughing at our place.
+Mir wurde nicht gesagt, dass der Kurs ausfällt. | به من نگفتند که کلاس تشکیل نمی‌شود. | I wasn't told that the course was cancelled.
+Am Wochenende wird nicht gearbeitet. | آخر هفته کار نمی‌شود. | There's no work at the weekend.
+
+=== de-passive-alternatives
+level: B2
+cat: passive
+title.fa: جایگزین‌های مجهول: man، sich lassen، ‎-bar، sein + zu
+title.en: Alternatives to the passive: man, sich lassen, -bar, sein + zu
+title.de: Passiversatzformen
+keys: Passiversatz, man, lässt sich, -bar, ist zu machen, sein zu, machbar, lesbar, alternatives passive, قابل
+see: de-passive, de-lassen, de-es-gibt-man
+--- fa
+آلمانی چند ساختار دارد که معنی مجهول دارند و اغلب طبیعی‌ترند:
+
+• man + فعل معلوم: Man spricht hier Deutsch = Hier wird Deutsch gesprochen.
+• sich lassen + مصدر (قابل … بودن): Das Problem lässt sich lösen = Das Problem kann gelöst werden.
+• صفت با ‎-bar‎ (قابل …): lösbar، machbar، essbar، lesbar: Das Problem ist lösbar.
+• sein + zu + مصدر (باید / می‌شود): Die Rechnung ist bis Montag zu bezahlen (باید پرداخت شود). Das ist nicht zu verstehen (قابل فهم نیست).
+--- en
+German has several structures with passive meaning that often sound more natural:
+• man + active verb: Man spricht hier Deutsch.
+• sich lassen + infinitive ("can be done"): Das Problem lässt sich lösen.
+• adjectives in -bar ("-able"): lösbar, machbar, essbar: Das Problem ist lösbar.
+• sein + zu + infinitive ("must / can be done"): Die Rechnung ist bis Montag zu bezahlen. Das ist nicht zu verstehen.
+--- de
+Passiversatz: man; sich lassen + Infinitiv (Möglichkeit); Adjektive auf -bar (Möglichkeit); sein + zu + Infinitiv (Notwendigkeit oder Möglichkeit).
+--- examples
+Das lässt sich leicht reparieren. | این به‌راحتی تعمیر می‌شود. | That can be repaired easily.
+Ist das Wasser trinkbar? | این آب قابل نوشیدن است؟ | Is the water drinkable?
+Der Antrag ist bis Ende Mai einzureichen. | درخواست باید تا آخر ماه مه تحویل داده شود. | The application must be submitted by the end of May.
+Seine Schrift ist kaum zu lesen. | دست‌خطش به‌سختی خوانده می‌شود. | His handwriting is barely legible.
+Wie schreibt man das? | این را چطور می‌نویسند؟ | How is that spelt?
+
+=== de-concessive
+level: B2
+cat: sentences
+title.fa: جمله‌های تقابلی: obwohl، trotzdem، trotz
+title.en: Contrast: obwohl, trotzdem, trotz
+title.de: Konzessive Sätze: obwohl, trotzdem, trotz
+keys: obwohl, trotzdem, trotz, dennoch, although, despite, nevertheless, با اینکه, با این حال, Konzessivsatz, auch wenn, selbst wenn
+words: obwohl, trotzdem, dennoch, obgleich
+see: de-weil-dass, de-prep-genitive, de-causal-connectors
+--- fa
+سه راه برای گفتن یک معنی («با اینکه هوا بد بود، بیرون رفتیم»):
+• obwohl + جمله‌ی وابسته (فعل آخر): Obwohl das Wetter schlecht war, gingen wir raus.
+• trotzdem (با این حال) + جمله‌ی اصلی؛ trotzdem جایگاه ۱ را می‌گیرد و فعل بلافاصله بعدش می‌آید: Das Wetter war schlecht. Trotzdem gingen wir raus.
+• trotz + Genitiv (+ اسم): Trotz des schlechten Wetters gingen wir raus.
+
+auch wenn / selbst wenn = حتی اگر: Ich komme, auch wenn es regnet.
+--- en
+Three ways to say the same thing:
+• obwohl + subordinate clause (verb last): Obwohl das Wetter schlecht war, gingen wir raus.
+• trotzdem + main clause (trotzdem takes position 1, the verb follows): Trotzdem gingen wir raus.
+• trotz + genitive noun: Trotz des schlechten Wetters gingen wir raus.
+
+auch wenn / selbst wenn = even if.
+--- de
+obwohl (Nebensatz, Verb am Ende), trotzdem (Adverb, Position 1 oder Mittelfeld), trotz + Genitiv. auch wenn / selbst wenn = auch im Fall, dass.
+--- table
+Konnektor | Satzart | Beispiel
+obwohl | Nebensatz | Obwohl er müde war, arbeitete er weiter.
+trotzdem | Hauptsatz | Er war müde. Trotzdem arbeitete er weiter.
+trotz | Präposition + Genitiv | Trotz seiner Müdigkeit arbeitete er weiter.
+--- examples
+Obwohl sie krank ist, geht sie zur Arbeit. | با اینکه مریض است، سر کار می‌رود. | Although she is ill, she goes to work.
+Es war sehr teuer. Trotzdem haben wir es gekauft. | خیلی گران بود. با این حال خریدیمش. | It was very expensive. We bought it anyway.
+Trotz der Probleme sind wir zufrieden. | با وجود مشکلات، راضی هستیم. | Despite the problems we are satisfied.
+Ich gehe joggen, auch wenn es regnet. | می‌روم دویدن، حتی اگر باران بیاید. | I'll go jogging even if it rains.
+Er hat die Prüfung bestanden, obwohl er wenig gelernt hatte. | امتحان را قبول شد، با اینکه کم درس خوانده بود. | He passed the exam although he had studied little.
+
+=== de-causal-connectors
+level: B2
+cat: sentences
+title.fa: بیان علت و نتیجه: weil، da، deshalb، daher، sodass، wegen
+title.en: Cause and result: weil, da, deshalb, daher, sodass
+title.de: Kausal- und Konsekutivsätze: deshalb, sodass, da
+keys: kausal, konsekutiv, deshalb, deswegen, daher, darum, sodass, so dass, da, nämlich, therefore, so that, because, به همین دلیل, در نتیجه
+words: deshalb, deswegen, daher, darum, sodass, nämlich, folglich, da
+see: de-weil-dass, de-concessive, de-conjunctions
+--- fa
+علت:
+• weil / da + جمله‌ی وابسته؛ da بیشتر وقتی است که علت معلوم است و اغلب اول جمله می‌آید: Da es spät ist, gehen wir.
+• denn (جمله‌ی اصلی)، nämlich (چون آخر …؛ بعد از فعل): Ich komme nicht, ich bin nämlich krank.
+• wegen + Genitiv
+
+نتیجه:
+• deshalb / deswegen / daher / darum = به همین دلیل (قید، جایگاه ۱ با فعل بعدش): Ich war krank. Deshalb bin ich nicht gekommen.
+• sodass / so …, dass = طوری که / به‌طوری که (جمله‌ی وابسته): Es regnete stark, sodass wir zu Hause blieben. / Er war so müde, dass er sofort einschlief.
+--- en
+Cause: weil / da + subordinate clause (da for known reasons, often at the start); denn (main clause); nämlich (after the verb: Ich bin nämlich krank); wegen + genitive.
+
+Result: deshalb / deswegen / daher / darum = that's why (adverb in position 1, verb follows); sodass / so …, dass = so that, so … that (subordinate clause).
+--- de
+Kausal: weil, da (Nebensatz), denn (Hauptsatz), nämlich (Adverb), wegen (Präposition). Konsekutiv: deshalb, deswegen, daher, darum (Hauptsatz, Inversion), sodass / so …, dass (Nebensatz).
+--- examples
+Ich hatte Kopfschmerzen, deshalb bin ich früh gegangen. | سرم درد می‌کرد، برای همین زود رفتم. | I had a headache, so I left early.
+Da der Zug Verspätung hatte, kam ich zu spät. | چون قطار تأخیر داشت، دیر رسیدم. | As the train was late, I arrived late.
+Er hat viel geübt, sodass er jetzt fließend spricht. | خیلی تمرین کرد، طوری که الان روان صحبت می‌کند. | He practised a lot, so now he speaks fluently.
+Es war so kalt, dass der See gefroren ist. | آن‌قدر سرد بود که دریاچه یخ زد. | It was so cold that the lake froze.
+Ich kann nicht kommen, ich muss nämlich arbeiten. | نمی‌توانم بیایم، آخر باید کار کنم. | I can't come – I have to work, you see.
+
+=== de-participles-adjectives
+level: B2
+cat: adjectives
+title.fa: اسم مفعول و اسم فاعل به عنوان صفت: das schlafende Kind، das gekochte Ei
+title.en: Participles as adjectives: das schlafende Kind, das gekochte Ei
+title.de: Partizipien als Adjektive und Partizipialattribute
+keys: Partizip I, Partizip II, participle, Partizipialattribut, schlafend, gekocht, -end, صفت فعلی, erweitertes Attribut
+see: de-adjective-endings, de-relative-clauses, de-nominal-style
+--- fa
+• Partizip I (مصدر + d): کاری که همزمان در جریان است (‎-ing‎ در انگلیسی): das schlafende Kind (بچه‌ی خوابیده / در حال خواب)، die steigenden Preise.
+• Partizip II: کار انجام‌شده یا مجهول: das gekochte Ei (تخم‌مرغ آب‌پز)، die geschlossene Tür.
+
+قبل از اسم، مثل هر صفتی پسوند می‌گیرند.
+
+در متن‌های رسمی و علمی، این صفت‌ها گاهی یک گروه کامل را جلوی خودشان می‌آورند (Partizipialattribut) که در فارسی و انگلیسی با جمله‌ی موصولی ترجمه می‌شود:
+der seit Jahren in Berlin lebende Künstler = der Künstler, der seit Jahren in Berlin lebt (هنرمندی که سال‌هاست در برلین زندگی می‌کند).
+
+روش خواندن: از حرف تعریف به اسم بپر، بعد برگرد و وسط را بخوان.
+--- en
+• Partizip I (infinitive + d): an ongoing action (-ing): das schlafende Kind, die steigenden Preise.
+• Partizip II: a completed or passive action: das gekochte Ei, die geschlossene Tür.
+
+Before a noun they take normal adjective endings.
+
+Formal texts expand them into long attributes, best translated with a relative clause: der seit Jahren in Berlin lebende Künstler = der Künstler, der seit Jahren in Berlin lebt. Reading tip: jump from the article to the noun, then read the middle.
+--- de
+Partizip I (Gleichzeitigkeit, aktiv) und Partizip II (Vorzeitigkeit, passiv) können als Adjektive dekliniert werden. Erweiterte Partizipialattribute ersetzen Relativsätze: der in Berlin lebende Künstler.
+--- examples
+Er kam lachend ins Zimmer. | خندان وارد اتاق شد. | He came into the room laughing.
+Das schlafende Baby sieht süß aus. | بچه‌ی خوابیده بامزه به نظر می‌رسد. | The sleeping baby looks sweet.
+Ich esse gern gekochte Eier. | تخم‌مرغ آب‌پز دوست دارم. | I like boiled eggs.
+Die steigenden Mieten sind ein großes Problem. | اجاره‌های رو به افزایش مشکل بزرگی است. | Rising rents are a big problem.
+Der vor zwei Jahren eröffnete Flughafen ist schon zu klein. | فرودگاهی که دو سال پیش افتتاح شد، الان دیگر کوچک است. | The airport that opened two years ago is already too small.
+
+=== de-nominal-style
+level: B2
+cat: nouns
+title.fa: اسم‌سازی و سبک رسمی: die Erklärung، bei der Ankunft
+title.en: Nominal style: die Erklärung, bei der Ankunft
+title.de: Nominalisierung und Nominalstil
+keys: Nominalisierung, Nominalstil, nominalization, اسم‌سازی, -ung, das Lesen, bei, nach, vor, wegen, formal writing, نامه رسمی
+see: de-temporal-clauses, de-prep-genitive, de-verb-noun-phrases
+--- fa
+در متن‌های اداری، علمی و خبری، به جای جمله‌ی وابسته از «اسم + حرف اضافه» استفاده می‌کنند. این کار جمله را کوتاه‌تر و رسمی‌تر می‌کند.
+
+ساختن اسم از فعل:
+• مصدر + das: lesen → das Lesen، essen → das Essen
+• ریشه + ‎-ung‎ (die): erklären → die Erklärung، bestellen → die Bestellung
+• شکل‌های دیگر: ankommen → die Ankunft، abfahren → die Abfahrt، beginnen → der Beginn
+
+تبدیل‌های رایج:
+• als / wenn → bei: Als ich ankam → Bei meiner Ankunft
+• nachdem → nach، bevor → vor، während → während
+• weil → wegen، obwohl → trotz، damit / um … zu → zu / für
+--- en
+Official, academic and news texts replace clauses with "preposition + noun", which is shorter and more formal.
+
+Making nouns from verbs: das + infinitive (das Lesen); stem + -ung (die Erklärung); other forms (die Ankunft, die Abfahrt, der Beginn).
+
+Typical swaps: als/wenn → bei, nachdem → nach, bevor → vor, weil → wegen, obwohl → trotz, um … zu → zu/für.
+--- de
+Nominalstil: Nebensätze werden zu Präpositionalgruppen (bei, nach, vor, während, wegen, trotz, zu). Nomen aus Verben: das Lesen, die Erklärung, die Ankunft.
+--- table
+Verbalstil | Nominalstil
+Als wir ankamen, … | Bei unserer Ankunft …
+Nachdem er das Studium beendet hatte, … | Nach dem Ende seines Studiums …
+Bevor Sie abfahren, … | Vor der Abfahrt …
+Weil es stark regnete, … | Wegen des starken Regens …
+Obwohl er krank war, … | Trotz seiner Krankheit …
+--- examples
+Bei der Ankunft erhalten Sie einen Schlüssel. | هنگام ورود یک کلید دریافت می‌کنید. | On arrival you will receive a key.
+Nach dem Essen trinken wir Kaffee. | بعد از غذا قهوه می‌خوریم. | After the meal we drink coffee.
+Vor der Abfahrt prüfen Sie bitte Ihr Gepäck. | قبل از حرکت لطفاً چمدانتان را بررسی کنید. | Please check your luggage before departure.
+Die Bearbeitung Ihres Antrags dauert zwei Wochen. | رسیدگی به درخواست شما دو هفته طول می‌کشد. | Processing your application takes two weeks.
+Zur Verbesserung des Service bitten wir um Ihre Meinung. | برای بهتر شدن خدمات، نظرتان را می‌خواهیم. | To improve our service we would like your opinion.
+
+=== de-future-perfect
+level: B2
+cat: tenses
+title.fa: آینده‌ی کامل (Futur II) و حدس زدن با werden
+title.en: Future perfect (Futur II) and guesses with werden
+title.de: Futur II und Vermutungen
+keys: Futur II, future perfect, آینده کامل, wird gemacht haben, Vermutung, guess, حدس, wohl, bis dahin
+see: de-future, de-modal-subjective
+--- fa
+Futur II = werden + Partizip II + haben/sein. دو کاربرد:
+• کاری که تا زمانی در آینده تمام شده است: Bis Freitag werde ich den Bericht geschrieben haben.
+• حدس درباره‌ی گذشته (خیلی رایج‌تر)، اغلب با wohl: Er wird den Zug verpasst haben (احتمالاً قطار را از دست داده).
+
+حدس درباره‌ی حال: werden + مصدر: Sie wird (wohl) noch schlafen.
+--- en
+Futur II = werden + participle + haben/sein. Two uses:
+• finished by a future time: Bis Freitag werde ich den Bericht geschrieben haben.
+• (more common) a guess about the past, often with wohl: Er wird den Zug verpasst haben (he has probably missed the train).
+
+A guess about the present: werden + infinitive: Sie wird (wohl) noch schlafen.
+--- de
+Futur II (werden + Partizip II + haben/sein): Abschluss in der Zukunft oder Vermutung über die Vergangenheit. Futur I + wohl: Vermutung über die Gegenwart.
+--- examples
+Bis Ende des Jahres werden wir das Projekt abgeschlossen haben. | تا آخر سال پروژه را تمام کرده‌ایم. | By the end of the year we will have finished the project.
+Er wird wohl im Stau gestanden haben. | احتمالاً در ترافیک گیر کرده بوده. | He was probably stuck in traffic.
+Sie wird das schon vergessen haben. | حتماً این را فراموش کرده است. | She has probably forgotten it already.
+Das wird der Postbote sein. | حتماً پستچی است. | That'll be the postman.
+In einer Stunde werde ich angekommen sein. | یک ساعت دیگر رسیده‌ام. | In an hour I will have arrived.
+
+=== de-modal-subjective
+level: C1
+cat: verbs
+title.fa: فعل‌های مُدال برای حدس و ادعا: muss، dürfte، soll، will
+title.en: Modal verbs for guesses and claims: muss, dürfte, soll, will
+title.de: Subjektiver Gebrauch der Modalverben
+keys: subjektive Modalverben, Vermutung, Behauptung, deduction, muss gewesen sein, dürfte, soll angeblich, will gesehen haben, kann nicht, حدس, شایعه, ادعا
+see: de-modal-verbs, de-future-perfect, de-konjunktiv1
+--- fa
+فعل‌های مُدال جز معنی اصلی، میزان اطمینان گوینده را هم نشان می‌دهند:
+
+• muss = حتماً (تقریباً مطمئن): Er muss krank sein.
+• dürfte = احتمالاً (حدس منطقی): Das dürfte reichen.
+• kann / könnte = شاید: Das könnte stimmen.
+• kann nicht = امکان ندارد: Das kann nicht wahr sein.
+• soll = می‌گویند / ظاهراً (شایعه، از قول دیگران): Der Film soll gut sein.
+• will = خودش ادعا می‌کند: Er will nichts gesehen haben.
+
+برای گذشته: مُدال + Partizip II + haben/sein: Sie muss den Zug verpasst haben (حتماً قطار را از دست داده).
+--- en
+Besides their basic meaning, modals show how sure the speaker is:
+• muss = must be (almost certain): Er muss krank sein.
+• dürfte = probably: Das dürfte reichen.
+• kann / könnte = might: Das könnte stimmen.
+• kann nicht = can't be: Das kann nicht wahr sein.
+• soll = is said to (hearsay): Der Film soll gut sein.
+• will = claims to: Er will nichts gesehen haben.
+
+For the past: modal + participle + haben/sein: Sie muss den Zug verpasst haben.
+--- de
+Subjektive Modalverben: muss (sicher), dürfte (wahrscheinlich), kann/könnte (möglich), kann nicht (unmöglich), soll (fremde Behauptung), will (eigene Behauptung). Vergangenheit: Modalverb + Infinitiv Perfekt.
+--- examples
+Das Licht ist an, sie muss zu Hause sein. | چراغ روشن است، حتماً خانه است. | The light is on, she must be at home.
+Die Reparatur dürfte etwa 200 Euro kosten. | تعمیر احتمالاً حدود ۲۰۰ یورو خرج دارد. | The repair will probably cost about 200 euros.
+Das Restaurant soll sehr gut sein. | می‌گویند این رستوران خیلی خوب است. | The restaurant is said to be very good.
+Er will den Täter gesehen haben. | ادعا می‌کند مجرم را دیده است. | He claims to have seen the culprit.
+Das kann nicht stimmen. | این نمی‌تواند درست باشد. | That can't be right.
+
+=== de-verb-noun-phrases
+level: C1
+cat: verbs
+title.fa: ترکیب‌های اسم و فعل: eine Entscheidung treffen، in Frage kommen
+title.en: Noun-verb combinations: eine Entscheidung treffen, in Frage kommen
+title.de: Nomen-Verb-Verbindungen
+keys: Nomen-Verb-Verbindung, Funktionsverbgefüge, collocation, ترکیب, eine Entscheidung treffen, zur Verfügung stellen, in Kraft treten, Kritik üben, Rücksicht nehmen
+words: treffen, stellen, nehmen, bringen, kommen, Verfügung, Entscheidung, Rücksicht, Kraft
+see: de-nominal-style
+--- fa
+در آلمانی رسمی، معنی اصلی اغلب در یک اسم است و فعل فقط نقش کمکی دارد. این ترکیب‌ها ثابت‌اند و باید همان‌طور حفظ شوند:
+
+• eine Entscheidung treffen = تصمیم گرفتن (= entscheiden)
+• zur Verfügung stellen / stehen = در اختیار گذاشتن / بودن
+• in Frage kommen = مطرح بودن، ممکن بودن
+• Rücksicht nehmen auf = ملاحظه کردن
+• in Kraft treten = اجرایی شدن (قانون)
+• eine Frage stellen = سؤال پرسیدن
+• Kritik üben an = انتقاد کردن
+• zum Ausdruck bringen = بیان کردن
+• in Anspruch nehmen = استفاده کردن (از خدمات، وقت)
+• Bescheid geben / sagen = خبر دادن
+--- en
+In formal German the meaning often sits in a noun and the verb is only a helper. These combinations are fixed: eine Entscheidung treffen (decide), zur Verfügung stellen/stehen (provide / be available), in Frage kommen (be possible), Rücksicht nehmen auf (be considerate), in Kraft treten (come into force), eine Frage stellen (ask), Kritik üben an (criticise), zum Ausdruck bringen (express), in Anspruch nehmen (make use of), Bescheid geben (let know).
+--- de
+Nomen-Verb-Verbindungen sind feste Wendungen, in denen das Nomen die Bedeutung trägt: eine Entscheidung treffen, zur Verfügung stellen, in Frage kommen, Rücksicht nehmen, in Kraft treten, Kritik üben, zum Ausdruck bringen.
+--- examples
+Wir müssen bald eine Entscheidung treffen. | باید زود تصمیم بگیریم. | We have to make a decision soon.
+Die Firma stellt uns einen Laptop zur Verfügung. | شرکت یک لپ‌تاپ در اختیار ما می‌گذارد. | The company provides us with a laptop.
+Das kommt nicht in Frage! | این اصلاً مطرح نیست! (امکان ندارد) | That's out of the question!
+Das neue Gesetz tritt im Januar in Kraft. | قانون جدید در ژانویه اجرایی می‌شود. | The new law comes into force in January.
+Gib mir bitte Bescheid, wenn du ankommst. | لطفاً وقتی رسیدی خبرم کن. | Please let me know when you arrive.
+
+=== de-als-ob
+level: C1
+cat: conditionals
+title.fa: مقایسه‌ی غیرواقعی: als ob، als wenn، als + Konjunktiv
+title.en: Unreal comparisons: als ob, als wenn
+title.de: Irreale Vergleichssätze: als ob, als wenn
+keys: als ob, als wenn, as if, as though, انگار, مثل اینکه, irrealer Vergleich, Konjunktiv II
+words: ob
+see: de-konjunktiv2, de-konjunktiv2-past
+--- fa
+برای «انگار / مثل اینکه» (چیزی که واقعی نیست) از als ob یا als wenn + Konjunktiv II استفاده می‌شود و فعل آخر می‌آید: Er tut so, als ob er nichts wüsste.
+
+شکل کوتاه‌تر: فقط als، که فعل بلافاصله بعدش می‌آید: Er tut so, als wüsste er nichts.
+
+برای گذشته: Sie sieht aus, als hätte sie nicht geschlafen. در گفتار گاهی به جای Konjunktiv II، Konjunktiv I یا حتی زمان حال هم می‌شنوی.
+--- en
+For "as if / as though" (something not real) use als ob or als wenn + Konjunktiv II with the verb at the end: Er tut so, als ob er nichts wüsste.
+
+Shorter: just als with the verb right after it: Er tut so, als wüsste er nichts. Past: Sie sieht aus, als hätte sie nicht geschlafen.
+--- de
+Irreale Vergleiche: als ob / als wenn + Konjunktiv II (Verb am Ende) oder als + Konjunktiv II (Verb direkt nach als).
+--- examples
+Er tut so, als ob er mich nicht kennen würde. | طوری رفتار می‌کند انگار من را نمی‌شناسد. | He acts as if he didn't know me.
+Du siehst aus, als hättest du ein Gespenst gesehen. | طوری به نظر می‌رسی انگار روح دیده‌ای. | You look as if you'd seen a ghost.
+Es fühlt sich an, als wäre ich nie weg gewesen. | حس می‌کنم انگار هیچ‌وقت نرفته بودم. | It feels as if I had never been away.
+Sie spricht Deutsch, als wäre es ihre Muttersprache. | آلمانی را طوری صحبت می‌کند انگار زبان مادری‌اش است. | She speaks German as if it were her mother tongue.
+Es sieht so aus, als ob es gleich regnen würde. | به نظر می‌رسد الان باران می‌آید. | It looks as if it's going to rain any minute.
+
+=== de-prefix-verbs-both
+level: C1
+cat: verbs
+title.fa: فعل‌هایی که هم جداشدنی‌اند هم جدانشدنی: übersetzen، umfahren، wiederholen
+title.en: Verbs that are separable or inseparable: übersetzen, umfahren, wiederholen
+title.de: Trennbar oder untrennbar: über-, um-, durch-, unter-, wieder-
+keys: über, um, durch, unter, wieder, hinter, voll, wider, trennbar untrennbar, übersetzen, umfahren, wiederholen, unterhalten, Betonung, تکیه
+words: übersetzen, umfahren, wiederholen, unterhalten, überlegen, umziehen, durchfallen, übernachten, unterschreiben, umgehen, übergeben
+see: de-separable-verbs, de-insep-verbs
+--- fa
+پیشوندهای durch، hinter، über، um، unter، voll، wider و wieder گاهی جداشدنی‌اند و گاهی جدانشدنی. معمولاً:
+• جداشدنی (تکیه روی پیشوند) = معنی واقعی و مکانی: ÜBERsetzen = با قایق به آن طرف بردن. Er setzt uns über.
+• جدانشدنی (تکیه روی فعل) = معنی مجازی: überSETZen = ترجمه کردن. Er übersetzt den Text. Partizip: übersetzt (بدون ge).
+
+جفت‌های مهم:
+• UMfahren (زیر گرفتن، fuhr um، umgefahren) / umFAHRen (دور زدن، umfahren)
+• WIEDERholen (پس گرفتن) / wiederHOLen (تکرار کردن)
+• UNTERhalten (زیر چیزی گرفتن) / unterHALten (سرگرم کردن؛ sich unterhalten = گپ زدن)
+• UMziehen (اسباب‌کشی کردن) / sich UMziehen (لباس عوض کردن) — هر دو جداشدنی
+
+بیشتر این فعل‌ها در کاربرد روزمره جدانشدنی‌اند؛ برنامه نوع فعل را در بخش Conjugation نشان می‌دهد.
+--- en
+The prefixes durch, hinter, über, um, unter, voll, wider and wieder can be separable or inseparable. Usually:
+• separable (stressed prefix) = literal, spatial meaning: ÜBERsetzen = ferry across.
+• inseparable (stressed verb) = figurative meaning: überSETZen = translate; participle übersetzt (no ge).
+
+Key pairs: UMfahren (knock down) / umFAHRen (drive around); WIEDERholen (fetch back) / wiederHOLen (repeat); UNTERhalten (hold underneath) / unterHALten (entertain; sich unterhalten = chat).
+--- de
+Bei durch-, hinter-, über-, um-, unter-, voll-, wider-, wieder- gibt es trennbare (betontes Präfix, wörtliche Bedeutung) und untrennbare Verben (betonter Stamm, übertragene Bedeutung, Partizip ohne ge-).
+--- table
+trennbar | Bedeutung | untrennbar | Bedeutung
+ÜBERsetzen | ferry across · با قایق رد کردن | überSETZen | translate · ترجمه کردن
+UMfahren | knock down · زیر گرفتن | umFAHRen | drive around · دور زدن
+WIEDERholen | fetch back · پس آوردن | wiederHOLen | repeat · تکرار کردن
+UNTERhalten | hold under · زیر چیزی گرفتن | unterHALten | entertain · سرگرم کردن
+--- examples
+Kannst du diesen Brief übersetzen? | می‌توانی این نامه را ترجمه کنی؟ | Can you translate this letter?
+Der Fährmann setzt uns ans andere Ufer über. | قایقران ما را به آن طرف رود می‌برد. | The ferryman takes us across to the other bank.
+Könnten Sie das bitte wiederholen? | ممکن است لطفاً تکرار کنید؟ | Could you repeat that, please?
+Wir haben uns lange unterhalten. | مدت زیادی با هم گپ زدیم. | We had a long chat.
+Wir umfahren die Stadt, um den Stau zu vermeiden. | شهر را دور می‌زنیم تا در ترافیک نمانیم. | We're driving around the city to avoid the traffic jam.

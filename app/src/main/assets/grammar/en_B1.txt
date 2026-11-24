@@ -1,0 +1,415 @@
+# English B1. Examples: English | Persian | German
+
+=== en-present-perfect-continuous
+level: B1
+cat: tenses
+title.fa: حال کامل استمراری: I have been working
+title.en: Present perfect continuous: I have been working
+title.de: Present perfect continuous: I have been working
+keys: present perfect continuous, progressive, have been + ing, for, since, how long, مدتی است که, seit
+tags: en-verb
+see: en-present-perfect
+--- fa
+have/has been + فعل ‎-ing‎. برای کاری که از گذشته شروع شده و هنوز ادامه دارد (یا تازه تمام شده و اثرش پیداست)، با تأکید بر مدت:
+• I've been waiting for an hour (یک ساعت است منتظرم).
+• How long have you been learning German?
+• You're out of breath. Have you been running?
+
+فرق با present perfect ساده: ساده روی نتیجه یا تعداد تأکید دارد (I've written three emails)، استمراری روی مدت و جریان کار (I've been writing emails all morning). فعل‌های حالت (know، like، have به معنی داشتن) استمراری نمی‌شوند: I've known her for years.
+
+در آلمانی همه‌ی این‌ها با زمان حال + seit گفته می‌شوند.
+--- en
+have/has been + -ing for an action that started in the past and is still going on (or has just stopped with visible results), focusing on duration: I've been waiting for an hour. How long have you been learning German? You're out of breath – have you been running?
+
+Simple vs continuous: simple = result or number (I've written three emails); continuous = duration (I've been writing emails all morning). State verbs stay simple: I've known her for years.
+--- de
+have/has been + -ing: Handlung, die in der Vergangenheit begann und noch andauert (Betonung auf Dauer). Deutsch: Präsens + seit (Ich warte seit einer Stunde).
+--- examples
+I've been living here since 2019. | از ۲۰۱۹ اینجا زندگی می‌کنم. | Ich wohne seit 2019 hier.
+How long have you been waiting? | چند وقت است منتظری؟ | Wie lange wartest du schon?
+It's been raining all day. | تمام روز باران آمده است. | Es regnet schon den ganzen Tag.
+She's tired because she's been working all night. | خسته است چون تمام شب کار کرده. | Sie ist müde, weil sie die ganze Nacht gearbeitet hat.
+We've been learning English for three years. | سه سال است انگلیسی یاد می‌گیریم. | Wir lernen seit drei Jahren Englisch.
+
+=== en-past-perfect
+level: B1
+cat: tenses
+title.fa: گذشته‌ی کامل (Past perfect): I had done
+title.en: Past perfect: I had done
+title.de: Past perfect: I had done
+keys: past perfect, ماضی بعید, گذشته بعید, had done, had been, before, already, by the time, Plusquamperfekt
+tags: en-verb
+see: en-past-simple, en-reported-speech, en-conditional-3-mixed
+--- fa
+had + اسم مفعول، برای کاری که قبل از یک کار دیگر در گذشته انجام شده بود:
+When I arrived, the film had already started (وقتی رسیدم فیلم شروع شده بود).
+
+اگر ترتیب با before / after واضح باشد، گذشته‌ی ساده هم کافی است. past perfect در نقل قول غیرمستقیم و شرطی نوع سوم هم به کار می‌رود.
+--- en
+had + past participle for an action before another past action: When I arrived, the film had already started. If before/after makes the order clear, the past simple is also fine. It is also used in reported speech and third conditionals.
+--- de
+had + past participle = Plusquamperfekt: Vorzeitigkeit in der Vergangenheit.
+--- examples
+I had never seen the sea before that trip. | قبل از آن سفر هیچ‌وقت دریا ندیده بودم. | Vor dieser Reise hatte ich nie das Meer gesehen.
+When we got to the station, the train had left. | وقتی به ایستگاه رسیدیم، قطار رفته بود. | Als wir am Bahnhof ankamen, war der Zug abgefahren.
+She was nervous because she hadn't flown before. | مضطرب بود چون قبلاً پرواز نکرده بود. | Sie war nervös, weil sie noch nie geflogen war.
+By the time I woke up, everyone had gone. | تا بیدار شدم، همه رفته بودند. | Als ich aufwachte, waren alle schon gegangen.
+He realised he had forgotten his passport. | فهمید که پاسپورتش را جا گذاشته بود. | Er merkte, dass er seinen Pass vergessen hatte.
+
+=== en-conditionals-0-1
+level: B1
+cat: conditionals
+title.fa: جمله‌های شرطی نوع صفر و یک: If it rains, I'll stay home
+title.en: Zero and first conditional: If it rains, I'll stay home
+title.de: Bedingungssätze Typ 0 und 1
+keys: conditional, if, شرطی, zero conditional, first conditional, will, unless, as long as, Bedingungssatz, wenn
+words: if, unless
+see: en-conditional-2, en-future, en-conjunctions
+--- fa
+• نوع صفر (حقیقت کلی): If + حال ساده، حال ساده: If you heat ice, it melts.
+• نوع یک (احتمال واقعی در آینده): If + حال ساده، will + فعل: If it rains, I'll stay at home.
+
+مهم: بعد از if در نوع یک will نمی‌آید: If it rains (نه If it will rain).
+
+unless = اگر … نه: I won't go unless you come with me. as long as = به شرطی که.
+اگر جمله‌ی if اول بیاید، ویرگول لازم است.
+--- en
+• Zero conditional (general truths): If + present, present: If you heat ice, it melts.
+• First conditional (real future possibility): If + present, will + verb: If it rains, I'll stay at home.
+
+No will after if: If it rains (not If it will rain). unless = if not; as long as = provided that. Comma when the if-clause comes first.
+--- de
+Typ 0: If + Präsens, Präsens (allgemeine Wahrheit). Typ 1: If + Präsens, will + Grundform (reale Möglichkeit). Kein will im if-Satz. unless = wenn nicht.
+--- examples
+If you press this button, the machine stops. | اگر این دکمه را فشار دهی، دستگاه می‌ایستد. | Wenn man diesen Knopf drückt, hält die Maschine an.
+If you study hard, you'll pass the exam. | اگر خوب درس بخوانی، امتحان را قبول می‌شوی. | Wenn du fleißig lernst, bestehst du die Prüfung.
+If I see him, I'll tell him. | اگر ببینمش، به او می‌گویم. | Wenn ich ihn sehe, sage ich es ihm.
+We'll miss the bus unless we hurry. | اگر عجله نکنیم، به اتوبوس نمی‌رسیم. | Wir verpassen den Bus, wenn wir uns nicht beeilen.
+You can borrow my car as long as you're careful. | می‌توانی ماشینم را قرض بگیری به شرطی که مراقب باشی. | Du kannst mein Auto leihen, solange du vorsichtig bist.
+
+=== en-conditional-2
+level: B1
+cat: conditionals
+title.fa: شرطی نوع دو: If I had …, I would …
+title.en: Second conditional: If I had …, I would …
+title.de: Bedingungssatz Typ 2: If I had …, I would …
+keys: second conditional, شرطی نوع دوم, would, if I were, unreal, imaginary, Konjunktiv II, wenn ich wäre
+words: would, wouldn't, were
+see: en-conditionals-0-1, en-conditional-3-mixed, en-wish
+--- fa
+برای موقعیت خیالی یا غیرواقعی در حال و آینده: If + گذشته‌ی ساده، would + فعل:
+If I had more money, I would travel more (اگر پول بیشتری داشتم، بیشتر سفر می‌کردم – ولی ندارم).
+
+• با be معمولاً برای همه were می‌آید: If I were you, I'd take the job (اگر جای تو بودم …).
+• could و might هم به جای would می‌آیند: If I had time, I could help you.
+
+فرق با نوع یک: نوع یک واقعاً ممکن است؛ نوع دو بعید یا غیرواقعی است.
+--- en
+For imaginary or unlikely situations now or in the future: If + past simple, would + verb: If I had more money, I would travel more.
+
+With be, were is used for all persons: If I were you, I'd take the job. could/might can replace would.
+--- de
+Typ 2: If + past simple, would + Grundform = Konjunktiv II (Wenn ich mehr Geld hätte, würde ich …). If I were you = Wenn ich du wäre.
+--- examples
+If I won the lottery, I would buy a house by the sea. | اگر لاتاری می‌بردم، خانه‌ای کنار دریا می‌خریدم. | Wenn ich im Lotto gewinnen würde, würde ich ein Haus am Meer kaufen.
+If I were you, I would talk to her. | اگر جای تو بودم، با او صحبت می‌کردم. | An deiner Stelle würde ich mit ihr reden.
+What would you do if you lost your job? | اگر کارت را از دست می‌دادی چه می‌کردی؟ | Was würdest du machen, wenn du deinen Job verlieren würdest?
+If he spoke German, he could work in Vienna. | اگر آلمانی بلد بود، می‌توانست در وین کار کند. | Wenn er Deutsch spräche, könnte er in Wien arbeiten.
+I wouldn't do that if I were you. | اگر جای تو بودم این کار را نمی‌کردم. | Ich würde das an deiner Stelle nicht tun.
+
+=== en-passive
+level: B1
+cat: passive
+title.fa: جمله‌ی مجهول (Passive): is made، was built، has been done
+title.en: The passive: is made, was built, has been done
+title.de: Das Passiv: is made, was built, has been done
+keys: passive, مجهول, be + past participle, by, is made, was built, has been, will be, Passiv
+see: en-irregular-verbs, en-causative
+--- fa
+مجهول = be (در زمان مناسب) + اسم مفعول. وقتی انجام‌دهنده معلوم نیست یا مهم نیست:
+• حال ساده: English is spoken here.
+• گذشته‌ی ساده: The bridge was built in 1990.
+• حال کامل: My car has been stolen.
+• آینده: The results will be announced tomorrow.
+• با مُدال: This must be done today.
+• استمراری: The road is being repaired.
+
+انجام‌دهنده با by: The book was written by a young author.
+
+در آلمانی برای مجهول werden می‌آید، ولی در انگلیسی be (نه will!).
+--- en
+Passive = be (in the right tense) + past participle, when the doer is unknown or unimportant: English is spoken here. The bridge was built in 1990. My car has been stolen. The results will be announced tomorrow. This must be done today. The road is being repaired. Add the doer with by.
+--- de
+Passiv = be + past participle (im Deutschen werden + Partizip II). is spoken = wird gesprochen, was built = wurde gebaut, has been stolen = ist gestohlen worden. Täter mit by = von.
+--- table
+tense | active | passive
+present simple | They make cars here. | Cars are made here.
+past simple | They built it in 1990. | It was built in 1990.
+present perfect | Someone has stolen my bike. | My bike has been stolen.
+future | They will announce it. | It will be announced.
+modal | You must do it today. | It must be done today.
+--- examples
+This house was built 100 years ago. | این خانه صد سال پیش ساخته شده است. | Dieses Haus wurde vor 100 Jahren gebaut.
+German is spoken in Austria. | در اتریش آلمانی صحبت می‌شود. | In Österreich wird Deutsch gesprochen.
+My wallet has been stolen. | کیف پولم دزدیده شده است. | Mein Portemonnaie ist gestohlen worden.
+The meeting will be held on Monday. | جلسه دوشنبه برگزار خواهد شد. | Die Besprechung findet am Montag statt.
+The road is being repaired. | جاده در حال تعمیر است. | Die Straße wird gerade repariert.
+
+=== en-relative-clauses
+level: B1
+cat: sentences
+title.fa: جمله‌ی موصولی: who، which، that، whose، where
+title.en: Relative clauses: who, which, that, whose, where
+title.de: Relativsätze: who, which, that, whose, where
+keys: relative clause, جمله موصولی, که, who, which, that, whose, where, whom, defining, non-defining, Relativsatz
+words: who, whom, which, that, whose, where
+see: en-participle-clauses
+--- fa
+• who برای آدم، which برای چیز، that برای هر دو (در گفتار رایج): The man who lives next door … / The book which/that I bought …
+• whose = که … اش (مالکیت): the woman whose car was stolen
+• where برای مکان: the town where I was born
+
+اگر ضمیر موصولی مفعول باشد (نه فاعل)، می‌شود حذفش کرد: The film (that) we saw was great. ولی نه وقتی فاعل است: The man who called … (who لازم است).
+
+جمله‌ی توضیحی (با ویرگول) فقط اطلاعات اضافه می‌دهد؛ در آن that نمی‌آید و ضمیر حذف نمی‌شود: My brother, who lives in Canada, is a doctor.
+
+حرف اضافه معمولاً آخر می‌آید: the people I work with.
+--- en
+who for people, which for things, that for both (common in speech). whose = possession; where = place.
+
+Leave out the pronoun when it is the object: The film (that) we saw was great – but not when it is the subject.
+
+Non-defining clauses (with commas) add extra information; no that, no omission: My brother, who lives in Canada, is a doctor. Prepositions usually go at the end: the people I work with.
+--- de
+who (Personen), which (Sachen), that (beides), whose (dessen/deren), where (wo). Als Objekt kann das Relativpronomen wegfallen (the film we saw). Präposition meist am Ende: the people I work with.
+--- examples
+The woman who lives upstairs is a teacher. | خانمی که طبقه‌ی بالا زندگی می‌کند معلم است. | Die Frau, die oben wohnt, ist Lehrerin.
+Is this the book you were talking about? | این همان کتابی است که درباره‌اش حرف می‌زدی؟ | Ist das das Buch, von dem du gesprochen hast?
+I have a friend whose father is a pilot. | دوستی دارم که پدرش خلبان است. | Ich habe einen Freund, dessen Vater Pilot ist.
+That's the restaurant where we first met. | آن رستورانی است که اولین بار همدیگر را آنجا دیدیم. | Das ist das Restaurant, wo wir uns kennengelernt haben.
+My car, which is ten years old, still runs well. | ماشینم که ده سال دارد، هنوز خوب کار می‌کند. | Mein Auto, das zehn Jahre alt ist, fährt noch gut.
+
+=== en-reported-speech
+level: B1
+cat: sentences
+title.fa: نقل قول غیرمستقیم: He said (that) he was tired
+title.en: Reported speech: He said (that) he was tired
+title.de: Indirekte Rede: He said (that) he was tired
+keys: reported speech, indirect speech, نقل قول, said, told, asked, backshift, say vs tell, indirekte Rede
+words: said, told, asked, say, tell
+see: en-past-perfect, en-indirect-questions
+--- fa
+وقتی حرف کسی را با said یا told نقل می‌کنیم، زمان فعل معمولاً یک قدم به عقب می‌رود:
+• حال ساده ← گذشته‌ی ساده: "I'm tired." → He said he was tired.
+• گذشته‌ی ساده / حال کامل ← گذشته‌ی کامل: "I lost my key." → She said she had lost her key.
+• will → would، can → could، must → had to
+
+ضمیرها و کلمه‌های زمان و مکان هم عوض می‌شوند: today → that day، tomorrow → the next day، here → there.
+
+say یا tell؟ say something (He said that …)، tell somebody something (He told me that …). نگو He said me.
+
+سؤال‌ها: ترتیب کلمات مثل جمله‌ی خبری می‌شود: "Where do you live?" → She asked where I lived. سؤال بله/خیر با if یا whether. دستور: told me to …
+--- en
+After said/told the tense usually moves one step back: present → past, past/present perfect → past perfect, will → would, can → could, must → had to. Pronouns and time words change too (tomorrow → the next day).
+
+say something; tell somebody something (not He said me). Questions use statement word order: She asked where I lived; yes/no with if/whether. Orders: He told me to wait.
+--- de
+In der indirekten Rede verschiebt sich die Zeit (backshift): is → was, did → had done, will → would. say vs. tell (tell + Person). Indirekte Fragen mit Aussagesatzstellung, ob = if/whether.
+--- examples
+He said he was busy. | گفت سرش شلوغ است. | Er sagte, er sei beschäftigt.
+She told me she had seen the film. | به من گفت که فیلم را دیده است. | Sie hat mir gesagt, dass sie den Film gesehen hat.
+They asked me where I worked. | از من پرسیدند کجا کار می‌کنم. | Sie fragten mich, wo ich arbeite.
+He asked if I could help him. | پرسید آیا می‌توانم کمکش کنم. | Er fragte, ob ich ihm helfen könnte.
+The doctor told me to rest. | دکتر به من گفت استراحت کنم. | Der Arzt hat mir gesagt, ich soll mich ausruhen.
+
+=== en-gerund-infinitive
+level: B1
+cat: verbs
+title.fa: ‎-ing‎ یا to: فعل‌هایی که معنی‌شان عوض می‌شود (stop، remember، try)
+title.en: -ing or to: verbs that change meaning (stop, remember, try)
+title.de: -ing oder to: Verben mit Bedeutungsunterschied (stop, remember, try)
+keys: gerund, infinitive, -ing, to, remember doing, remember to, stop doing, stop to, try, forget, regret, used to, verb patterns
+words: stop, remember, forget, try, regret, mean, go on
+see: en-gerund-infinitive-basic, en-used-to
+--- fa
+بعضی فعل‌ها با ‎-ing‎ و to دو معنی مختلف دارند:
+• stop doing = دست کشیدن از کاری: I stopped smoking. / stop to do = ایستادن برای انجام کاری: I stopped to smoke.
+• remember doing = به یاد داشتن کاری که در گذشته کردی: I remember meeting him. / remember to do = یادت باشد که انجام دهی: Remember to lock the door.
+• forget doing / forget to do: همان منطق remember.
+• try doing = امتحان کردن یک راه: Try restarting the computer. / try to do = تلاش کردن: I tried to open the window, but it was stuck.
+• regret doing = پشیمان بودن از کاری / regret to tell = متأسفم که بگویم (رسمی).
+
+قاعده‌ی کمکی: ‎-ing‎ معمولاً به کار قبلی یا خود کار اشاره دارد، to به کار بعدی.
+--- en
+Some verbs change meaning:
+• stop doing = quit / stop to do = pause in order to do
+• remember/forget doing = a memory of the past / remember/forget to do = a task to do
+• try doing = experiment with a method / try to do = make an effort
+• regret doing = be sorry about the past / regret to tell = formal "I'm sorry to say"
+
+Rough rule: -ing looks back at the action itself, to looks forward to it.
+--- de
+stop doing (aufhören) vs. stop to do (anhalten, um zu); remember doing (sich erinnern) vs. remember to do (daran denken); try doing (ausprobieren) vs. try to do (versuchen).
+--- examples
+He stopped smoking last year. | پارسال سیگار را ترک کرد. | Er hat letztes Jahr mit dem Rauchen aufgehört.
+We stopped to buy some water. | ایستادیم تا آب بخریم. | Wir haben angehalten, um Wasser zu kaufen.
+Remember to call your mother. | یادت باشد به مادرت زنگ بزنی. | Denk daran, deine Mutter anzurufen.
+I remember visiting this place as a child. | یادم هست بچه که بودم اینجا آمدم. | Ich erinnere mich, als Kind hier gewesen zu sein.
+Try turning it off and on again. | امتحان کن خاموش و روشنش کنی. | Versuch mal, es aus- und wieder einzuschalten.
+
+=== en-used-to
+level: B1
+cat: verbs
+title.fa: used to (قبلاً …) و be used to (عادت داشتن)
+title.en: used to, be used to, get used to
+title.de: used to, be used to, get used to
+keys: used to, be used to, get used to, would, قبلاً, عادت داشتن, عادت کردن, früher, gewohnt sein
+words: used
+see: en-past-simple, en-gerund-infinitive
+--- fa
+سه ساختار شبیه با معنی‌های مختلف:
+• used to + فعل ساده = قبلاً (عادت یا حالتی در گذشته که الان نیست): I used to smoke (قبلاً سیگار می‌کشیدم). منفی و سؤال: didn't use to / Did you use to …?
+• be used to + ‎-ing‎ / اسم = عادت داشتن به چیزی: I'm used to getting up early.
+• get used to + ‎-ing‎ / اسم = عادت کردن: You'll get used to the weather.
+
+would هم برای کارهای تکراری گذشته (نه حالت‌ها) می‌آید: When I was a child, we would play in the street.
+--- en
+• used to + base verb = past habit or state that is no longer true: I used to smoke. (didn't use to / Did you use to …?)
+• be used to + -ing/noun = be accustomed to: I'm used to getting up early.
+• get used to + -ing/noun = become accustomed: You'll get used to the weather.
+
+would also describes repeated past actions (not states): We would play in the street.
+--- de
+used to + Grundform = früher (nicht mehr); be used to + -ing = an etwas gewöhnt sein; get used to + -ing = sich an etwas gewöhnen.
+--- examples
+I used to live in Isfahan. | قبلاً در اصفهان زندگی می‌کردم. | Früher habe ich in Isfahan gewohnt.
+She didn't use to like coffee. | قبلاً قهوه دوست نداشت. | Früher mochte sie keinen Kaffee.
+I'm used to working at night. | به کار کردن در شب عادت دارم. | Ich bin es gewohnt, nachts zu arbeiten.
+It took me a year to get used to the cold. | یک سال طول کشید تا به سرما عادت کنم. | Ich habe ein Jahr gebraucht, um mich an die Kälte zu gewöhnen.
+Did you use to play football? | قبلاً فوتبال بازی می‌کردی؟ | Hast du früher Fußball gespielt?
+
+=== en-modals-deduction
+level: B1
+cat: verbs
+title.fa: حدس با must، might، can't: He must be tired
+title.en: Deduction: must, might, can't
+title.de: Vermutungen: must, might, can't
+keys: deduction, speculation, حدس, must be, might be, may, could, can't be, probably, certainly, Vermutung
+words: might, may, could, must, can't
+see: en-modals-obligation, en-modals-past
+--- fa
+برای حدس زدن درباره‌ی حال:
+• must = حتماً (تقریباً مطمئنم): He's been working all day. He must be tired.
+• might / may / could = شاید: She might be at home.
+• can't = امکان ندارد: That can't be true.
+
+دقت: مخالفِ must در این معنی can't است، نه mustn't.
+
+برای گذشته، درس «مُدال در گذشته» را ببین (must have been).
+--- en
+Guessing about the present: must = almost certain (He must be tired); might / may / could = possible (She might be at home); can't = impossible (That can't be true). The opposite of must here is can't, not mustn't.
+--- de
+must = muss (sicher), might/may/could = könnte (vielleicht), can't = kann nicht (unmöglich).
+--- examples
+You must be hungry after the trip. | حتماً بعد از سفر گرسنه‌ای. | Nach der Reise musst du hungrig sein.
+He might be in a meeting. | شاید در جلسه باشد. | Er ist vielleicht in einer Besprechung.
+That can't be Ali – he's in London. | آن نمی‌تواند علی باشد – او لندن است. | Das kann nicht Ali sein – er ist in London.
+It may rain later. | شاید بعداً باران بیاید. | Später könnte es regnen.
+The lights are off – they must be asleep. | چراغ‌ها خاموش است – حتماً خوابیده‌اند. | Das Licht ist aus – sie schlafen bestimmt.
+
+=== en-question-tags
+level: B1
+cat: questions
+title.fa: سؤال‌های کوتاه آخر جمله: isn't it? don't you?
+title.en: Question tags: isn't it? don't you?
+title.de: Frageanhängsel: isn't it? don't you?
+keys: question tags, tag questions, isn't it, don't you, aren't I, right, نه؟, مگه نه, oder, nicht wahr
+see: en-questions-do
+--- fa
+در انگلیسی برای تأیید گرفتن («… نه؟ / مگه نه؟») آخر جمله یک سؤال کوتاه می‌آید:
+• جمله‌ی مثبت ← tag منفی: It's cold, isn't it?
+• جمله‌ی منفی ← tag مثبت: You don't smoke, do you?
+
+tag از همان فعل کمکی جمله ساخته می‌شود (is، can، have، will …). اگر فعل کمکی نباشد: do / does / did: She works here, doesn't she? He went home, didn't he?
+
+استثناها: I am → aren't I? / Let's … → shall we?
+--- en
+Question tags ask for confirmation: positive sentence → negative tag (It's cold, isn't it?); negative sentence → positive tag (You don't smoke, do you?). Use the same auxiliary, or do/does/did. Exceptions: I'm right, aren't I? Let's go, shall we?
+--- de
+Positive Aussage + negatives Anhängsel, negative Aussage + positives Anhängsel, mit demselben Hilfsverb oder do/does/did. Im Deutschen: „…, oder?“ / „…, nicht wahr?“
+--- examples
+It's a beautiful day, isn't it? | روز قشنگی است، نه؟ | Es ist ein schöner Tag, oder?
+You're coming tomorrow, aren't you? | فردا می‌آیی، نه؟ | Du kommst morgen, oder?
+She doesn't eat meat, does she? | او گوشت نمی‌خورد، درسته؟ | Sie isst kein Fleisch, oder?
+You've met my wife, haven't you? | همسرم را دیده‌ای، نه؟ | Du kennst meine Frau, nicht wahr?
+They left early, didn't they? | زود رفتند، نه؟ | Sie sind früh gegangen, oder?
+
+=== en-phrasal-verbs
+level: B1
+cat: verbs
+title.fa: فعل‌های دوکلمه‌ای (Phrasal verbs): give up، look after، turn on
+title.en: Phrasal verbs: give up, look after, turn on
+title.de: Phrasal verbs: give up, look after, turn on
+keys: phrasal verb, phrasal verbs, فعل دوکلمه‌ای, فعل عبارتی, particle, give up, look after, turn on, pick up, separable, Partikelverb
+tags: en-phrasal
+words: give up, look after, turn on, turn off, pick up, look for, find out, get up, put on, take off, look forward to
+see: en-gerund-infinitive-basic
+--- fa
+phrasal verb یعنی فعل + یک یا دو کلمه‌ی کوچک (up، on، off، out، in …) که با هم معنی تازه‌ای می‌سازند و اغلب از تک‌تک کلمه‌ها قابل حدس نیست: give up = دست کشیدن، look after = مراقبت کردن، find out = فهمیدن.
+
+نکته‌ی گرامری مهم، جای مفعول:
+• در بیشتر phrasal verbها مفعول می‌تواند وسط یا آخر بیاید: Turn on the light / Turn the light on.
+• اگر مفعول ضمیر باشد، حتماً وسط می‌آید: Turn it on (نه Turn on it).
+• بعضی‌ها جدا نمی‌شوند (مخصوصاً وقتی کلمه‌ی دوم حرف اضافه است): Look after the children / Look after them.
+• سه‌کلمه‌ای‌ها هم جدا نمی‌شوند: I'm looking forward to it.
+
+این شبیه فعل‌های جداشدنی آلمانی است (anrufen → ruf mich an)، ولی قاعده‌ها فرق دارد. وقتی یک phrasal verb را در برنامه جستجو کنی، معنی و شکل‌های فعلش را نشان می‌دهد.
+--- en
+A phrasal verb is a verb + particle (up, on, off, out, in …) with a new, often unguessable meaning: give up, look after, find out.
+
+Object position:
+• most allow the object in the middle or at the end: Turn on the light / Turn the light on.
+• a pronoun object must go in the middle: Turn it on (not Turn on it).
+• some never separate (often with a preposition): Look after them.
+• three-word verbs don't separate: I'm looking forward to it.
+
+Similar to German separable verbs (ruf mich an), but the rules differ.
+--- de
+Phrasal verbs = Verb + Partikel mit eigener Bedeutung (give up = aufgeben). Ein Pronomen-Objekt steht zwischen Verb und Partikel (turn it on). Manche sind untrennbar (look after them). Vergleichbar mit trennbaren Verben im Deutschen.
+--- table
+phrasal verb | meaning | example
+give up | stop trying · دست کشیدن | Don't give up!
+look after | take care of · مراقبت کردن | She looks after her mother.
+find out | discover · فهمیدن | I found out the truth.
+pick up | collect · دنبال کسی رفتن | I'll pick you up at six.
+turn on / off | start / stop a device · روشن / خاموش کردن | Turn it off, please.
+--- examples
+I'm trying to give up sugar. | دارم سعی می‌کنم شکر را کنار بگذارم. | Ich versuche, auf Zucker zu verzichten.
+Can you look after my cat this weekend? | می‌توانی این آخر هفته مراقب گربه‌ام باشی؟ | Kannst du dieses Wochenende auf meine Katze aufpassen?
+I'll pick you up at the airport. | فرودگاه دنبالت می‌آیم. | Ich hole dich vom Flughafen ab.
+Please turn it down – it's too loud. | لطفاً صدایش را کم کن – خیلی بلند است. | Mach es bitte leiser – es ist zu laut.
+We need to find out what happened. | باید بفهمیم چه اتفاقی افتاد. | Wir müssen herausfinden, was passiert ist.
+
+=== en-indirect-questions
+level: B1
+cat: questions
+title.fa: سؤال غیرمستقیم: Do you know where …?
+title.en: Indirect questions: Do you know where …?
+title.de: Indirekte Fragen: Do you know where …?
+keys: indirect question, سؤال غیرمستقیم, polite question, do you know, could you tell me, I wonder, whether, if, indirekte Frage
+see: en-questions-do, en-reported-speech
+--- fa
+برای مؤدب‌تر پرسیدن، سؤال را با Do you know …? / Could you tell me …? / I wonder … شروع می‌کنیم. بعد از آن، ترتیب کلمات مثل جمله‌ی خبری است و do/does/did حذف می‌شود:
+• Where is the station? → Could you tell me where the station is?
+• What time does it start? → Do you know what time it starts?
+• سؤال بله/خیر ← if / whether: Is he coming? → Do you know if he's coming?
+--- en
+To ask politely, start with Do you know …? / Could you tell me …? / I wonder … Then use statement word order and drop do/does/did: Could you tell me where the station is? Do you know what time it starts? Yes/no questions take if/whether.
+--- de
+Indirekte Fragen: Aussagesatzstellung, kein do/does/did; Ja/Nein-Fragen mit if/whether (= ob).
+--- examples
+Could you tell me where the toilets are? | ممکن است بگویید سرویس بهداشتی کجاست؟ | Könnten Sie mir sagen, wo die Toiletten sind?
+Do you know what time the shop closes? | می‌دانی مغازه کی می‌بندد؟ | Weißt du, wann der Laden schließt?
+I wonder why she didn't come. | نمی‌دانم چرا نیامد. | Ich frage mich, warum sie nicht gekommen ist.
+Do you know if he's married? | می‌دانی ازدواج کرده یا نه؟ | Weißt du, ob er verheiratet ist?
+Can you tell me how much this costs? | می‌توانید بگویید این چقدر است؟ | Können Sie mir sagen, wie viel das kostet?

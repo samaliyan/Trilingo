@@ -53,6 +53,15 @@
             android:name=".SettingsActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".GrammarActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity
+            android:name=".LessonActivity"
+            android:exported="false" />
+
         <receiver
             android:name=".WidgetProvider"
             android:exported="true"
