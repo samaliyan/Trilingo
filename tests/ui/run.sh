@@ -273,6 +273,7 @@ tap "Explanations in English. Change"
 tap "Persian" "^Persian$"
 back; back
 open_app
+type_text "x"            # the next step starts with clear_field (an empty field would hit "Clear" history instead)
 
 # 4. Ambiguous word: auto vs forced German ("Gift" = poison in German)
 clear_field
