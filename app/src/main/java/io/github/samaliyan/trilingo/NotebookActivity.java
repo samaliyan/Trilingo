@@ -226,7 +226,7 @@ public final class NotebookActivity extends Activity {
         top.addView(meta);
         row.addView(top, Page.full());
         TextView back = ui.text(14, ui.sub, Ui.REGULAR);
-        back.setText(w.back.replace('\n', '·'));
+        back.setText(w.back);
         back.setMaxLines(2);
         back.setEllipsize(android.text.TextUtils.TruncateAt.END);
         Ui.bidi(back);

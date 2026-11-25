@@ -266,9 +266,12 @@ public final class TextWordsActivity extends Activity {
                 top.addView(n, lp);
             }
             texts.addView(top);
-            String meaning = dict == null ? "" : dict.summary(item.word).replace('\n', '·');
+            // English and Persian on their own lines (mixed in one line, the directions get mixed up)
+            String meaning = dict == null ? "" : dict.summary(item.word);
             if (!meaning.isEmpty()) {
-                TextView m = ui.line(14, ui.sub, Ui.REGULAR);
+                TextView m = ui.text(14, ui.sub, Ui.REGULAR);
+                m.setMaxLines(2);
+                m.setEllipsize(android.text.TextUtils.TruncateAt.END);
                 m.setText(meaning);
                 Ui.bidi(m);
                 texts.addView(m, Page.full(ui.dp(2), 0));

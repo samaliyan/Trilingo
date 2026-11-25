@@ -163,7 +163,7 @@ final class TextWords {
         }
         if (headword(low)) return low;                                             // leider, gestern
         String v = GermanVerbs.lemma(low);                                         // spielte → spielen
-        if (v != null && !v.equals(low) && (headword(v) || leveled(v))) return v;
+        if (v != null && !v.equals(low) && (headword(v) || leveled(v) || (words != null && words.known(v)))) return v;
         for (String end : new String[]{"en", "em", "er", "es", "e"}) {          // adjective endings: schönen → schön
             String stem = low.length() - end.length() >= 3 && low.endsWith(end) ? low.substring(0, low.length() - end.length()) : null;
             if (stem != null && (headword(stem) || (dict == null && leveled(stem)))) return stem;
