@@ -51,6 +51,7 @@ public final class StudyTest {
         textWords();
         dictation();
         notebook();
+        review();
         backup();
         System.out.println(checks + " checks, " + failures + " failures");
         if (failures > 0) System.exit(1);
@@ -310,6 +311,42 @@ public final class StudyTest {
         f.delete();
         f2.delete();
         new File(f.getPath() + ".tmp").delete();
+    }
+
+    static Lookup lk(String q, Lang src, String tr, String suggestion) {
+        List<Lookup.Result> rs = new ArrayList<>();
+        rs.add(new Lookup.Result(src == Lang.EN ? Lang.DE : Lang.EN, tr, new ArrayList<>()));
+        rs.add(new Lookup.Result(Lang.FA, "x", new ArrayList<>()));
+        return new Lookup(q, src, rs, "Google", 1000, suggestion);
+    }
+
+    static void review() throws IOException {
+        List<Lookup> recent = Arrays.asList(
+                lk("Haus", Lang.DE, "house", ""),
+                lk("hous", Lang.EN, "Haus", "house"),            // a typo with "Did you mean"
+                lk("xqzv", Lang.EN, "xqzv", ""),                 // not a word: the translation only repeats it
+                lk("eihnschlafen", Lang.DE, "fall asleep", ""),  // a typo the service still translated
+                lk("give up", Lang.EN, "aufgeben", ""),
+                lk("how are you today my friend", Lang.EN, "wie geht es", ""));
+        List<Lookup> ok = Notebook.reviewable(recent, en, de);
+        List<String> qs = new ArrayList<>();
+        for (Lookup l : ok) qs.add(l.query);
+        eq(Arrays.asList("Haus", "give up"), qs, "only real words are reviewed");
+        File f = File.createTempFile("nbrev", ".json");
+        f.delete();
+        Notebook nb = new Notebook(f);
+        List<Notebook.Card> due = nb.due(null, ok, 5000, 20);
+        eq(2, due.size(), "recent words are due");
+        eq(0, nb.size(), "nothing is stored before a review");
+        nb.answer(due.get(0), Notebook.GOOD, 5000);
+        eq(1, nb.size(), "a reviewed word is kept");
+        nb.forgetRecent(Lang.DE, "Haus");
+        nb.forgetRecent(Lang.EN, "give up");
+        eq(0, nb.size(), "removed from Recent: no longer reviewed");
+        nb.save(Lang.DE, "Tisch", "table", "", 1);
+        nb.forgetAllRecent();
+        ok(nb.isSaved(Lang.DE, "Tisch"), "clearing Recent keeps saved words");
+        f.delete();
     }
 
     static void backup() throws IOException {

@@ -43,7 +43,10 @@ public final class ReviewActivity extends Activity implements TextToSpeech.OnIni
         } catch (RuntimeException e) {
             tts = null;
         }
-        start(false);
+        // the word lists decide which recent words are real words: loaded first (at once when already loaded)
+        Lexicon.load(this, () -> runOnUiThread(() -> {
+            if (!isDestroyed()) start(false);
+        }));
     }
 
     @Override protected void onDestroy() {
@@ -68,7 +71,8 @@ public final class ReviewActivity extends Activity implements TextToSpeech.OnIni
 
     private List<Lookup> recent() {
         boolean fromHome = getIntent().getStringExtra(EXTRA_FOLDER) == null;
-        return fromHome && new Store(this).reviewRecent() ? Store.history(this).items() : null;
+        return fromHome && new Store(this).reviewRecent()
+                ? Notebook.reviewable(Store.history(this).items(), Lexicon.words(Lang.EN), Lexicon.words(Lang.DE)) : null;
     }
 
     /** Fills the queue with the cards due now; {@code anyway}: the oldest cards even if not due. */

@@ -263,23 +263,69 @@ final class Notebook {
      * {@code recent} is given — recently looked-up words too (they get a card the first time).
      */
     List<Card> due(String folder, List<Lookup> recent, long now, int max) {
+        List<Card> out = new ArrayList<>();
+        java.util.Set<String> recentKeys = new java.util.HashSet<>();
         if (recent != null) {
             for (Lookup l : recent) {
-                if (l.source == Lang.FA || Text.clean(l.query).split(" ").length > 3) continue;
-                String back = l.results.isEmpty() ? "" : summary(l);
-                if (get(l.source, l.query) == null) {
-                    Card c = cardFor(l.source, l.query, back, l.time);
-                    c.saved = false;
-                }
+                String k = Card.key(l.source, l.query);
+                if (!recentKeys.add(k) || cards.containsKey(k)) continue;
+                // a recent word gets a card only when it is answered (see answer): nothing is stored before
+                Card c = new Card();
+                c.lang = l.source;
+                c.word = Text.clean(l.query);
+                c.back = summary(l);
+                c.folder = "";
+                c.added = l.time;
+                c.due = l.time;
+                if (c.due <= now && !c.back.isEmpty()) out.add(c);
             }
         }
-        List<Card> out = new ArrayList<>();
         for (Card c : cards.values()) {
-            boolean inScope = recent != null ? true : c.saved && (folder == null || folder.equals(c.folder));
+            // saved words (of the folder); with recent words also those already reviewed and still in Recent
+            boolean inScope = c.saved ? (recent != null || folder == null || folder.equals(c.folder))
+                    : recent != null && recentKeys.contains(c.key());
             if (inScope && c.due <= now && !c.back.isEmpty()) out.add(c);
         }
         out.sort((a, b) -> Long.compare(a.due, b.due));
         return out.size() > max ? new ArrayList<>(out.subList(0, max)) : out;
+    }
+
+    /**
+     * Recent lookups worth reviewing: real words of English or German (in the word lists), not misspellings,
+     * not long sentences, and with a real translation. Typos and half-typed words never become cards.
+     */
+    static List<Lookup> reviewable(List<Lookup> recent, Words en, Words de) {
+        List<Lookup> out = new ArrayList<>();
+        if (recent == null || en == null || de == null) return out;
+        for (Lookup l : recent) {
+            if (l.source == Lang.FA || l.hasSuggestion() || l.results.isEmpty()) continue;
+            String q = Text.clean(l.query);
+            String[] parts = q.split(" ");
+            if (q.length() < 2 || parts.length > 3) continue;
+            Words w = l.source == Lang.EN ? en : de;
+            boolean known = true;
+            for (String p : parts) known &= w.known(p.replaceAll("^[^\\p{L}]+|[^\\p{L}]+$", ""));
+            if (!known) continue;
+            boolean echo = true;
+            for (Lookup.Result r : l.results) echo &= Text.key(r.text).equals(Text.key(q));
+            if (!echo) out.add(l);
+        }
+        return out;
+    }
+
+    /** A word removed from Recent is no longer reviewed (unless it is saved). */
+    void forgetRecent(Lang l, String word) {
+        Card c = get(l, word);
+        if (c != null && !c.saved) {
+            cards.remove(c.key());
+            save();
+        }
+    }
+
+    /** Recent was cleared: the review progress of words that were not saved goes too. */
+    void forgetAllRecent() {
+        cards.values().removeIf(c -> !c.saved);
+        save();
     }
 
     /** When the card would come back for each answer ("10 min", "1 day", "4 days"), for the buttons. */
@@ -327,6 +373,7 @@ final class Notebook {
 
     void answer(Card c, int answer, long now) {
         grade(c, answer, now);
+        if (!cards.containsKey(c.key())) cards.put(c.key(), c);       // a recent word's first review
         save();
     }
 
@@ -401,6 +448,7 @@ final class Notebook {
                 c.interval = Json.num(x, "i", 0);
                 c.reps = (int) Json.num(x, "r", 0);
                 c.lapses = (int) Json.num(x, "x", 0);
+                if (!c.saved && c.reps == 0) continue;           // a recent word never reviewed (older versions kept these)
                 cards.put(c.key(), c);
             }
         } catch (RuntimeException e) {

@@ -472,7 +472,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         suggestScroll.scrollTo(0, 0);
         lastSuggestions = words;
         handler.removeCallbacks(prefetchTask);
-        if (!words.isEmpty()) handler.postDelayed(prefetchTask, 350);
+        if (!words.isEmpty()) handler.postDelayed(prefetchTask, 700);
     }
 
     private boolean lastQueryShown() {
@@ -554,6 +554,8 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                 if (instant != null) {
                     // the dictionary answer is on screen: replaced only by a real translation of the same word
                     if (r == null || echoes(r) || r.hasSuggestion() || fixedWord) return;
+                    // the backup service gives one word without meanings: the dictionary's answer is better
+                    if (service == Services.GOOGLE && Services.NAMES[Services.MYMEMORY].equals(r.service)) return;
                     int y = scroll.getScrollY();
                     showLookup(r, f == null, umlautFixed);
                     scroll.post(() -> scroll.scrollTo(0, y));
@@ -596,11 +598,15 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         if (isFinishing() || lastSuggestions.isEmpty() || !online()) return;
         final Lang f = forced;
         final int service = store.service();
-        for (String w : lastSuggestions.subList(0, Math.min(2, lastSuggestions.size()))) {
+        // Only the first suggestion, and only one the built-in dictionary does not answer already: the free
+        // service limits how often it may be asked, so nothing is fetched that is not likely to be needed.
+        for (String w : lastSuggestions.subList(0, 1)) {
             final String key = prefetchKey(w, f);
-            if (prefetched.containsKey(key) || prefetching.contains(key) || history.find(w, f) != null) continue;
-            prefetching.add(key);
+            if (prefetched.containsKey(key) || prefetching.contains(key) || history.find(w, f) != null
+                    || Lexicon.dictionary(w, f, false, 0) != null) continue;
             final Lang source = f != null ? f : Lexicon.guessLatin(w);
+            if (source == null) continue;                     // language unknown: it would take three requests
+            prefetching.add(key);
             Net.POOL.execute(() -> {
                 Lookup r = null;
                 try {
@@ -863,7 +869,8 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
     /** Tiles above the recent words: Review (with the number due), Saved words, the practices and tools. */
     private View homeTiles() {
         Notebook nb = Store.notebook(this);
-        int due = nb.due(null, store.reviewRecent() ? history.items() : null, System.currentTimeMillis(), 99).size();
+        List<Lookup> recent = store.reviewRecent() ? Notebook.reviewable(history.items(), Lexicon.words(Lang.EN), Lexicon.words(Lang.DE)) : null;
+        int due = nb.due(null, recent, System.currentTimeMillis(), 99).size();
         String[] labels = {due > 0 ? getString(R.string.review_n, due) : getString(R.string.review), getString(R.string.saved_words),
                 getString(R.string.listen_write), getString(R.string.text_words),
                 getString(R.string.scan_text), getString(R.string.check_sentence)};
@@ -1440,6 +1447,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         Runnable remove = () -> {
             int index = history.items().indexOf(l);
             history.remove(l);
+            nb.forgetRecent(l.source, l.query);
             WidgetProvider.updateAll(this);
             collapse(swipe);
             showUndo(getString(R.string.removed_word, l.query), () -> {
@@ -1595,6 +1603,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                 .setMessage(R.string.clear_history_confirm)
                 .setPositiveButton(R.string.clear_history_short, (d, w) -> {
                     history.clear();
+                    Store.notebook(this).forgetAllRecent();
                     WidgetProvider.updateAll(this);
                     showRecent();
                 })

@@ -38,6 +38,7 @@ public final class LearnTest {
     public static void main(String[] args) throws IOException {
         meanings();
         sources();
+        pictures();
         eq("spielen", GermanVerbs.lemma("spielt"), "spielt → spielen");
         eq("sammeln", GermanVerbs.lemma("sammelt"), "sammelt → sammeln");
         levels();
@@ -101,6 +102,51 @@ public final class LearnTest {
         eq("https://commons.wikimedia.org/wiki/Special:FilePath/Color_icon_red.svg?width=330", Meaning.fileUrl("Color icon red.svg", 330), "file url");
         ok(Meaning.wiktionaryUrl("de", "schön").endsWith("page=sch%C3%B6n"), "page name encoded");
         eq("Ein Tisch (Möbel) – groß", Meaning.plain("Ein [[Tisch]] {{K|Möbel}} – ''groß''<ref>x</ref>"), "plain text");
+    }
+
+    /** A German Wiktionary page (API answer) for a verb, with or without a picture. */
+    static String germanVerbPage(String verb, String meaning, String picture) {
+        String t = "== " + verb + " ({{Sprache|Deutsch}}) ==\n=== {{Wortart|Verb|Deutsch}} ===\n\n{{Deutsch Verb Übersicht\n|Präsens_ich=x\n"
+                + (picture == null ? "" : "|Bild=" + picture + "|mini|1|ein Beispiel\n") + "}}\n\n{{Bedeutungen}}\n:[1] " + meaning + "\n";
+        return "{\"parse\":{\"title\":" + Json.quote(verb) + ",\"wikitext\":" + Json.quote(t) + "}}";
+    }
+
+    static void pictures() throws IOException {
+        java.util.Map<String, String> pages = new java.util.HashMap<>();
+        pages.put(Meaning.wiktionaryUrl("de", "einschlafen"), germanVerbPage("einschlafen", "in den Schlaf fallen", null));
+        pages.put(Meaning.wiktionaryUrl("de", "schlafen"), germanVerbPage("schlafen", "ruhen", "Anker Schlafender Knabe im Heu.jpg"));
+        pages.put(Meaning.wiktionaryUrl("de", "öffnen"), germanVerbPage("öffnen", "aufmachen", null));
+        pages.put(Meaning.wikipediaUrl("de", "Öffnen"), "");
+        pages.put(Meaning.wikipediaUrl("en", "Opening"), "{\"type\":\"standard\",\"thumbnail\":{\"source\":\"https://upload.example/door.jpg\"}}");
+        pages.put(Meaning.wikipediaUrl("en", "Work"), "{\"type\":\"disambiguation\"}");
+        List<String> asked = new ArrayList<>();
+        MeaningSource.Fetch net = url -> {
+            asked.add(url);
+            String p = pages.get(url);
+            return p == null ? "" : p;
+        };
+        // a German prefix verb without its own picture: the picture of the base verb
+        Lookup ein = new Lookup("einschlafen", Lang.DE, Arrays.asList(new Lookup.Result(Lang.EN, "fall asleep", Collections.emptyList()),
+                new Lookup.Result(Lang.FA, "خوابیدن", Collections.emptyList())), "Google", 0);
+        Meaning m = MeaningSource.load(ein, net, w -> w, null);
+        eq("Anker Schlafender Knabe im Heu.jpg", m.image, "einschlafen → picture of schlafen");
+        ok(m.imageCaption.startsWith("schlafen"), "the caption says it is the base verb: " + m.imageCaption);
+        // the same for an English word whose German translation is that verb
+        Lookup fall = new Lookup("fall asleep", Lang.EN, Arrays.asList(new Lookup.Result(Lang.DE, "einschlafen", Collections.emptyList()),
+                new Lookup.Result(Lang.FA, "خوابیدن", Collections.emptyList())), "Google", 0);
+        m = MeaningSource.load(fall, net, w -> w, null);
+        eq("Anker Schlafender Knabe im Heu.jpg", m.image, "fall asleep → picture of schlafen");
+        // a verb with no Wiktionary picture: Wikipedia's article about the activity (English -ing form)
+        Lookup open = new Lookup("öffnen", Lang.DE, Arrays.asList(new Lookup.Result(Lang.EN, "open", Collections.emptyList())), "Google", 0);
+        m = MeaningSource.load(open, net, w -> w, null);
+        eq("https://upload.example/door.jpg", m.image, "öffnen → Wikipedia 'Opening'");
+        ok(asked.contains(Meaning.wikipediaUrl("de", "Öffnen")), "German Wikipedia asked first");
+        // a disambiguation page gives no picture
+        Lookup work = new Lookup("work", Lang.EN, Arrays.asList(new Lookup.Result(Lang.DE, "Arbeit", Collections.emptyList())), "Google", 0);
+        Meaning wm = new Meaning(Lang.EN, "work");
+        wm.senses.add(new Meaning.Sense("Verb", "to do a job", ""));
+        MeaningSource.picture(wm, work, net, w -> w);
+        eq("", wm.image, "disambiguation page: no picture");
     }
 
     static void sources() throws IOException {

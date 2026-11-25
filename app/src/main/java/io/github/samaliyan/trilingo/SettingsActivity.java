@@ -240,6 +240,7 @@ public final class SettingsActivity extends Activity {
                     .setMessage(R.string.clear_history_confirm)
                     .setPositiveButton(R.string.clear_history_short, (d, w) -> {
                         Store.history(this).clear();
+                        Store.notebook(this).forgetAllRecent();
                         WidgetProvider.updateAll(this);
                         build();
                     })

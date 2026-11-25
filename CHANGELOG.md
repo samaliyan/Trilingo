@@ -13,6 +13,8 @@
 - **Tablets and landscape**: the translation and the meaning are shown side by side; other screens keep a readable width.
 - **Feel**: a short vibration and a small animation for right and wrong answers, a card that turns over in Review, a soft fade for new results. Vibration can be turned off in Settings.
 - **Introduction** on the first start: four short pages (also in Settings, *Show the introduction*).
+- **Pictures for more words**: a German prefix verb without its own picture gets its base verb's (einschlafen → schlafen); verbs get the Wikipedia picture of the activity (öffnen → Opening, sleep → Sleep).
+- Fixed: **Review** asked about every looked-up text, also typos and half-typed words. Now only real English and German words from Recent are reviewed (and saved words); a word removed from Recent is no longer asked, and old cards of words that were never reviewed were removed.
 
 ## 1.6 — 2026-11-24
 

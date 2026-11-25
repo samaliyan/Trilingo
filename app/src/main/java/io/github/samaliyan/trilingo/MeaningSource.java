@@ -71,38 +71,98 @@ final class MeaningSource {
                 own = Meaning.parsePersian(Meaning.wikitext(net.get(Meaning.wiktionaryUrl("fa", w))), w);
         }
         m = own;
-        // picture: German Wiktionary has pictures chosen to show the meaning; Wikipedia's for things (nouns)
-        if (m.image.isEmpty()) {
-            String de = germanWord(l);
-            if (de != null && l.source != Lang.DE) {
-                try {
-                    String page = german == null ? de : german.apply(de);
-                    Meaning d = Meaning.parseGerman(Meaning.wikitext(net.get(Meaning.wiktionaryUrl("de", page))), page);
-                    m.image = d.image;
-                    m.imageCaption = d.imageCaption;
-                    m.imageSource = d.imageSource;
-                } catch (IOException e) {
-                    // no picture
-                }
-            }
-        }
-        if (m.image.isEmpty() && (isNoun(m) || m.senses.isEmpty())) {
-            String en = englishWord(l);
-            if (en != null && !en.isEmpty() && en.split(" ").length <= 2) {
-                try {
-                    String title = Character.toUpperCase(en.charAt(0)) + en.substring(1).toLowerCase(Locale.ROOT);
-                    String img = Meaning.wikipediaImage(net.get(Meaning.wikipediaUrl("en", title)));
-                    if (!img.isEmpty()) {
-                        m.image = img;
-                        m.imageCaption = "";
-                        m.imageSource = "Wikipedia";
-                    }
-                } catch (IOException e) {
-                    // no picture
-                }
-            }
-        }
+        picture(m, l, net, german);
         return m;
+    }
+
+    /** German prefixes of separable and inseparable verbs, longest first (einschlafen → schlafen). */
+    private static final String[] PREFIXES = {"zurück", "zusammen", "weiter", "herein", "heraus", "hinaus", "vorbei", "entgegen",
+            "durch", "nach", "fern", "fest", "weg", "hin", "her", "auf", "aus", "ein", "mit", "vor", "zu", "ab", "an", "be", "er",
+            "ver", "zer", "ent", "um", "los", "über", "unter"};
+
+    /**
+     * The picture, from the first source that has one:
+     * 1. the German Wiktionary picture of the German word (typed, or the German translation) — chosen by its
+     *    authors to show the meaning;
+     * 2. for a German prefix verb without one, the picture of its base verb (einschlafen → schlafen);
+     * 3. Wikipedia: for a noun its article (Dog); for a verb the article about the activity — German
+     *    "Einschlafen", or English "Running" / "Sleep".
+     */
+    static void picture(Meaning m, Lookup l, Fetch net, java.util.function.UnaryOperator<String> german) {
+        String de = germanWord(l);
+        if (de != null && german != null) de = german.apply(de);
+        if (m.image.isEmpty() && de != null && l.source != Lang.DE) take(m, germanPage(de, net), "");
+        boolean verb = isVerb(m, l) || (de != null && isGermanInfinitive(de));
+        if (m.image.isEmpty() && de != null && isGermanInfinitive(de)) {
+            for (String p : PREFIXES) {
+                String base = de.startsWith(p) ? de.substring(p.length()) : "";
+                if (base.length() >= 4 && isGermanInfinitive(base)) {
+                    take(m, germanPage(base, net), base);
+                    if (!m.image.isEmpty()) break;
+                }
+            }
+        }
+        if (!m.image.isEmpty()) return;
+        String en = englishWord(l);
+        if (en != null && en.toLowerCase(Locale.ROOT).startsWith("to ")) en = en.substring(3);
+        List<String[]> tries = new ArrayList<>();                       // {wikipedia language, title}
+        if (isNoun(m) || m.senses.isEmpty() && !verb) {
+            if (en != null && !en.isEmpty() && en.split(" ").length <= 2) tries.add(new String[]{"en", capital(en)});
+        } else if (verb) {
+            if (de != null && isGermanInfinitive(de)) tries.add(new String[]{"de", capital(de)});
+            if (en != null && !en.isEmpty() && !en.contains(" ")) {
+                String base = EnglishVerbs.lemma(en.toLowerCase(Locale.ROOT));
+                if (base != null && !base.isEmpty()) {
+                    tries.add(new String[]{"en", capital(EnglishVerbs.ing(base))});
+                    tries.add(new String[]{"en", capital(base)});
+                }
+            }
+        }
+        for (String[] t : tries) {
+            try {
+                String img = Meaning.wikipediaImage(net.get(Meaning.wikipediaUrl(t[0], t[1])));
+                if (!img.isEmpty()) {
+                    m.image = img;
+                    m.imageCaption = "";
+                    m.imageSource = "Wikipedia";
+                    return;
+                }
+            } catch (IOException e) {
+                return;                                                 // no network: no picture
+            }
+        }
+    }
+
+    private static Meaning germanPage(String page, Fetch net) {
+        try {
+            return Meaning.parseGerman(Meaning.wikitext(net.get(Meaning.wiktionaryUrl("de", page))), page);
+        } catch (IOException | RuntimeException e) {
+            return null;
+        }
+    }
+
+    /** Uses the other page's picture; for a base verb the caption names it ("schlafen"), so the link is clear. */
+    private static void take(Meaning m, Meaning from, String base) {
+        if (from == null || from.image.isEmpty()) return;
+        m.image = from.image;
+        m.imageCaption = base.isEmpty() ? from.imageCaption : base + (from.imageCaption.isEmpty() ? "" : ": " + from.imageCaption);
+        m.imageSource = from.imageSource;
+    }
+
+    private static boolean isGermanInfinitive(String w) {
+        return w.length() >= 4 && Character.isLowerCase(w.charAt(0)) && !w.contains(" ")
+                && (w.endsWith("en") || w.endsWith("ern") || w.endsWith("eln"));
+    }
+
+    private static boolean isVerb(Meaning m, Lookup l) {
+        if (!m.senses.isEmpty()) return "Verb".equals(m.senses.get(0).pos);
+        for (Lookup.Result r : l.results)
+            if (!r.senses.isEmpty() && r.senses.get(0).pos.toLowerCase(Locale.ROOT).startsWith("verb")) return true;
+        return false;
+    }
+
+    private static String capital(String s) {
+        return s.isEmpty() ? s : Character.toUpperCase(s.charAt(0)) + s.substring(1).toLowerCase(Locale.ROOT);
     }
 
     /** True when the main meaning is a noun. */
