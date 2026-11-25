@@ -769,6 +769,8 @@ elif [ -f old.apk ]; then
   adb install old.apk > /dev/null && log "old build installed"
   adb shell appops set "$PKG" REQUEST_INSTALL_PACKAGES allow
   adb shell am start -n "$PKG/.MainActivity" > /dev/null
+  sleep 4
+  [ -n "$(nfind "Skip" "^Skip$")" ] && tap "Skip" "^Skip$"          # a new install shows the introduction first
   wait_for "Update available" "" 90
   shot 27_update_offered 1
   tap_any "Update" "UPDATE"

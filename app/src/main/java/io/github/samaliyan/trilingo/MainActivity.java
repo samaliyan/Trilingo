@@ -166,9 +166,9 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         } catch (RuntimeException e) {
             tts = null;
         }
-        if (introduce) {
-            startActivity(new Intent(this, OnboardingActivity.class));
-        } else if (saved == null && store.autoUpdate() && System.currentTimeMillis() - store.lastUpdateCheck() > 12 * 60 * 60_000L) {
+        if (introduce) startActivity(new Intent(this, OnboardingActivity.class));
+        // (an update question waits behind the introduction until it is closed)
+        if (saved == null && store.autoUpdate() && System.currentTimeMillis() - store.lastUpdateCheck() > 12 * 60 * 60_000L) {
             updater.check(true);
         }
     }
