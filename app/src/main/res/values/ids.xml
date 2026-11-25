@@ -8,4 +8,6 @@
     <item name="bubble_input" type="id" />
     <item name="action_save" type="id" />
     <item name="action_remove" type="id" />
+    <item name="undo_text" type="id" />
+    <item name="undo_button" type="id" />
 </resources>

@@ -310,9 +310,15 @@ public final class NotebookActivity extends Activity {
         LinearLayout box = new LinearLayout(this);
         box.setPadding(ui.dp(20), ui.dp(8), ui.dp(20), 0);
         box.addView(e, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        // the keyboard goes with the dialog (else it stays up over the list)
+        Runnable hide = () -> {
+            android.view.inputmethod.InputMethodManager im = (android.view.inputmethod.InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            if (im != null) im.hideSoftInputFromWindow(e.getWindowToken(), 0);
+        };
         new AlertDialog.Builder(this, ui.dialogTheme())
                 .setTitle(title)
                 .setView(box)
+                .setOnDismissListener(d -> hide.run())
                 .setPositiveButton(android.R.string.ok, (d, w) -> {
                     if (!Text.clean(e.getText().toString()).isEmpty()) answer.text(e.getText().toString());
                 })

@@ -1544,9 +1544,11 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         undoBar.setBackground(ui.round(ui.dark ? 0xFFE6E9EE : 0xFF232A33, 14));
         undoBar.setElevation(ui.dp(6));
         undoText = ui.line(14, ui.dark ? 0xFF12161C : 0xFFF2F4F7, Ui.REGULAR);
+        undoText.setId(R.id.undo_text);
         undoBar.addView(undoText, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         TextView undo = ui.text(14, ui.dark ? 0xFF2563EB : 0xFF7AB0FF, Ui.MEDIUM);
         undo.setText(R.string.undo);
+        undo.setId(R.id.undo_button);
         undo.setGravity(Gravity.CENTER);
         undo.setMinHeight(ui.dp(44));
         undo.setPadding(ui.dp(14), 0, ui.dp(14), 0);

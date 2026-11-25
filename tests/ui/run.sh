@@ -377,6 +377,7 @@ sleep 1
 shot 03z6_folder 1
 expect "folder chip" "^Class .*"
 back
+[ -n "$(nfind "Search saved words")" ] && back      # a first Back may only close the keyboard
 tap "Review tile" "^Review( \(\d+\))?$"
 sleep 1
 shot 03z7_review_front 1
@@ -743,8 +744,14 @@ sleep 2
 shot 25_landscape 2
 expect "PERSIAN"
 # sideways there is room for two columns: the meaning is next to the translation, without scrolling
-wait_for "picture beside the translation" "^Picture: house.*" 20
 shot 25b_landscape_two_columns 1
+if scroll_to "picture" "^Picture: house.*" quiet; then
+  set -- $(nfind "picture" "^Picture: house.*")
+  W=$(adb shell wm size | sed -n 's/.*: *\([0-9]*\)x\([0-9]*\).*/\2/p' | tail -1)     # sideways: the long side is the width
+  [ "$1" -gt $(( W / 2 )) ] && log "ok: the picture is in the right column" || fail "picture not in a second column (x=$1)"
+else
+  log "no picture for house this time (picture service) — two columns not checked"
+fi
 adb shell settings put system user_rotation 0
 sleep 1
 

@@ -22,7 +22,9 @@ def main():
     # Only the app's own views: Android's built-in widgets (date/time pickers…) have "android:id/…" IDs.
     texts = [(n.get('text'), rect(n)) for n in nodes
              if n.get('package') == pkg and (n.get('text') or '').strip() and rect(n)
-             and not (n.get('resource-id') or '').startswith('android:id/')]
+             and not (n.get('resource-id') or '').startswith('android:id/')
+             # the Undo bar floats over the list on purpose (like a snackbar)
+             and not (n.get('resource-id') or '').endswith(('/undo_text', '/undo_button'))]
     bad = 0
     for i in range(len(texts)):
         t1, a = texts[i]
