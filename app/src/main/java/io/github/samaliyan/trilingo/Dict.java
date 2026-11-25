@@ -130,6 +130,20 @@ final class Dict {
      * ("Gift", "Rat") is left to the translation service unless {@code anyway} (then the more common one wins).
      */
     static Lookup choose(String query, Lang source, boolean anyway, long now, Dict en, Dict de, Words enWords, Words deWords) {
+        Lookup l = pick(query, source, anyway, now, en, de, enWords, deWords);
+        // German typed in lower case is a noun ("tisch" → Tisch) only when it is not a small word of its own:
+        // "habe" is a form of haben, not the noun "die Habe"
+        if (l != null && l.source == Lang.DE && deWords != null) {
+            String q = Text.clean(query);
+            Entry e = de.find(q);
+            if (e != null && !e.word.equals(q) && Character.isUpperCase(e.word.charAt(0)) && Character.isLowerCase(q.charAt(0))
+                    && (GermanVerbs.isKnownForm(q) || (deWords.known(q) && Character.isLowerCase(deWords.canonical(q).charAt(0)))))
+                return null;
+        }
+        return l;
+    }
+
+    private static Lookup pick(String query, Lang source, boolean anyway, long now, Dict en, Dict de, Words enWords, Words deWords) {
         String q = Text.clean(query);
         if (q.isEmpty() || en == null || de == null || q.split(" ").length > 3) return null;
         if (source == Lang.FA || (source == null && Text.hasPersian(q))) return persian(q, en, de, now);

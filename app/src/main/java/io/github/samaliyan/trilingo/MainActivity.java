@@ -166,10 +166,24 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         } catch (RuntimeException e) {
             tts = null;
         }
-        if (introduce) startActivity(new Intent(this, OnboardingActivity.class));
+        if (introduce) {
+            afterIntro = true;
+            startActivity(new Intent(this, OnboardingActivity.class));
+        }
         // (an update question waits behind the introduction until it is closed)
         if (saved == null && store.autoUpdate() && System.currentTimeMillis() - store.lastUpdateCheck() > 12 * 60 * 60_000L) {
             updater.check(true);
+        }
+    }
+
+    /** The introduction is open over this screen: when it closes, the keyboard comes up (as on a normal start). */
+    private boolean afterIntro;
+
+    @Override protected void onRestart() {
+        super.onRestart();
+        if (afterIntro) {
+            afterIntro = false;
+            if (Text.clean(input.getText().toString()).isEmpty()) showKeyboard();
         }
     }
 

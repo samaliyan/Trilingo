@@ -139,6 +139,9 @@ public final class StudyTest {
             ok(contains(l.result(Lang.EN), t[1]), t[0] + " → " + t[1] + ": " + l.result(Lang.EN).summary(9));
             ok(contains(l.result(Lang.FA), t[2]), t[0] + " → " + t[2] + ": " + l.result(Lang.FA).summary(9));
         }
+        ok(Dict.choose("habe", null, false, 0, enDict, deDict, en, de) == null, "habe is a verb form, not the noun Habe");
+        ok(Dict.choose("habe", Lang.DE, false, 0, enDict, deDict, en, de) == null, "also with German chosen");
+        eq("table", Dict.choose("tisch", Lang.DE, false, 0, enDict, deDict, en, de).result(Lang.EN).text, "tisch is still Tisch");
         Lookup p = Dict.choose("کتاب", null, false, 0, enDict, deDict, en, de);
         ok(p != null && contains(p.result(Lang.EN), "book") && contains(p.result(Lang.DE), "Buch"), "Persian کتاب");
         int bad = 0;

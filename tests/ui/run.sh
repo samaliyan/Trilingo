@@ -754,7 +754,11 @@ shot 25_landscape 2
 expect "PERSIAN"
 # sideways there is room for two columns: the meaning is next to the translation, without scrolling
 shot 25b_landscape_two_columns 1
-if scroll_to "picture" "^Picture: house.*" quiet; then
+ROOT=$(grep -o 'bounds="\[0,0\]\[[0-9]*,[0-9]*\]"' "$OUT/25b_landscape_two_columns.xml" | head -1 | sed 's/.*\]\[\([0-9]*\),\([0-9]*\)\]"/\1 \2/')
+set -- $ROOT
+if [ "${1:-0}" -le "${2:-0}" ]; then
+  log "this emulator did not turn the screen sideways — two columns not checked here"
+elif scroll_to "picture" "^Picture: house.*" quiet; then
   set -- $(nfind "picture" "^Picture: house.*")
   W=$(adb shell wm size | sed -n 's/.*: *\([0-9]*\)x\([0-9]*\).*/\2/p' | tail -1)     # sideways: the long side is the width
   [ "$1" -gt $(( W / 2 )) ] && log "ok: the picture is in the right column" || fail "picture not in a second column (x=$1)"
