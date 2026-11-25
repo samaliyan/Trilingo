@@ -11,9 +11,18 @@ FAILS=0
 log() { echo "[ui] $*" | tee -a "$OUT/report.txt"; }
 fail() { log "FAIL: $*"; FAILS=$((FAILS+1)); }
 
-dump() { timeout 30 adb shell uiautomator dump /sdcard/ui.xml > /dev/null 2>&1; timeout 15 adb exec-out cat /sdcard/ui.xml > "$OUT/.ui.xml"; }
+dump() {
+  timeout 30 adb shell uiautomator dump /sdcard/ui.xml > /dev/null 2>&1; timeout 15 adb exec-out cat /sdcard/ui.xml > "$OUT/.ui.xml"
+  # a slow emulator sometimes shows "<system app> isn't responding": wait for it (not part of the app)
+  if grep -q "t responding" "$OUT/.ui.xml" 2>/dev/null; then
+    local w; w=$(python3 find_node.py "$OUT/.ui.xml" "Wait")
+    [ -n "$w" ] && { echo "[ui] (closed a system 'not responding' dialog)" >> "$OUT/report.txt"; adb shell input tap $w; sleep 2; }
+    timeout 30 adb shell uiautomator dump /sdcard/ui.xml > /dev/null 2>&1; timeout 15 adb exec-out cat /sdcard/ui.xml > "$OUT/.ui.xml"
+  fi
+}
 shot() {      # shot NAME [wait] → screenshot, UI dump and overlap check
   sleep "${2:-1.2}"
+  dump
   adb exec-out screencap -p > "$OUT/$1.png"
   dump; cp "$OUT/.ui.xml" "$OUT/$1.xml"
   python3 check_layout.py "$OUT/$1.xml" "$PKG" >> "$OUT/report.txt" || fail "layout problem on $1"
@@ -660,7 +669,7 @@ tap "Copy English"
 tap "Settings"
 tap "Quick-translate bubble"
 sleep 1
-tap_any "Allow" "ALLOW" "Don't allow" "DON'T ALLOW" > /dev/null 2>&1 || true      # Android 13+: notification permission
+[ "$API" -ge 33 ] && { tap_any "Allow" "ALLOW" > /dev/null 2>&1 || true; }      # Android 13+ asks for the notification permission
 shot 26a_bubble_on 0.5
 adb shell input keyevent KEYCODE_HOME
 sleep 2
