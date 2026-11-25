@@ -195,6 +195,9 @@ public final class PracticeActivity extends Activity {
                 if (!ok) {
                     o.setBackground(ui.outline(ui.surface, ui.danger, 14));
                     o.setTextColor(ui.danger);
+                    Feel.wrong(o);
+                } else {
+                    Feel.right(o);
                 }
                 reveal(b, result, ok, ok ? "" : q.explain);
             });
@@ -222,6 +225,8 @@ public final class PracticeActivity extends Activity {
                 built.setClickable(false);
                 boolean ok = String.join(" ", placed).equals(q.explain);
                 built.setTextColor(ok ? green() : ui.danger);
+                if (ok) Feel.right(built);
+                else Feel.wrong(built);
                 reveal(b, result, ok, ok ? "" : q.explain);
             }
         };

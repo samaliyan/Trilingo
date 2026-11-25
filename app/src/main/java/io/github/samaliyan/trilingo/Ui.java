@@ -75,6 +75,17 @@ final class Ui {
         return dark ? R.style.Dialog_Dark : R.style.Dialog_Light;
     }
 
+    /** A tablet, or a phone turned sideways: room for two columns. */
+    boolean wide() {
+        return ctx.getResources().getConfiguration().screenWidthDp >= 600;
+    }
+
+    /** Side padding that keeps content at most {@code maxDp} wide, centred (0 on phones). */
+    int sidePadding(int maxDp, int minPaddingDp) {
+        int w = ctx.getResources().getConfiguration().screenWidthDp;
+        return dp(Math.max(minPaddingDp, (w - maxDp) / 2f));
+    }
+
     int dp(float v) {
         return Math.round(v * ctx.getResources().getDisplayMetrics().density);
     }

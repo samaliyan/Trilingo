@@ -43,7 +43,6 @@ final class MeaningView {
     private final Ui ui;
     private final Host host;
     private final Voice voice;
-    private int generation;
 
     MeaningView(Activity act, Ui ui, Host host, Voice voice) {
         this.act = act;
@@ -66,7 +65,11 @@ final class MeaningView {
      * (it may be placed elsewhere on the screen), {@code meaningBox} the meaning.
      */
     void fill(Lookup l, LinearLayout pictureBox, LinearLayout meaningBox) {
-        int gen = ++generation;
+        // The boxes of the result on screen now: a load already running for the same word (the screen was
+        // redrawn, e.g. the dictionary answer replaced by the service's) fills these instead of starting again.
+        shownKey = key(l);
+        shownPicture = pictureBox;
+        shownMeaning = meaningBox;
         Meaning cached = CACHE.get(key(l));
         if (cached != null) {
             show(l, cached, pictureBox, meaningBox);
@@ -74,17 +77,26 @@ final class MeaningView {
         }
         meaningBox.removeAllViews();
         meaningBox.addView(loadingRow());
+        if (loading.contains(key(l))) return;
+        final String k = key(l);
+        loading.add(k);
         Net.run(() -> MeaningSource.load(l, Net::get, Lexicon::germanCase, Lexicon.words(Lang.EN)), (m, err) -> {
-            if (gen != generation || act.isDestroyed()) return;
+            loading.remove(k);
+            if (m != null) CACHE.put(k, m);
+            if (!k.equals(shownKey) || act.isDestroyed()) return;
+            LinearLayout pb = shownPicture, mb = shownMeaning;
             if (m == null) {
-                meaningBox.removeAllViews();
-                meaningBox.addView(note(act.getString(R.string.meaning_failed), true, () -> fill(l, pictureBox, meaningBox)));
+                mb.removeAllViews();
+                mb.addView(note(act.getString(R.string.meaning_failed), true, () -> fill(l, pb, mb)));
                 return;
             }
-            CACHE.put(key(l), m);
-            show(l, m, pictureBox, meaningBox);
+            show(l, m, pb, mb);
         });
     }
+
+    private final java.util.Set<String> loading = new java.util.HashSet<>();
+    private String shownKey = "";
+    private LinearLayout shownPicture, shownMeaning;
 
     private void show(Lookup l, Meaning m, LinearLayout pictureBox, LinearLayout meaningBox) {
         pictureBox.removeAllViews();

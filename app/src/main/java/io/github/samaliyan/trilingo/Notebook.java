@@ -24,6 +24,7 @@ import java.util.Map;
 final class Notebook {
     static final long MINUTE = 60_000L, DAY = 24 * 60 * MINUTE;
     static final int AGAIN = 0, GOOD = 1, EASY = 2;
+    static final int SORT_NEWEST = 0, SORT_OLDEST = 1, SORT_AZ = 2, SORT_LEVEL = 3, SORT_HARDEST = 4, SORT_DUE = 5;
 
     static final class Card {
         String word, back, folder;
@@ -136,6 +137,119 @@ final class Notebook {
         for (Card c : cards.values()) if (c.saved && (folder == null || folder.equals(c.folder))) out.add(c);
         out.sort((a, b) -> Long.compare(b.added, a.added));
         return out;
+    }
+
+    /** Words whose spelling or translation contains the search (any case; "mude" finds "müde"). */
+    static List<Card> filter(List<Card> in, String query) {
+        String q = fold(Text.clean(query));
+        if (q.isEmpty()) return new ArrayList<>(in);
+        List<Card> out = new ArrayList<>();
+        for (Card c : in) if (fold(c.word).contains(q) || fold(c.back).contains(q)) out.add(c);
+        return out;
+    }
+
+    private static String fold(String s) {
+        String x = Text.unifyPersian(s == null ? "" : s).toLowerCase(Locale.ROOT).replace("\u200C", "");
+        return x.replace("ä", "a").replace("ö", "o").replace("ü", "u").replace("ß", "ss");
+    }
+
+    /** Sorts saved words; {@code level} gives a word's level ("B1") or null, for {@link #SORT_LEVEL}. */
+    static void sort(List<Card> list, int mode, java.util.function.Function<Card, String> level) {
+        java.util.Comparator<Card> newest = (a, b) -> Long.compare(b.added, a.added);
+        java.util.Comparator<Card> az = (a, b) -> {
+            int c = fold(a.word).compareTo(fold(b.word));
+            return c != 0 ? c : a.word.compareTo(b.word);
+        };
+        switch (mode) {
+            case SORT_OLDEST: list.sort((a, b) -> Long.compare(a.added, b.added)); break;
+            case SORT_AZ: list.sort(az); break;
+            case SORT_LEVEL:
+                list.sort((a, b) -> {
+                    String la = level.apply(a), lb = level.apply(b);
+                    int c = (la == null ? "Z" : la).compareTo(lb == null ? "Z" : lb);   // words without a level last
+                    return c != 0 ? c : az.compare(a, b);
+                });
+                break;
+            case SORT_HARDEST:
+                list.sort((a, b) -> {
+                    int c = Integer.compare(b.lapses, a.lapses);
+                    return c != 0 ? c : newest.compare(a, b);
+                });
+                break;
+            case SORT_DUE: list.sort((a, b) -> Long.compare(a.due, b.due)); break;
+            default: list.sort(newest);
+        }
+    }
+
+    /** Saves several words at once (one file write); words already saved keep their folder. Returns how many are new. */
+    int saveAll(Lang l, List<String> words, java.util.function.Function<String, String> back, String folder, long now) {
+        int added = 0;
+        for (int i = 0; i < words.size(); i++) {
+            String w = words.get(i);
+            if (isSaved(l, w)) continue;
+            Card c = cardFor(l, w, back.apply(w), now - i);       // keeps the text's order among "newest first"
+            c.word = Text.clean(w);
+            c.saved = true;
+            c.folder = folder == null ? "" : folder;
+            added++;
+        }
+        if (folder != null && !folder.isEmpty() && !folders.contains(folder)) folders.add(folder);
+        save();
+        return added;
+    }
+
+    /** Sets the translation of a saved word (filled in later, when it was saved without one). */
+    void setBack(Lang l, String word, String back) {
+        Card c = get(l, word);
+        if (c == null || back == null || back.isEmpty()) return;
+        c.back = back;
+        save();
+    }
+
+    /** Saved words that still have no translation. */
+    List<Card> withoutBack() {
+        List<Card> out = new ArrayList<>();
+        for (Card c : cards.values()) if (c.saved && c.back.isEmpty()) out.add(c);
+        return out;
+    }
+
+    /** Number of saved words and of words with review progress. */
+    int size() {
+        return cards.size();
+    }
+
+    /**
+     * Adds a backup's words: missing words are added, a word both have keeps the one with more review
+     * progress, and is saved when either is. Returns the number of words added.
+     */
+    int merge(String json) {
+        Notebook other = new Notebook(null);
+        other.read(json);
+        int added = 0;
+        for (String f : other.folders) if (!folders.contains(f)) folders.add(f);
+        for (Card o : other.cards.values()) {
+            Card c = cards.get(o.key());
+            if (c == null) {
+                cards.put(o.key(), o);
+                added++;
+                continue;
+            }
+            if (o.reps > c.reps) {
+                c.due = o.due;
+                c.interval = o.interval;
+                c.reps = o.reps;
+                c.lapses = o.lapses;
+            }
+            if (o.saved && !c.saved) {
+                c.saved = true;
+                c.folder = o.folder;
+            }
+            if (c.back.isEmpty()) c.back = o.back;
+            if (c.folder.isEmpty() && c.saved) c.folder = o.folder;
+            if (o.added > 0 && (c.added == 0 || o.added < c.added)) c.added = o.added;
+        }
+        save();
+        return added;
     }
 
     int count(String folder) {
@@ -254,9 +368,18 @@ final class Notebook {
     // ------------------------------------------------------------------ file
 
     private void load() {
-        if (!file.exists()) return;
+        if (file == null || !file.exists()) return;
         try {
-            Map<String, Object> m = Json.obj(Json.parse(new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8)));
+            read(new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            // a broken file starts empty
+        }
+    }
+
+    /** Reads words and folders from JSON (the file's format); damaged parts are skipped. */
+    private void read(String json) {
+        try {
+            Map<String, Object> m = Json.obj(Json.parse(json));
             if (m == null) return;
             List<Object> fs = Json.arr(m, "folders");
             if (fs != null) for (Object o : fs) if (o instanceof String) folders.add((String) o);
@@ -280,7 +403,7 @@ final class Notebook {
                 c.lapses = (int) Json.num(x, "x", 0);
                 cards.put(c.key(), c);
             }
-        } catch (IOException | RuntimeException e) {
+        } catch (RuntimeException e) {
             // a broken file starts empty
         }
     }
@@ -290,6 +413,22 @@ final class Notebook {
     }
 
     void save() {
+        if (file == null) return;
+        String json = toJson();
+        File tmp = new File(file.getPath() + ".tmp");
+        try (Writer w = new OutputStreamWriter(new FileOutputStream(tmp), StandardCharsets.UTF_8)) {
+            w.write(json);
+        } catch (IOException e) {
+            return;
+        }
+        if (!tmp.renameTo(file)) {
+            file.delete();
+            tmp.renameTo(file);
+        }
+    }
+
+    /** Everything as JSON (the file's format, also used in backups). */
+    String toJson() {
         StringBuilder b = new StringBuilder("{\"folders\":[");
         for (int i = 0; i < folders.size(); i++) b.append(i > 0 ? "," : "").append(Json.quote(folders.get(i)));
         b.append("],\"cards\":[");
@@ -304,15 +443,6 @@ final class Notebook {
                     .append(",\"x\":").append(c.lapses).append('}');
         }
         b.append("]}");
-        File tmp = new File(file.getPath() + ".tmp");
-        try (Writer w = new OutputStreamWriter(new FileOutputStream(tmp), StandardCharsets.UTF_8)) {
-            w.write(b.toString());
-        } catch (IOException e) {
-            return;
-        }
-        if (!tmp.renameTo(file)) {
-            file.delete();
-            tmp.renameTo(file);
-        }
+        return b.toString();
     }
 }

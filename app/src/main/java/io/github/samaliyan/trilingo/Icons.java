@@ -15,7 +15,7 @@ import android.graphics.drawable.Drawable;
 final class Icons {
     private Icons() { }
 
-    enum Kind { BACK, CLOSE, SETTINGS, COPY, SPEAK, PASTE, SEARCH, SHARE, EXAMPLES, TABLE, FAMILY, BOOK, CHEVRON, MIC, PLAY, STAR, STAR_ON, CAMERA, CHECK, CARDS, FOLDER, PLUS, PEN }
+    enum Kind { BACK, CLOSE, SETTINGS, COPY, SPEAK, PASTE, SEARCH, SHARE, EXAMPLES, TABLE, FAMILY, BOOK, CHEVRON, MIC, PLAY, STAR, STAR_ON, CAMERA, CHECK, CARDS, FOLDER, PLUS, PEN, EAR, LIST, SORT, BUBBLE }
 
     static Drawable of(Kind kind, int color) {
         return new IconDrawable(kind, color);
@@ -207,6 +207,46 @@ final class Icons {
                     path.moveTo(4.5f, 12.5f);
                     path.lineTo(9.5f, 17.5f);
                     path.lineTo(19.5f, 7);
+                    c.drawPath(path, stroke);
+                    break;
+                case EAR:
+                    // headphones: listening practice
+                    r.set(4, 4.5f, 20, 20.5f);
+                    c.drawArc(r, 180, 180, false, stroke);
+                    r.set(3.5f, 13, 8, 20.5f);
+                    c.drawRoundRect(r, 2, 2, stroke);
+                    r.set(16, 13, 20.5f, 20.5f);
+                    c.drawRoundRect(r, 2, 2, stroke);
+                    break;
+                case LIST:
+                    // lines of text and a magnifier: words found in a text
+                    line(c, 4, 6, 20, 6);
+                    line(c, 4, 10.5f, 20, 10.5f);
+                    line(c, 4, 15, 11, 15);
+                    line(c, 4, 19.5f, 9, 19.5f);
+                    c.drawCircle(16.5f, 16.5f, 3, stroke);
+                    line(c, 18.7f, 18.7f, 21, 21);
+                    break;
+                case SORT:
+                    line(c, 4, 7, 20, 7);
+                    line(c, 4, 12, 15, 12);
+                    line(c, 4, 17, 10, 17);
+                    break;
+                case BUBBLE:
+                    // a speech bubble: quick translation over other apps
+                    path.moveTo(5, 4.5f);
+                    path.lineTo(19, 4.5f);
+                    path.quadTo(20.5f, 4.5f, 20.5f, 6);
+                    path.lineTo(20.5f, 15);
+                    path.quadTo(20.5f, 16.5f, 19, 16.5f);
+                    path.lineTo(10, 16.5f);
+                    path.lineTo(6, 20);
+                    path.lineTo(6, 16.5f);
+                    path.lineTo(5, 16.5f);
+                    path.quadTo(3.5f, 16.5f, 3.5f, 15);
+                    path.lineTo(3.5f, 6);
+                    path.quadTo(3.5f, 4.5f, 5, 4.5f);
+                    path.close();
                     c.drawPath(path, stroke);
                     break;
                 case CARDS:

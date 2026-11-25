@@ -3,4 +3,9 @@
     <!-- Fixed id so Android restores the typed text after a rotation. -->
     <item name="input" type="id" />
     <item name="check_text" type="id" />
+    <item name="notebook_search" type="id" />
+    <item name="text_words_input" type="id" />
+    <item name="bubble_input" type="id" />
+    <item name="action_save" type="id" />
+    <item name="action_remove" type="id" />
 </resources>

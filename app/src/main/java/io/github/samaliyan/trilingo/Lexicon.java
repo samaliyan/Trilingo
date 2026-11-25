@@ -22,6 +22,7 @@ final class Lexicon {
     private static volatile Phrasal phrasal;
     private static volatile Grammar grammar;
     private static volatile Levels enLevels, deLevels;
+    private static volatile Dict enDict, deDict;
     private static boolean started;
     private static final List<Runnable> waiting = new ArrayList<>();
 
@@ -51,6 +52,12 @@ final class Lexicon {
             } catch (IOException | RuntimeException e) {
                 // no levels shown
             }
+            try {
+                enDict = Dict.read(Lang.EN, am.open("dict_en.txt"));
+                deDict = Dict.read(Lang.DE, am.open("dict_de.txt"));
+            } catch (IOException | RuntimeException e) {
+                // no offline dictionary: answers come from the translation service only
+            }
             grammar = readGrammar(am);
             List<Runnable> run;
             synchronized (Lexicon.class) {
@@ -77,6 +84,19 @@ final class Lexicon {
         return phrasal;
     }
 
+    static Dict dict(Lang l) {
+        return l == Lang.EN ? enDict : l == Lang.DE ? deDict : null;
+    }
+
+    /**
+     * The word from the built-in dictionary, or null. {@code source} null = automatic: Persian script is
+     * Persian; a Latin word only one dictionary has is taken from it. A word both have ("Gift", "Rat") is
+     * left to the translation service unless {@code anyway} (then the more common one wins).
+     */
+    static Lookup dictionary(String query, Lang source, boolean anyway, long now) {
+        return Dict.choose(query, source, anyway, now, enDict, deDict, en, de);
+    }
+
     /** CEFR level of a word ("B1"), or null. */
     static String level(String word, Lang lang) {
         Levels l = lang == Lang.EN ? enLevels : lang == Lang.DE ? deLevels : null;
@@ -85,6 +105,10 @@ final class Lexicon {
 
     static Levels germanLevels() {
         return deLevels;
+    }
+
+    static Levels levels(Lang l) {
+        return l == Lang.EN ? enLevels : l == Lang.DE ? deLevels : null;
     }
 
     /** The right case of a German word for dictionary pages ("tisch" → "Tisch"). */

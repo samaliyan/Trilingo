@@ -67,6 +67,46 @@ final class Json {
 
     // ------------------------------------------------------------------ writing
 
+    /** Writes a parsed value back as JSON (maps, lists, strings, numbers, booleans, null). */
+    static String write(Object v) {
+        StringBuilder b = new StringBuilder();
+        write(v, b);
+        return b.toString();
+    }
+
+    private static void write(Object v, StringBuilder b) {
+        if (v instanceof Map) {
+            b.append('{');
+            boolean first = true;
+            for (Map.Entry<?, ?> e : ((Map<?, ?>) v).entrySet()) {
+                if (!first) b.append(',');
+                first = false;
+                b.append(quote(String.valueOf(e.getKey()))).append(':');
+                write(e.getValue(), b);
+            }
+            b.append('}');
+        } else if (v instanceof List) {
+            b.append('[');
+            boolean first = true;
+            for (Object o : (List<?>) v) {
+                if (!first) b.append(',');
+                first = false;
+                write(o, b);
+            }
+            b.append(']');
+        } else if (v instanceof String) {
+            b.append(quote((String) v));
+        } else if (v instanceof Double) {
+            double d = (Double) v;
+            if (d == Math.rint(d) && Math.abs(d) < 1e15) b.append((long) d);
+            else b.append(d);
+        } else if (v instanceof Boolean) {
+            b.append(v);
+        } else {
+            b.append("null");
+        }
+    }
+
     static String quote(String v) {
         if (v == null) return "null";
         StringBuilder b = new StringBuilder(v.length() + 2).append('"');

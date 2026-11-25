@@ -55,8 +55,21 @@ adb install -r "$APK" || { echo "install failed"; exit 1; }
 adb logcat -c
 adb shell settings put global window_animation_scale 0
 
-# 1. First start: introduction, keyboard up
+# 1. First start: the introduction (4 pages), then the main screen with the keyboard up
 adb shell am start -W -n "$PKG/.MainActivity" > /dev/null; sleep 3
+shot 00_intro_1
+expect "Translate in a moment"
+tap "Next" "^Next$"; shot 00_intro_2 0.6
+expect "Understand the meaning"
+# swipe to the next page
+adb shell input swipe 900 1000 150 1000 200; sleep 1
+shot 00_intro_3 0.6
+expect "Keep what you learn"
+tap "Next" "^Next$"; shot 00_intro_4 0.6
+expect "Learn from real texts"
+expect "Add widget to home screen"
+tap "Get started"
+sleep 2.5
 shot 01_first_start
 KB=$(adb shell dumpsys input_method | grep -c "mInputShown=true")
 [ "$KB" -gt 0 ] && log "ok: keyboard open on first start" || fail "keyboard not open on first start"
@@ -438,6 +451,68 @@ if [ -n "$MID" ]; then
 else
   log "scan test skipped: the picture could not be found in the media store"
 fi
+# 3z14. Listen and write (the phone's text-to-speech says the word)
+open_app
+back
+tap "Listen & write"
+sleep 2
+shot 03z14_listen_write 1
+if [ -n "$(nfind "Install voice")" ]; then
+  log "listen & write: this emulator has no text-to-speech voice (the app offers to install one) — ok"
+else
+  tap "A1 words"
+  sleep 1
+  expect "Question 1"
+  tap "Answer 1"
+  type_text "xyz"
+  tap "Check" "^Check$"
+  sleep 1
+  shot 03z15_listen_write_checked 1
+  expect "Not quite." "^Not quite\.$"
+  for i in $(seq 1 10); do [ -n "$(nfind "5 new")" ] && break; adb shell input swipe 540 1600 540 600 300; sleep 0.5; done
+  tap "5 new" "^5 new$"
+  sleep 1
+  expect "Question 1"
+fi
+back
+
+# 3z16. Words from a text (shared text → the new words at your level → save them)
+adb shell "am start -a android.intent.action.SEND -t text/plain --es android.intent.extra.TEXT 'Die Verwaltung hat die Genehmigung verweigert, obwohl die Anwohner sich beschwert hatten.' -n $PKG/.TextWordsActivity" > /dev/null
+sleep 3
+wait_for "new words" "^\d+ new words?$" 15
+shot 03z16_text_words 1
+expect "German text · Your level"
+tap "level C1" "^My level: C1.*"
+sleep 1
+shot 03z17_text_words_c1 1
+tap "level A2" "^My level: A2.*"
+wait_for "new words" "^\d+ new words?$" 5
+scroll_to "save" "^Save \d+ words?$"
+tap "save" "^Save \d+ words?$"
+sleep 1
+shot 03z18_text_words_folder 0.5
+tap "No folder"
+sleep 1.5
+expect "No new words at this level"
+back
+
+# 3z19. Saved words: search and sort
+open_app
+back
+tap "Saved words"
+sleep 1
+tap "Search saved words"
+type_text "tisch"
+sleep 1
+shot 03z19_search 1
+expect "1 word found"
+expect "Tisch" "^Tisch$"
+back
+tap "Sort"
+tap "A to Z"
+sleep 1
+shot 03z20_sorted 1
+back
 open_app
 type_text "x"            # the next step starts with clear_field
 
@@ -484,7 +559,23 @@ scroll_to "fernsehen"
 longpress "fernsehen"
 shot 10_remove_dialog
 tap_any "Remove" "REMOVE"
+sleep 1
 expect_not "fernsehen"
+expect "Undo"
+tap "Undo"
+sleep 1
+scroll_to "fernsehen"
+log "ok: undo brought the word back"
+# swipe left removes (with Undo), swipe right saves
+P=$(nfind "fernsehen")
+if [ -n "$P" ]; then set -- $P; adb shell input swipe 900 $2 100 $2 250; sleep 1.2; fi
+shot 10b_swiped_away 0.3
+expect "Removed “fernsehen”"
+expect_not "fernsehen"
+scroll_to "Gift"
+P=$(nfind "Gift")
+if [ -n "$P" ]; then set -- $P; adb shell input swipe 150 $2 950 $2 250; sleep 1.2; fi
+shot 10c_swiped_saved 0.3
 scroll_to "house"
 tap "house"
 shot 11_from_history 1
@@ -499,8 +590,20 @@ type_text "house"; sleep 2
 back
 shot 12_offline_known 1
 expect "Haus" "Haus"
+# a common word never looked up: from the built-in dictionary (when this emulator really is offline)
 clear_field
-type_text "zebra"
+type_text "window"; sleep 3
+if [ -n "$(nfind "From the built-in dictionary")" ]; then
+  shot 12b_offline_dictionary 1
+  expect "Fenster" "Fenster"
+  log "ok: offline dictionary answered"
+elif [ -n "$(nfind "PERSIAN")" ]; then
+  log "offline dictionary: this emulator stayed online (answered by the service)"
+else
+  fail "no answer for a common word offline"
+fi
+clear_field
+type_text "quokka"
 # Some emulator images (Android 8) cannot be taken offline from adb: then the word is simply translated.
 for i in $(seq 1 25); do
   sleep 1
@@ -554,6 +657,62 @@ scroll_to "Examples"; tap "Examples" && { wait_for "example sentences" "([.!?]$)
 open_app; type_text "gehen"; wait_for "ENGLISH" "" 20; back
 scroll_to "Conjugation"; tap "Conjugation" && { sleep 1; shot 20b_dark_conjugation 1; back; }
 
+# 11b. Quick-translate bubble over other apps: copy a word, tap the bubble, the panel translates it
+adb shell appops set "$PKG" SYSTEM_ALERT_WINDOW allow
+open_app; type_text "Wasser"; wait_for "ENGLISH" "" 20; back
+tap "Copy English"
+back; tap "Settings"
+tap "Quick-translate bubble"
+sleep 1
+tap_any "Allow" "ALLOW" "Don't allow" "DON'T ALLOW" > /dev/null 2>&1 || true      # Android 13+: notification permission
+shot 26a_bubble_on 0.5
+adb shell input keyevent KEYCODE_HOME
+sleep 2
+shot 26b_bubble_home 0.5
+# the bubble is not part of the screen dump (it cannot take focus): tap where it starts
+W=$(adb shell wm size | sed -n 's/.*: *\([0-9]*\)x\([0-9]*\).*/\1/p' | tail -1); H=$(adb shell wm size | sed -n 's/.*: *\([0-9]*\)x\([0-9]*\).*/\2/p' | tail -1)
+D=$(adb shell wm density | sed -n 's/.*: *\([0-9]*\).*/\1/p' | tail -1)
+BX=$(( W - (35 * D / 160) )); BY=$(( H / 3 + (27 * D / 160) ))
+adb shell input tap $BX $BY
+wait_for "bubble panel" "^Open in Trilingo$" 10
+wait_for "translation in the panel" "^Wasser$" 20
+shot 26c_bubble_panel 1
+tap "Close"
+sleep 1
+open_app; back; tap "Settings"
+tap "Quick-translate bubble"
+sleep 1
+expect "Vibration"
+back
+
+# 11c. Backup to a file and restore it (the phone's file picker)
+open_app; back; tap "Settings"
+scroll_to "Back up now"
+tap "Back up now"
+sleep 3
+shot 26d_backup_picker 0.5
+if tap_any "SAVE" "Save" > /dev/null; then
+  sleep 2
+  scroll_to "Restore a backup"
+  tap "Restore a backup"
+  sleep 3
+  shot 26e_restore_picker 0.5
+  if tap "backup file" "^trilingo-backup-.*\.json$"; then
+    wait_for "restore question" "^Backup from .*" 10
+    shot 26f_restore_confirm 0.5
+    tap_any "Restore" "RESTORE"
+    sleep 1
+    log "ok: backup saved and restored"
+  else
+    log "restore: the backup file is not listed in this emulator's picker — restore not driven (the backup itself was saved)"
+    back
+  fi
+else
+  log "backup: the file picker could not be driven on this emulator — skipped"
+  back
+fi
+back
+
 # 12. Widget on the home screen
 open_app; back; tap "Settings"
 if [ -n "$(nfind "Add widget to home screen")" ]; then
@@ -588,6 +747,9 @@ adb shell settings put system user_rotation 1
 sleep 2
 shot 25_landscape 2
 expect "PERSIAN"
+# sideways there is room for two columns: the meaning is next to the translation, without scrolling
+wait_for "meaning beside the translation" "^MEANING IN ENGLISH$" 20
+shot 25b_landscape_two_columns 1
 adb shell settings put system user_rotation 0
 sleep 1
 

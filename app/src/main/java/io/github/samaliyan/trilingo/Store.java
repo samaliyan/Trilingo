@@ -21,6 +21,11 @@ final class Store {
     private static Notebook notebook;
     private static final String K_EXPLAIN = "grammarExplain", K_GRAMMAR_LANG = "grammarLang";
 
+    private static final String K_HAPTICS = "haptics", K_ONBOARDED = "onboarded", K_BUBBLE = "bubble";
+    private static final String K_SORT = "notebookSort", K_MY_LEVEL = "myLevel", K_DICTATION = "dictationLang";
+    /** Keys that describe this phone, not the user's choices: not part of a backup. */
+    private static final java.util.Set<String> LOCAL = new java.util.HashSet<>(java.util.Arrays.asList(K_LAST_UPD, K_BUBBLE));
+
     private static History history;
 
     private final SharedPreferences p;
@@ -86,6 +91,105 @@ final class Store {
 
     void setReviewRecent(boolean b) {
         p.edit().putBoolean(K_REVIEW_RECENT, b).apply();
+    }
+
+    /** A short vibration on right and wrong answers. */
+    boolean haptics() {
+        return p.getBoolean(K_HAPTICS, true);
+    }
+
+    void setHaptics(boolean b) {
+        p.edit().putBoolean(K_HAPTICS, b).apply();
+    }
+
+    /** The introduction was shown (or the app was already in use before it existed). */
+    boolean onboarded() {
+        return p.getBoolean(K_ONBOARDED, false);
+    }
+
+    void setOnboarded(boolean b) {
+        p.edit().putBoolean(K_ONBOARDED, b).apply();
+    }
+
+    /** True before the app has saved any setting (a new install). */
+    boolean isNew() {
+        return p.getAll().isEmpty();
+    }
+
+    /** The quick-translate bubble over other apps is switched on. */
+    boolean bubble() {
+        return p.getBoolean(K_BUBBLE, false);
+    }
+
+    void setBubble(boolean b) {
+        p.edit().putBoolean(K_BUBBLE, b).apply();
+    }
+
+    /** Order of the saved words ({@link Notebook#SORT_NEWEST} …). */
+    int notebookSort() {
+        return p.getInt(K_SORT, Notebook.SORT_NEWEST);
+    }
+
+    void setNotebookSort(int s) {
+        p.edit().putInt(K_SORT, s).apply();
+    }
+
+    /** The learner's level in a language ("A2"), used to pick new words from a text. */
+    String myLevel(Lang l) {
+        return p.getString(K_MY_LEVEL + l.code, "A2");
+    }
+
+    void setMyLevel(Lang l, String level) {
+        p.edit().putString(K_MY_LEVEL + l.code, level).apply();
+    }
+
+    /** Language of the listening practice. */
+    Lang dictationLang() {
+        return Lang.EN.code.equals(p.getString(K_DICTATION, "de")) ? Lang.EN : Lang.DE;
+    }
+
+    void setDictationLang(Lang l) {
+        p.edit().putString(K_DICTATION, l.code).apply();
+    }
+
+    // ------------------------------------------------------------------ backup
+
+    /** All settings as "key" → "b:true" / "i:2" / "l:5" / "f:1.0" / "s:text" (without this phone's own state). */
+    java.util.Map<String, String> exportSettings() {
+        java.util.Map<String, String> out = new java.util.TreeMap<>();
+        for (java.util.Map.Entry<String, ?> e : p.getAll().entrySet()) {
+            Object v = e.getValue();
+            if (LOCAL.contains(e.getKey()) || v == null) continue;
+            if (v instanceof Boolean) out.put(e.getKey(), "b:" + v);
+            else if (v instanceof Integer) out.put(e.getKey(), "i:" + v);
+            else if (v instanceof Long) out.put(e.getKey(), "l:" + v);
+            else if (v instanceof Float) out.put(e.getKey(), "f:" + v);
+            else if (v instanceof String) out.put(e.getKey(), "s:" + v);
+        }
+        return out;
+    }
+
+    /** Restores settings written by {@link #exportSettings}; unknown or damaged values are skipped. */
+    void importSettings(java.util.Map<String, String> in) {
+        SharedPreferences.Editor ed = p.edit();
+        for (java.util.Map.Entry<String, String> e : in.entrySet()) {
+            String v = e.getValue();
+            if (LOCAL.contains(e.getKey()) || v == null || v.length() < 2 || v.charAt(1) != ':') continue;
+            String x = v.substring(2);
+            try {
+                switch (v.charAt(0)) {
+                    case 'b': ed.putBoolean(e.getKey(), Boolean.parseBoolean(x)); break;
+                    case 'i': ed.putInt(e.getKey(), Integer.parseInt(x)); break;
+                    case 'l': ed.putLong(e.getKey(), Long.parseLong(x)); break;
+                    case 'f': ed.putFloat(e.getKey(), Float.parseFloat(x)); break;
+                    case 's': ed.putString(e.getKey(), x); break;
+                    default: break;
+                }
+            } catch (NumberFormatException ignored) {
+                // skipped
+            }
+        }
+        ed.apply();
     }
 
     int theme() {

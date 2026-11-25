@@ -5,3 +5,4 @@ local.properties
 .idea/
 tests/ui/out/
 tests/ui/old.apk
+__pycache__/

@@ -163,7 +163,9 @@ public final class ReviewActivity extends Activity implements TextToSpeech.OnIni
         Notebook.Card c = queue.get(0);
         LinearLayout content = page.content;
         content.removeAllViews();
-        content.addView(card(c), Page.full(ui.dp(8), 0));
+        View front = card(c);
+        content.addView(front, Page.full(ui.dp(8), 0));
+        Feel.appear(front);
         TextView hint = ui.text(14, ui.sub, Ui.REGULAR);
         hint.setText(R.string.review_think);
         hint.setGravity(Gravity.CENTER);
@@ -192,6 +194,7 @@ public final class ReviewActivity extends Activity implements TextToSpeech.OnIni
             box.addView(t, Page.full(ui.dp(12), 0));
         }
         content.addView(box, Page.full(ui.dp(8), 0));
+        flip(box);
         if (ttsReady && tts != null) speak(c);
 
         TextView q = ui.text(14, ui.sub, Ui.REGULAR);
@@ -220,12 +223,26 @@ public final class ReviewActivity extends Activity implements TextToSpeech.OnIni
             b.setContentDescription(getString(names[i]) + ", " + when[i]);
             b.setClickable(true);
             b.setFocusable(true);
-            b.setOnClickListener(v -> answer(answer));
+            b.setOnClickListener(v -> {
+                if (answer == Notebook.AGAIN) Feel.wrong(v);
+                else Feel.tick(v);
+                answer(answer);
+            });
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
             if (i > 0) lp.leftMargin = ui.dp(10);
             row.addView(b, lp);
         }
         content.addView(row, Page.full());
+    }
+
+    /** The card turns over to its back. */
+    private void flip(View card) {
+        if (!android.animation.ValueAnimator.areAnimatorsEnabled()) return;
+        card.setCameraDistance(card.getResources().getDisplayMetrics().density * 8000);
+        card.setRotationY(-90);
+        card.setAlpha(0.4f);
+        card.animate().rotationY(0).alpha(1f).setDuration(260)
+                .setInterpolator(new android.view.animation.DecelerateInterpolator()).start();
     }
 
     private void answer(int a) {

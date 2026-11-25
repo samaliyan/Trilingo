@@ -265,6 +265,12 @@ public final class ScanActivity extends Activity {
             row.addView(copy, lp);
         }
         c.addView(row, Page.full(ui.dp(12), 0));
+        if (TextWords.detect(allText, Lexicon.words(Lang.EN), Lexicon.words(Lang.DE)) != null) {
+            TextView words = ui.pill(getString(R.string.find_new_words), true);
+            words.setOnClickListener(v -> startActivity(new Intent(this, TextWordsActivity.class).putExtra(TextWordsActivity.EXTRA_TEXT, allText)));
+            c.addView(words, Page.full(ui.dp(10), 0));
+            words.getLayoutParams().height = ui.dp(46);
+        }
     }
 
     /** Translates a tapped word in the panel under the photo. */

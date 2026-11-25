@@ -20,7 +20,9 @@ and choosing "English to Persian" or "German to English" every time.
 - **Conjugation** — for verbs, the conjugation in German, English and Persian, built in (works offline).
 - **Widget** — a search bar on the home screen that opens the app with the keyboard up. Make it taller to see your recent words.
 - **From any app** — select a word and choose *Trilingo* in the text menu, share text to it, or use the Quick Settings tile.
-- **Works offline for known words** — every looked-up word is saved (can be turned off).
+- **Works offline** — a built-in dictionary of about 14,000 common English and German words (and Persian through them), and every looked-up word is saved (can be turned off).
+- **Quick-translate bubble** — an optional button over other apps: copy text, tap it, read the translation.
+- **Learning** — saved words with folders, search and sort; review with spaced repetition; listen & write; words from a text at your level; grammar practice; backup and restore.
 - **Listen and copy** — speaker button when the phone's text-to-speech has the language; one-tap copy.
 - **Two services** — Google Translate (default, with dictionary meanings) and MyMemory as backup; if one does not answer, the other is used.
 - **Updates itself** from this repository's Releases (asks first; Android shows its own install confirmation).
@@ -33,7 +35,8 @@ example sentences from [Tatoeba](https://tatoeba.org) (CC BY 2.0 FR); meanings f
 and the [Free Dictionary API](https://dictionaryapi.dev); pictures from Wikimedia Commons / Wikipedia; word levels from
 [Words-CEFR-Dataset](https://github.com/Maximax67/Words-CEFR-Dataset) (MIT, based on CEFR-J) and
 [german-cefr-wordlist](https://github.com/ph98/german-cefr-wordlist) (MIT) — `tools/build_levels.py`;
-sentence checks by [LanguageTool](https://languagetool.org); text recognition by Google ML Kit. `tools/build_data.py` rebuilds `app/src/main/assets`.
+sentence checks by [LanguageTool](https://languagetool.org); text recognition by Google ML Kit; the offline dictionary from
+Wiktionary translation tables (CC BY-SA) via [wiktextract / kaikki.org](https://kaikki.org) — `tools/build_dict.py`. `tools/build_data.py` rebuilds `app/src/main/assets`.
 
 ## Install
 

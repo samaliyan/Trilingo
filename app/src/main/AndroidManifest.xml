@@ -9,6 +9,13 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <!-- Pronunciation practice: record yourself saying a word (asked for only when you tap Record). -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- Quick-translate bubble (only when switched on in Settings): drawn over other apps, kept running as a
+         foreground service with a quiet notification, and started again after a restart. -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <!-- Android 11+: lets the app see the phone's text-to-speech engine (for the speaker buttons). -->
     <queries>
@@ -72,6 +79,27 @@
             android:exported="false" />
 
         <activity android:name=".NotebookActivity" android:exported="false" />
+        <activity android:name=".DictationActivity" android:exported="false" android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity android:name=".OnboardingActivity" android:exported="false" />
+        <!-- Share text → "Find new words" -->
+        <activity
+            android:name=".TextWordsActivity"
+            android:exported="true"
+            android:label="@string/text_words">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+        <!-- The panel the bubble opens: its own small task, not in Recents. -->
+        <activity
+            android:name=".BubbleActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:taskAffinity="io.github.samaliyan.trilingo.bubble"
+            android:theme="@style/BubbleTheme" />
         <activity android:name=".ReviewActivity" android:exported="false" />
         <activity android:name=".PracticeActivity" android:exported="false" />
         <activity
@@ -89,6 +117,24 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".BubbleService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Quick-translate button shown over other apps, switched on by the user" />
+        </service>
+
+        <receiver
+            android:name=".BootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
 
         <provider
             android:name=".PhotoProvider"

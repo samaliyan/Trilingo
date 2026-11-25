@@ -107,6 +107,12 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
     @Override protected void onCreate(Bundle saved) {
         super.onCreate(saved);
         store = new Store(this);
+        // First start of a new install: a short introduction. (Updated installs already know the app.)
+        boolean introduce = false;
+        if (!store.onboarded()) {
+            introduce = saved == null && store.isNew() && Store.history(this).items().isEmpty() && incomingText(getIntent()) == null;
+            store.setOnboarded(true);
+        }
         ui = Ui.of(this);
         ui.applyWindow(this);
         themeAtStart = store.theme();
@@ -116,6 +122,8 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         updater = new Updater(this, ui);
         sheets = new DetailSheets(this, ui, this);
         Net.POOL.execute(() -> Net.init(this));          // disk work, off the screen thread
+        if (store.bubble()) BubbleService.start(this);   // e.g. after the app was stopped
+        Backfill.start(this);                            // saved words still without a translation
         voice = new Voice(this);
         meaningView = new MeaningView(this, ui, new MeaningView.Host() {
             @Override public boolean canSpeak(Lang l) {
@@ -158,7 +166,9 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         } catch (RuntimeException e) {
             tts = null;
         }
-        if (saved == null && store.autoUpdate() && System.currentTimeMillis() - store.lastUpdateCheck() > 12 * 60 * 60_000L) {
+        if (introduce) {
+            startActivity(new Intent(this, OnboardingActivity.class));
+        } else if (saved == null && store.autoUpdate() && System.currentTimeMillis() - store.lastUpdateCheck() > 12 * 60 * 60_000L) {
             updater.check(true);
         }
     }
@@ -373,10 +383,14 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         scroll.setFillViewport(true);
         content = new LinearLayout(this);
         content.setOrientation(LinearLayout.VERTICAL);
-        content.setPadding(ui.dp(12), ui.dp(4), ui.dp(12), ui.dp(24));
+        int side = ui.sidePadding(1100, 12);
+        content.setPadding(side, ui.dp(4), side, ui.dp(72));      // room for the undo bar under the last row
         scroll.addView(content);
         root.addView(scroll, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
-        setContentView(root);
+        android.widget.FrameLayout frame = new android.widget.FrameLayout(this);
+        frame.addView(root);
+        frame.addView(buildUndoBar());
+        setContentView(frame);
         updateFieldButtons();
         // Suggestions belong to typing: when the keyboard closes (Back, scrolling …) they go away.
         root.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
@@ -456,6 +470,9 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         }
         suggestScroll.setVisibility(words.isEmpty() ? View.GONE : View.VISIBLE);
         suggestScroll.scrollTo(0, 0);
+        lastSuggestions = words;
+        handler.removeCallbacks(prefetchTask);
+        if (!words.isEmpty()) handler.postDelayed(prefetchTask, 350);
     }
 
     private boolean lastQueryShown() {
@@ -483,14 +500,21 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         final String umlautHint = uf != null && !uf.sure ? uf.text : null;
         final String query = umlautFixed ? uf.text : q;
 
+        long now0 = System.currentTimeMillis();
         Lookup cached = history.find(query, forced);
-        if (cached != null) {
+        Lookup pre = cached == null ? prefetched.get(prefetchKey(query, forced)) : null;
+        if (cached == null && pre != null) cached = pre;
+        // Shown at once: the saved lookup, or the built-in dictionary's. A dictionary answer is replaced by
+        // the translation service's (richer) answer when it arrives, and stays when there is no internet.
+        Lookup offline = cached != null ? cached : Lexicon.dictionary(query, forced, false, now0);
+        if (offline != null) {
             busy.setVisibility(View.INVISIBLE);
-            showLookup(cached, forced == null, umlautFixed);
+            showLookup(offline, forced == null, umlautFixed);
             shownFor = Text.key(q);
-            scheduleSave(cached, now);
-            return;
+            scheduleSave(offline, now);
+            if (!Dict.SERVICE.equals(offline.service) || !online()) return;
         }
+        final Lookup instant = offline;
         busy.setVisibility(View.VISIBLE);
         final Lang f = forced;
         // Automatic: a word only German (or only English) has is decided here; the rest by the service.
@@ -527,17 +551,70 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
             runOnUiThread(() -> {
                 if (g != generation || isFinishing() || isDestroyed()) return;
                 busy.setVisibility(View.INVISIBLE);
-                if (r != null) {
-                    showLookup(r, f == null, fixedWord);
+                if (instant != null) {
+                    // the dictionary answer is on screen: replaced only by a real translation of the same word
+                    if (r == null || echoes(r) || r.hasSuggestion() || fixedWord) return;
+                    int y = scroll.getScrollY();
+                    showLookup(r, f == null, umlautFixed);
+                    scroll.post(() -> scroll.scrollTo(0, y));
                     shownFor = Text.key(q);
                     scheduleSave(r, now);
+                    return;
+                }
+                Lookup shownNow = r;
+                if (shownNow == null) shownNow = Lexicon.dictionary(query, f, true, System.currentTimeMillis());
+                if (shownNow != null) {
+                    showLookup(shownNow, f == null, r != null ? fixedWord : umlautFixed);
+                    shownFor = Text.key(q);
+                    scheduleSave(shownNow, now);
                 } else {
-                    boolean offline = (x != null && x.offline) || !online();
-                    showMessage(getString(offline ? R.string.error_offline : R.string.error_service),
-                            getString(offline ? R.string.error_offline_hint : R.string.error_service_hint), true);
+                    boolean offlineNow = (x != null && x.offline) || !online();
+                    showMessage(getString(offlineNow ? R.string.error_offline : R.string.error_service),
+                            getString(offlineNow ? R.string.error_offline_hint : R.string.error_service_hint), true);
                 }
             });
         }, "lookup").start();
+    }
+
+    // ------------------------------------------------------------------ prefetching suggestions
+
+    /** Translations of the first suggestions, fetched while the user still types (tapping one is instant). */
+    private final java.util.Map<String, Lookup> prefetched = new java.util.LinkedHashMap<String, Lookup>(16, 0.75f, true) {
+        @Override protected boolean removeEldestEntry(java.util.Map.Entry<String, Lookup> e) {
+            return size() > 40;
+        }
+    };
+    private final Set<String> prefetching = new java.util.HashSet<>();
+    private List<String> lastSuggestions = new java.util.ArrayList<>();
+    private final Runnable prefetchTask = this::prefetch;
+
+    private static String prefetchKey(String word, Lang forced) {
+        return Text.key(word) + "|" + (forced == null ? "auto" : forced.code);
+    }
+
+    private void prefetch() {
+        if (isFinishing() || lastSuggestions.isEmpty() || !online()) return;
+        final Lang f = forced;
+        final int service = store.service();
+        for (String w : lastSuggestions.subList(0, Math.min(2, lastSuggestions.size()))) {
+            final String key = prefetchKey(w, f);
+            if (prefetched.containsKey(key) || prefetching.contains(key) || history.find(w, f) != null) continue;
+            prefetching.add(key);
+            final Lang source = f != null ? f : Lexicon.guessLatin(w);
+            Net.POOL.execute(() -> {
+                Lookup r = null;
+                try {
+                    r = engine.translate(w, source, service, System.currentTimeMillis());
+                } catch (Engine.Failure | RuntimeException ignored) {
+                    // the normal lookup tries again when the word is chosen
+                }
+                final Lookup res = r != null && !echoes(r) && !r.hasSuggestion() ? r : null;
+                handler.post(() -> {
+                    prefetching.remove(key);
+                    if (res != null) prefetched.put(key, res);
+                });
+            });
+        }
     }
 
     /** True when every result is just the typed text again (the service did not know the word). */
@@ -626,11 +703,23 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         boolean meaning = MeaningView.applies(l);
         LinearLayout picture = column(), meaningBox = column();
         if (meaning) content.addView(modeSwitch(l, detected, corrected));
+        // Tablet or sideways: the two parts side by side; on a phone one below the other.
+        LinearLayout first = content, second = content;
+        if (ui.wide()) {
+            LinearLayout cols = new LinearLayout(this);
+            first = column();
+            second = column();
+            cols.addView(first, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+            LinearLayout.LayoutParams sp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+            sp.leftMargin = ui.dp(14);
+            cols.addView(second, sp);
+            content.addView(cols);
+        }
         View actions = actionRow(l);
         if (meaning && store.meaningFirst()) {
             // learn from the meaning first; the translation is one tap away
-            content.addView(picture);
-            content.addView(meaningBox);
+            first.addView(picture);
+            first.addView(meaningBox);
             LinearLayout hidden = column();
             hidden.setVisibility(View.GONE);
             for (Lookup.Result r : l.results) hidden.addView(card(l, r));
@@ -638,29 +727,35 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
             reveal.setOnClickListener(v -> {
                 reveal.setVisibility(View.GONE);
                 hidden.setVisibility(View.VISIBLE);
+                Feel.appear(hidden);
             });
             LinearLayout.LayoutParams rp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ui.dp(48));
             rp.bottomMargin = ui.dp(12);
-            content.addView(reveal, rp);
-            content.addView(hidden);
-            if (actions != null) content.addView(actions);
+            second.addView(reveal, rp);
+            second.addView(hidden);
+            if (actions != null) second.addView(actions);
         } else {
             // translation, its tools (examples, conjugation …), then the picture and the meaning
-            for (Lookup.Result r : l.results) content.addView(card(l, r));
-            if (actions != null) content.addView(actions);
-            if (meaning) content.addView(picture);
-            if (meaning) content.addView(meaningBox);
+            for (Lookup.Result r : l.results) first.addView(card(l, r));
+            if (actions != null) first.addView(actions);
+            if (meaning) second.addView(picture);
+            if (meaning) second.addView(meaningBox);
         }
 
-        if (Services.NAMES[Services.MYMEMORY].equals(l.service)) {
+        boolean fromDict = Dict.SERVICE.equals(l.service);
+        if (Services.NAMES[Services.MYMEMORY].equals(l.service) || fromDict) {
             TextView via = ui.text(12, ui.sub, Ui.REGULAR);
-            via.setText(getString(R.string.via_service, l.service));
+            via.setText(fromDict ? getString(R.string.via_dictionary) : getString(R.string.via_service, l.service));
             via.setPadding(ui.dp(6), ui.dp(4), 0, 0);
             content.addView(via);
         }
         if (meaning) meaningView.fill(l, picture, meaningBox);
         scroll.scrollTo(0, 0);
+        if (!l.key().equals(animatedKey)) Feel.appear(content);      // a new word fades in; a refresh does not
+        animatedKey = l.key();
     }
+
+    private String animatedKey = "";
 
     // ------------------------------------------------------------------ voice search
 
@@ -765,19 +860,23 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
 
     // ------------------------------------------------------------------ home: review, notebook, scan, check
 
-    /** Four tiles above the recent words: Review (with the number due), Saved words, Scan text, Check a sentence. */
+    /** Tiles above the recent words: Review (with the number due), Saved words, the practices and tools. */
     private View homeTiles() {
         Notebook nb = Store.notebook(this);
         int due = nb.due(null, store.reviewRecent() ? history.items() : null, System.currentTimeMillis(), 99).size();
         String[] labels = {due > 0 ? getString(R.string.review_n, due) : getString(R.string.review), getString(R.string.saved_words),
+                getString(R.string.listen_write), getString(R.string.text_words),
                 getString(R.string.scan_text), getString(R.string.check_sentence)};
-        Icons.Kind[] icons = {Icons.Kind.CARDS, Icons.Kind.STAR, Icons.Kind.CAMERA, Icons.Kind.CHECK};
-        Class<?>[] screens = {ReviewActivity.class, NotebookActivity.class, ScanActivity.class, CheckActivity.class};
+        Icons.Kind[] icons = {Icons.Kind.CARDS, Icons.Kind.STAR, Icons.Kind.EAR, Icons.Kind.LIST,
+                Icons.Kind.CAMERA, Icons.Kind.CHECK};
+        Class<?>[] screens = {ReviewActivity.class, NotebookActivity.class, DictationActivity.class, TextWordsActivity.class,
+                ScanActivity.class, CheckActivity.class};
+        int perRow = ui.wide() ? 3 : 2;
         LinearLayout box = column();
         box.setPadding(0, ui.dp(4), 0, ui.dp(8));
         LinearLayout row = null;
-        for (int i = 0; i < 4; i++) {
-            if (i % 2 == 0) {
+        for (int i = 0; i < labels.length; i++) {
+            if (i % perRow == 0) {
                 row = new LinearLayout(this);
                 LinearLayout.LayoutParams rp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 if (i > 0) rp.topMargin = ui.dp(10);
@@ -790,7 +889,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                 startActivity(new Intent(this, screen));
             });
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
-            if (i % 2 == 1) lp.leftMargin = ui.dp(10);
+            if (i % perRow > 0) lp.leftMargin = ui.dp(10);
             row.addView(t, lp);
         }
         return box;
@@ -848,6 +947,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                 nb.unsave(l.source, word);
                 Toast.makeText(this, R.string.word_unsaved, Toast.LENGTH_SHORT).show();
                 update.run();
+                Feel.tick(star);
                 return;
             }
             List<String> folders = nb.folders();
@@ -855,6 +955,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                 nb.save(l.source, word, Notebook.summary(l), "", System.currentTimeMillis());
                 Toast.makeText(this, R.string.word_saved, Toast.LENGTH_SHORT).show();
                 update.run();
+                Feel.pop(star);
                 return;
             }
             String[] items = new String[folders.size() + 1];
@@ -866,6 +967,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                         nb.save(l.source, word, Notebook.summary(l), i == 0 ? "" : folders.get(i - 1), System.currentTimeMillis());
                         Toast.makeText(this, R.string.word_saved, Toast.LENGTH_SHORT).show();
                         update.run();
+                        Feel.pop(star);
                     })
                     .show();
         });
@@ -1275,53 +1377,192 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         LinearLayout list = new LinearLayout(this);
         list.setOrientation(LinearLayout.VERTICAL);
         list.setBackground(ui.round(ui.surface, 18));
+        list.setClipToOutline(true);                   // the swipe bands keep the rounded corners
+        Notebook nb = Store.notebook(this);
         int n = Math.min(items.size(), RECENT_SHOWN);
-        for (int k = 0; k < n; k++) {
-            final Lookup l = items.get(k);
-            LinearLayout row = new LinearLayout(this);
-            row.setOrientation(LinearLayout.VERTICAL);
-            row.setPadding(ui.dp(18), ui.dp(12), ui.dp(18), ui.dp(12));
-            row.setMinimumHeight(ui.dp(60));
-            row.setGravity(Gravity.CENTER_VERTICAL);
-            row.setBackground(ui.ripple(null, 0));
-            TextView q = ui.line(16, ui.text, Ui.REGULAR);
-            q.setText(l.query);
-            Ui.bidi(q);
-            row.addView(q, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            TextView s = ui.line(14, ui.sub, Ui.REGULAR);
-            s.setText(l.results.get(0).summary(2));
-            Ui.bidi(s);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            lp.topMargin = ui.dp(4);
-            row.addView(s, lp);
-            row.setOnClickListener(v -> {
-                setInput(l.query);
-                lastQuery = Text.clean(l.query);
-                generation++;
-                showLookup(l, true, false);
-                shownFor = Text.key(l.query);
-                scheduleSave(l, true);
-                hideKeyboard();
-            });
-            row.setOnLongClickListener(v -> {
-                new AlertDialog.Builder(this, ui.dialogTheme())
-                        .setMessage(getString(R.string.remove_word, l.query))
-                        .setPositiveButton(R.string.remove, (d, w) -> {
-                            history.remove(l);
-                            WidgetProvider.updateAll(this);
-                            showRecent();
-                        })
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .show();
-                return true;
-            });
-            list.addView(row);
-        }
+        for (int k = 0; k < n; k++) list.addView(recentRow(items.get(k), nb));
         content.addView(list);
         TextView tip = ui.text(12, ui.sub, Ui.REGULAR);
         tip.setText(R.string.recent_tip);
         tip.setPadding(ui.dp(6), ui.dp(10), ui.dp(6), 0);
         content.addView(tip);
+    }
+
+    /** One recent word: tap to show it; swipe right to save it, left to remove it (long press: the same as a menu). */
+    private View recentRow(Lookup l, Notebook nb) {
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.VERTICAL);
+        row.setPadding(ui.dp(18), ui.dp(12), ui.dp(18), ui.dp(12));
+        row.setMinimumHeight(ui.dp(60));
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        row.setBackground(ui.ripple(ui.round(ui.surface, 0), 0));
+        LinearLayout top = new LinearLayout(this);
+        top.setGravity(Gravity.CENTER_VERTICAL);
+        TextView q = ui.line(16, ui.text, Ui.REGULAR);
+        q.setText(l.query);
+        Ui.bidi(q);
+        top.addView(q, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+        final boolean canSave = MeaningView.applies(l) && !l.results.isEmpty();
+        final String word = l.source == Lang.DE ? Lexicon.germanCase(Text.clean(l.query)) : Text.clean(l.query);
+        ImageView mark = new ImageView(this);
+        mark.setImageDrawable(Icons.of(Icons.Kind.STAR_ON, ui.accent));
+        mark.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        mark.setVisibility(canSave && nb.isSaved(l.source, word) ? View.VISIBLE : View.GONE);
+        LinearLayout.LayoutParams mp = new LinearLayout.LayoutParams(ui.dp(16), ui.dp(16));
+        mp.leftMargin = ui.dp(8);
+        top.addView(mark, mp);
+        row.addView(top, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        TextView s = ui.line(14, ui.sub, Ui.REGULAR);
+        s.setText(l.results.get(0).summary(2));
+        Ui.bidi(s);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.topMargin = ui.dp(4);
+        row.addView(s, lp);
+        row.setOnClickListener(v -> {
+            setInput(l.query);
+            lastQuery = Text.clean(l.query);
+            generation++;
+            showLookup(l, true, false);
+            shownFor = Text.key(l.query);
+            scheduleSave(l, true);
+            hideKeyboard();
+        });
+
+        SwipeRow swipe = new SwipeRow(this, ui, row);
+        Runnable toggleSave = () -> {
+            boolean now = !nb.isSaved(l.source, word);
+            if (now) nb.save(l.source, word, Notebook.summary(l), "", System.currentTimeMillis());
+            else nb.unsave(l.source, word);
+            mark.setVisibility(now ? View.VISIBLE : View.GONE);
+            if (now) Feel.pop(mark);
+            Toast.makeText(this, now ? R.string.word_saved : R.string.word_unsaved, Toast.LENGTH_SHORT).show();
+        };
+        Runnable remove = () -> {
+            int index = history.items().indexOf(l);
+            history.remove(l);
+            WidgetProvider.updateAll(this);
+            collapse(swipe);
+            showUndo(getString(R.string.removed_word, l.query), () -> {
+                history.restore(l, index);
+                WidgetProvider.updateAll(this);
+                if (Text.clean(input.getText().toString()).isEmpty()) showRecent();
+            });
+        };
+        if (canSave) swipe.onRight(Icons.Kind.STAR, getString(R.string.save_word), ui.accent, () -> {
+            toggleSave.run();
+            return false;
+        });
+        swipe.onLeft(Icons.Kind.CLOSE, getString(R.string.remove), ui.danger, () -> {
+            remove.run();
+            return true;
+        });
+        row.setOnLongClickListener(v -> {
+            boolean saved = canSave && nb.isSaved(l.source, word);
+            List<String> names = new java.util.ArrayList<>();
+            if (canSave) names.add(getString(saved ? R.string.unsave_word : R.string.save_word));
+            names.add(getString(R.string.remove));
+            new AlertDialog.Builder(this, ui.dialogTheme())
+                    .setTitle(l.query)
+                    .setItems(names.toArray(new String[0]), (d, i) -> {
+                        if (canSave && i == 0) toggleSave.run();
+                        else remove.run();
+                    })
+                    .show();
+            return true;
+        });
+        // the same actions for screen readers
+        row.setContentDescription(l.query + ". " + s.getText());
+        accessibilityActions(row, canSave, toggleSave, remove);
+        return swipe;
+    }
+
+    /** Custom accessibility actions ("Save word", "Remove"), so the swipes are not the only way. */
+    private void accessibilityActions(View row, boolean canSave, Runnable save, Runnable remove) {
+        row.setAccessibilityDelegate(new View.AccessibilityDelegate() {
+            @Override public void onInitializeAccessibilityNodeInfo(View host, android.view.accessibility.AccessibilityNodeInfo info) {
+                super.onInitializeAccessibilityNodeInfo(host, info);
+                if (canSave) info.addAction(new android.view.accessibility.AccessibilityNodeInfo.AccessibilityAction(R.id.action_save, getString(R.string.save_word)));
+                info.addAction(new android.view.accessibility.AccessibilityNodeInfo.AccessibilityAction(R.id.action_remove, getString(R.string.remove)));
+            }
+
+            @Override public boolean performAccessibilityAction(View host, int action, Bundle args) {
+                if (action == R.id.action_save && canSave) {
+                    save.run();
+                    return true;
+                }
+                if (action == R.id.action_remove) {
+                    remove.run();
+                    return true;
+                }
+                return super.performAccessibilityAction(host, action, args);
+            }
+        });
+    }
+
+    /** The row's height shrinks to nothing, then it is taken out of the list. */
+    private void collapse(View v) {
+        int h = v.getHeight();
+        android.animation.ValueAnimator a = android.animation.ValueAnimator.ofInt(h, 0);
+        a.setDuration(180);
+        a.addUpdateListener(x -> {
+            v.getLayoutParams().height = (int) x.getAnimatedValue();
+            v.requestLayout();
+        });
+        a.addListener(new android.animation.AnimatorListenerAdapter() {
+            @Override public void onAnimationEnd(android.animation.Animator x) {
+                if (v.getParent() instanceof ViewGroup) ((ViewGroup) v.getParent()).removeView(v);
+                if (history.items().isEmpty() && Text.clean(input.getText().toString()).isEmpty()) showRecent();
+            }
+        });
+        a.start();
+    }
+
+    // ------------------------------------------------------------------ undo bar
+
+    private LinearLayout undoBar;
+    private TextView undoText;
+    private Runnable undoAction;
+    private final Runnable hideUndo = () -> {
+        if (undoBar != null) undoBar.setVisibility(View.GONE);
+        undoAction = null;
+    };
+
+    private void showUndo(String text, Runnable undo) {
+        undoText.setText(text);
+        undoAction = undo;
+        undoBar.setVisibility(View.VISIBLE);
+        Feel.appear(undoBar);
+        handler.removeCallbacks(hideUndo);
+        handler.postDelayed(hideUndo, 5000);
+    }
+
+    private View buildUndoBar() {
+        undoBar = new LinearLayout(this);
+        undoBar.setGravity(Gravity.CENTER_VERTICAL);
+        undoBar.setPadding(ui.dp(18), ui.dp(4), ui.dp(6), ui.dp(4));
+        undoBar.setMinimumHeight(ui.dp(52));
+        undoBar.setBackground(ui.round(ui.dark ? 0xFFE6E9EE : 0xFF232A33, 14));
+        undoBar.setElevation(ui.dp(6));
+        undoText = ui.line(14, ui.dark ? 0xFF12161C : 0xFFF2F4F7, Ui.REGULAR);
+        undoBar.addView(undoText, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+        TextView undo = ui.text(14, ui.dark ? 0xFF2563EB : 0xFF7AB0FF, Ui.MEDIUM);
+        undo.setText(R.string.undo);
+        undo.setGravity(Gravity.CENTER);
+        undo.setMinHeight(ui.dp(44));
+        undo.setPadding(ui.dp(14), 0, ui.dp(14), 0);
+        undo.setBackground(ui.ripple(null, 0));
+        undo.setOnClickListener(v -> {
+            Runnable r = undoAction;
+            hideUndo.run();
+            if (r != null) r.run();
+        });
+        undoBar.addView(undo);
+        undoBar.setVisibility(View.GONE);
+        android.widget.FrameLayout.LayoutParams lp = new android.widget.FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM);
+        lp.setMargins(ui.dp(12), 0, ui.dp(12), ui.dp(12));
+        undoBar.setLayoutParams(lp);
+        return undoBar;
     }
 
     private void intro() {

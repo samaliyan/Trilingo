@@ -9,10 +9,13 @@ javac -encoding UTF-8 -Xlint:all -Werror -d "$OUT" "$S/Lang.java" "$S/Json.java"
   "$S/Services.java" "$S/Engine.java" "$S/History.java" \
   "$S/Conjugation.java" "$S/GermanVerbs.java" "$S/EnglishVerbs.java" "$S/PersianVerbs.java" "$S/Verbs.java" "$S/Examples.java" \
   "$S/Words.java" "$S/Umlauts.java" "$S/Nouns.java" "$S/Phrasal.java" "$S/Grammar.java" "$S/Meaning.java" "$S/Levels.java" "$S/Notebook.java" "$S/Exercises.java" "$S/MeaningSource.java" \
+  "$S/Dict.java" "$S/TextWords.java" "$S/Dictation.java" "$S/Backup.java" \
   tests/java/io/github/samaliyan/trilingo/CoreTest.java tests/java/io/github/samaliyan/trilingo/VerbTest.java tests/java/io/github/samaliyan/trilingo/WordsTest.java \
-  tests/java/io/github/samaliyan/trilingo/GrammarTest.java tests/java/io/github/samaliyan/trilingo/LearnTest.java
+  tests/java/io/github/samaliyan/trilingo/GrammarTest.java tests/java/io/github/samaliyan/trilingo/LearnTest.java \
+  tests/java/io/github/samaliyan/trilingo/StudyTest.java
 java -Dstdout.encoding=UTF-8 -cp "$OUT" io.github.samaliyan.trilingo.CoreTest
 java -Dstdout.encoding=UTF-8 -cp "$OUT" io.github.samaliyan.trilingo.VerbTest
 java -Dstdout.encoding=UTF-8 -cp "$OUT" io.github.samaliyan.trilingo.WordsTest
 java -Dstdout.encoding=UTF-8 -cp "$OUT" io.github.samaliyan.trilingo.GrammarTest
 java -Dstdout.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8 -cp "$OUT" io.github.samaliyan.trilingo.LearnTest
+java -Dstdout.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8 -cp "$OUT" io.github.samaliyan.trilingo.StudyTest

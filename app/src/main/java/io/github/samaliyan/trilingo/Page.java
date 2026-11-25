@@ -34,7 +34,8 @@ final class Page {
         scroll.setFillViewport(true);
         content = new LinearLayout(a);
         content.setOrientation(LinearLayout.VERTICAL);
-        content.setPadding(ui.dp(16), ui.dp(4), ui.dp(16), ui.dp(28));
+        int side = ui.sidePadding(720, 16);                // tablets: a readable column in the middle
+        content.setPadding(side, ui.dp(4), side, ui.dp(28));
         scroll.addView(content);
         root.addView(scroll, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
         a.setContentView(root);

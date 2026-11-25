@@ -28,6 +28,9 @@ public final class NotebookActivity extends Activity {
     private Page page;
     /** null = all words, "" = words without a folder, else a folder name. */
     private String folder;
+    private Store store;
+    private EditText search;
+    private LinearLayout body;
 
     @Override protected void onCreate(Bundle saved) {
         super.onCreate(saved);
@@ -35,10 +38,73 @@ public final class NotebookActivity extends Activity {
         ui.applyWindow(this);
         nb = Store.notebook(this);
         if (saved != null && saved.containsKey("folder")) folder = saved.getString("folder");
+        store = new Store(this);
+        getWindow().setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+                | android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         page = new Page(this, ui, getString(R.string.saved_words));
+        ImageButton sort = ui.iconButton(Icons.Kind.SORT, ui.text, getString(R.string.sort));
+        sort.setOnClickListener(v -> chooseSort());
+        page.action(sort);
         ImageButton export = ui.iconButton(Icons.Kind.SHARE, ui.text, getString(R.string.export_anki));
         export.setOnClickListener(v -> export());
         page.action(export);
+
+        // search: stays while the list below is rebuilt
+        LinearLayout field = new LinearLayout(this);
+        field.setGravity(Gravity.CENTER_VERTICAL);
+        field.setBackground(ui.outline(ui.surface, ui.line, 22));
+        field.setPadding(ui.dp(14), 0, ui.dp(2), 0);
+        android.widget.ImageView icon = new android.widget.ImageView(this);
+        icon.setImageDrawable(Icons.of(Icons.Kind.SEARCH, ui.sub));
+        field.addView(icon, new LinearLayout.LayoutParams(ui.dp(18), ui.dp(18)));
+        search = new EditText(this);
+        search.setId(R.id.notebook_search);
+        search.setBackground(null);
+        search.setHint(R.string.search_saved);
+        search.setHintTextColor(ui.sub);
+        search.setTextColor(ui.text);
+        search.setTextSize(16);
+        search.setSingleLine(true);
+        search.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        search.setImeOptions(android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH);
+        search.setPadding(ui.dp(10), ui.dp(10), ui.dp(6), ui.dp(10));
+        Ui.bidi(search);
+        field.addView(search, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+        ImageButton clear = ui.iconButton(Icons.Kind.CLOSE, ui.sub, getString(R.string.clear));
+        clear.setVisibility(View.GONE);
+        clear.setOnClickListener(v -> search.setText(""));
+        field.addView(clear, new LinearLayout.LayoutParams(ui.dp(42), ui.dp(42)));
+        search.addTextChangedListener(new android.text.TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence a, int b, int c, int d) { }
+            @Override public void onTextChanged(CharSequence a, int b, int c, int d) { }
+            @Override public void afterTextChanged(android.text.Editable e) {
+                clear.setVisibility(e.length() == 0 ? View.GONE : View.VISIBLE);
+                render();
+            }
+        });
+        search.setOnEditorActionListener((v, id, ev) -> {
+            android.view.inputmethod.InputMethodManager im = (android.view.inputmethod.InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            if (im != null) im.hideSoftInputFromWindow(search.getWindowToken(), 0);
+            return true;
+        });
+        page.content.addView(field, Page.full(0, ui.dp(6)));
+        body = new LinearLayout(this);
+        body.setOrientation(LinearLayout.VERTICAL);
+        page.content.addView(body, Page.full());
+    }
+
+    private void chooseSort() {
+        String[] names = {getString(R.string.sort_newest), getString(R.string.sort_oldest), getString(R.string.sort_az),
+                getString(R.string.sort_level), getString(R.string.sort_hardest), getString(R.string.sort_due)};
+        new AlertDialog.Builder(this, ui.dialogTheme())
+                .setTitle(R.string.sort)
+                .setSingleChoiceItems(names, store.notebookSort(), (d, i) -> {
+                    d.dismiss();
+                    store.setNotebookSort(i);
+                    render();
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
     }
 
     @Override protected void onSaveInstanceState(Bundle out) {
@@ -52,7 +118,7 @@ public final class NotebookActivity extends Activity {
     }
 
     private void render() {
-        LinearLayout c = page.content;
+        LinearLayout c = body;
         c.removeAllViews();
         if (folder != null && !folder.isEmpty() && !nb.folders().contains(folder)) folder = null;
 
@@ -75,6 +141,20 @@ public final class NotebookActivity extends Activity {
         c.addView(hs);
 
         List<Notebook.Card> words = nb.saved(folder);
+        String query = search.getText().toString();
+        boolean searching = !Text.clean(query).isEmpty();
+        if (searching && !words.isEmpty()) {
+            words = Notebook.filter(words, query);
+            if (words.isEmpty()) {
+                TextView t = ui.text(15, ui.sub, Ui.REGULAR);
+                t.setText(getString(R.string.search_none, Text.clean(query)));
+                t.setGravity(Gravity.CENTER);
+                t.setPadding(ui.dp(16), ui.dp(32), ui.dp(16), 0);
+                c.addView(t, Page.full());
+                return;
+            }
+        }
+        Notebook.sort(words, store.notebookSort(), w -> Lexicon.level(w.word, w.lang));
         if (words.isEmpty()) {
             TextView t = ui.text(16, ui.text, Ui.MEDIUM);
             t.setText(R.string.saved_empty);
@@ -92,7 +172,13 @@ public final class NotebookActivity extends Activity {
         TextView review = ui.pill(getResources().getQuantityString(R.plurals.review_these, words.size(), words.size()), true);
         review.setOnClickListener(v -> startActivity(new Intent(this, ReviewActivity.class)
                 .putExtra(ReviewActivity.EXTRA_FOLDER, folder == null ? ReviewActivity.ALL_SAVED : folder)));
-        c.addView(review, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ui.dp(48)));
+        if (!searching) c.addView(review, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ui.dp(48)));
+        else {
+            TextView n = ui.line(13, ui.sub, Ui.MEDIUM);
+            n.setText(getResources().getQuantityString(R.plurals.found_n, words.size(), words.size()));
+            n.setPadding(ui.dp(6), 0, 0, 0);
+            c.addView(n);
+        }
 
         LinearLayout list = new LinearLayout(this);
         list.setOrientation(LinearLayout.VERTICAL);

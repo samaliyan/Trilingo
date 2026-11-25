@@ -10,6 +10,18 @@
         <item name="android:colorPrimary">@color/accent</item>
     </style>
 
+    <!-- The quick-translate panel over other apps: see-through window, the panel is drawn in code. -->
+    <style name="BubbleTheme" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:colorPrimary">@color/accent</item>
+    </style>
+
     <style name="Dialog.Light" parent="android:Theme.Material.Light.Dialog.Alert">
         <item name="android:colorAccent">#FF2563EB</item>
     </style>

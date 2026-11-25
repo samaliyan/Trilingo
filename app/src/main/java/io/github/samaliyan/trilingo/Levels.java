@@ -44,6 +44,11 @@ final class Levels {
         return map.size();
     }
 
+    /** Level of exactly this word (lower case), or null. */
+    String get(String w) {
+        return map.get(w.toLowerCase(Locale.ROOT));
+    }
+
     /** Level of a word ("B1"), or null when the lists do not know it. */
     String of(String word, Lang lang, Nouns nouns) {
         String w = Text.clean(word).toLowerCase(Locale.ROOT);

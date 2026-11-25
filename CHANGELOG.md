@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.7 — 2026-11-25
+
+- **Built-in dictionary**: about 14,000 common English and German words (7,800 English, 6,000 German) with their translations, and Persian words through them, are inside the app. The answer appears at once, also without internet; the translation service's fuller answer replaces it when it arrives.
+- **Faster suggestions**: the first suggestions are translated while you type, so tapping one shows the result at once.
+- **Quick-translate bubble** (Settings, *Over other apps*): a small button over other apps. Copy a word or sentence, tap the bubble, and the translation opens in a small panel. Drag it to the × to turn it off.
+- **Swipe in Recent**: swipe a word to the right to save it, to the left to remove it (with *Undo*). Long press gives the same choices.
+- **Saved words**: search (also in the translations, without typing umlauts) and sort (newest, oldest, A to Z, by level, hardest, next to review).
+- **Listen & write**: the phone says a word or sentence and you write it. Saved words, words of a level (A1 … C1) or sentences; German nouns come with their article. Missed letters are marked; 5 at a time, then *5 new*.
+- **Words from a text**: paste or share an English or German text, choose your level, and get its new words in dictionary form (ging → gehen, Häuser → Haus) with their meaning. Save the ones you choose to a folder in one step. Also from *Scan text*.
+- **Backup and restore** (Settings): saved words, review progress, recent words and settings in one file. Restoring adds to what is on the phone and deletes nothing.
+- **Tablets and landscape**: the translation and the meaning are shown side by side; other screens keep a readable width.
+- **Feel**: a short vibration and a small animation for right and wrong answers, a card that turns over in Review, a soft fade for new results. Vibration can be turned off in Settings.
+- **Introduction** on the first start: four short pages (also in Settings, *Show the introduction*).
+
 ## 1.6 — 2026-11-24
 
 - **Meaning in the word's own language**: what the word means, explained like a monolingual dictionary (English, German and Persian), with examples. Choose *Translation* or *Meaning* above the result; in *Meaning* mode the translation stays hidden until you tap *Show translation*.

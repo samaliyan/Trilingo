@@ -63,6 +63,14 @@ final class History {
         return true;
     }
 
+    /** Puts a removed lookup back where it was (undo). */
+    void restore(Lookup l, int index) {
+        for (Lookup x : items) if (x.key().equals(l.key())) return;
+        items.add(Math.max(0, Math.min(index, items.size())), l);
+        while (items.size() > MAX) items.remove(items.size() - 1);
+        save();
+    }
+
     void remove(Lookup l) {
         if (items.remove(l)) save();
     }
@@ -90,18 +98,45 @@ final class History {
         }
     }
 
-    /** Written to a temporary file first and then renamed, so a crash never leaves half a file. */
-    private void save() {
-        if (file == null) return;
+    /** All lookups as a JSON array (the file's format, also used in backups). */
+    String toJson() {
         StringBuilder b = new StringBuilder("[");
         for (int k = 0; k < items.size(); k++) {
             if (k > 0) b.append(",\n");
             b.append(items.get(k).toJson());
         }
-        b.append("]");
+        return b.append("]").toString();
+    }
+
+    /** Adds a backup's lookups (a word both have keeps the newer one), newest first, at most {@link #MAX}. */
+    int merge(List<Object> saved) {
+        java.util.Map<String, Lookup> byKey = new java.util.LinkedHashMap<>();
+        for (Lookup l : items) byKey.put(l.key(), l);
+        int added = 0;
+        if (saved != null) {
+            for (Object o : saved) {
+                Lookup l = Lookup.fromJson(o);
+                if (l == null) continue;
+                Lookup have = byKey.get(l.key());
+                if (have == null) added++;
+                if (have == null || l.time > have.time) byKey.put(l.key(), l);
+            }
+        }
+        items.clear();
+        items.addAll(byKey.values());
+        items.sort((a, b) -> Long.compare(b.time, a.time));
+        while (items.size() > MAX) items.remove(items.size() - 1);
+        save();
+        return added;
+    }
+
+    /** Written to a temporary file first and then renamed, so a crash never leaves half a file. */
+    private void save() {
+        if (file == null) return;
+        String b = toJson();
         File tmp = new File(file.getPath() + ".tmp");
         try (Writer w = new OutputStreamWriter(new FileOutputStream(tmp), StandardCharsets.UTF_8)) {
-            w.write(b.toString());
+            w.write(b);
         } catch (IOException e) {
             return;
         }
