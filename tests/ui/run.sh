@@ -67,7 +67,6 @@ shot 00_intro_3 0.6
 expect "Keep what you learn"
 tap "Next" "^Next$"; shot 00_intro_4 0.6
 expect "Learn from real texts"
-expect "Add widget to home screen"
 tap "Get started"
 sleep 2.5
 shot 01_first_start
@@ -559,13 +558,9 @@ scroll_to "fernsehen"
 longpress "fernsehen"
 shot 10_remove_dialog
 tap_any "Remove" "REMOVE"
+tap "Undo"                         # right away: the bar goes after 8 s, and each screen check takes a few
 sleep 1
-expect_not "fernsehen"
-expect "Undo"
-tap "Undo"
-sleep 1
-scroll_to "fernsehen"
-log "ok: undo brought the word back"
+scroll_to "fernsehen" && log "ok: undo brought the word back"
 # swipe left removes (with Undo), swipe right saves
 P=$(nfind "fernsehen")
 if [ -n "$P" ]; then set -- $P; adb shell input swipe 900 $2 100 $2 250; sleep 1.2; fi
@@ -661,7 +656,7 @@ scroll_to "Conjugation"; tap "Conjugation" && { sleep 1; shot 20b_dark_conjugati
 adb shell appops set "$PKG" SYSTEM_ALERT_WINDOW allow
 open_app; type_text "Wasser"; wait_for "ENGLISH" "" 20; back
 tap "Copy English"
-back; tap "Settings"
+tap "Settings"
 tap "Quick-translate bubble"
 sleep 1
 tap_any "Allow" "ALLOW" "Don't allow" "DON'T ALLOW" > /dev/null 2>&1 || true      # Android 13+: notification permission
@@ -715,7 +710,7 @@ back
 
 # 12. Widget on the home screen
 open_app; back; tap "Settings"
-if [ -n "$(nfind "Add widget to home screen")" ]; then
+if scroll_to "Add widget to home screen" "" quiet; then
   tap "Add widget to home screen"
   shot 21_pin_widget_dialog 2
   tap_any "Add automatically" "ADD AUTOMATICALLY" "Add to home screen" "ADD TO HOME SCREEN" "Add" "ADD"
@@ -748,7 +743,7 @@ sleep 2
 shot 25_landscape 2
 expect "PERSIAN"
 # sideways there is room for two columns: the meaning is next to the translation, without scrolling
-wait_for "meaning beside the translation" "^MEANING IN ENGLISH$" 20
+wait_for "picture beside the translation" "^Picture: house.*" 20
 shot 25b_landscape_two_columns 1
 adb shell settings put system user_rotation 0
 sleep 1

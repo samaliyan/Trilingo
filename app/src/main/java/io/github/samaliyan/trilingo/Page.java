@@ -14,10 +14,14 @@ final class Page {
     final LinearLayout root, bar, content;
     final ScrollView scroll;
     final TextView title;
+    private final int ui48;
 
     Page(Activity a, Ui ui, CharSequence titleText) {
+        ui48 = ui.dp(48);
         root = new LinearLayout(a);
         root.setOrientation(LinearLayout.VERTICAL);
+        // a search field on the page does not take the focus (and open the keyboard) by itself
+        root.setFocusableInTouchMode(true);
         root.setBackgroundColor(ui.bg);
         bar = new LinearLayout(a);
         bar.setGravity(Gravity.CENTER_VERTICAL);
@@ -43,7 +47,7 @@ final class Page {
 
     /** Adds a view at the right end of the top bar. */
     void action(View v) {
-        bar.addView(v);
+        bar.addView(v, new LinearLayout.LayoutParams(ui48, ui48));
     }
 
     static LinearLayout.LayoutParams full() {

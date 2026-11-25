@@ -1533,7 +1533,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         undoBar.setVisibility(View.VISIBLE);
         Feel.appear(undoBar);
         handler.removeCallbacks(hideUndo);
-        handler.postDelayed(hideUndo, 5000);
+        handler.postDelayed(hideUndo, 8000);
     }
 
     private View buildUndoBar() {
