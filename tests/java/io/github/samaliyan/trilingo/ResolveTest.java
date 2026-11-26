@@ -183,7 +183,8 @@ public final class ResolveTest {
     /** Fake network: only the listed URL parts answer, everything else is "no such page". */
     static MeaningSource.Fetch fake(String... pairs) {
         return url -> {
-            for (int i = 0; i < pairs.length; i += 2) if (url.contains(pairs[i])) return pairs[i + 1];
+            for (int i = 0; i < pairs.length; i += 2)
+                if (pairs[i].startsWith("$") ? url.endsWith(pairs[i].substring(1)) : url.contains(pairs[i])) return pairs[i + 1];
             return "";
         };
     }
@@ -205,11 +206,10 @@ public final class ResolveTest {
             + "[{\"definition\":\"To move from one place to another.\"}]}]}]";
 
     static void meaningChain() throws IOException {
-        // nothing anywhere: the translations are shown, never an empty meaning
+        // nothing in its own language anywhere: no meaning from another language (not the translations)
         Lookup l = lookup("xyzzy", Lang.EN, "xyzzy", "ایکس");
         Meaning m = MeaningSource.load(l, fake(), r);
-        ok(!m.senses.isEmpty(), "never empty");
-        eq(Meaning.NOTE_TRANSLATION, m.note, "last resort: the translations");
+        ok(m.senses.isEmpty(), "no meaning taken from another language");
 
         // an inflected English word: the meaning of its base
         l = lookup("went", Lang.EN, "ging", "رفت");
@@ -218,16 +218,25 @@ public final class ResolveTest {
         eq("go", m.noteWord, "the base is named");
         ok(!m.senses.isEmpty(), "go has senses");
 
-        // a German word with no entry: the meaning of its English translation
-        l = lookup("Marketingassistentin", Lang.DE, "go", "رفتن");
+        // a German word whose English translation has a meaning: never shown (German meanings only)
+        l = lookup("Xyzwort", Lang.DE, "go", "رفتن");
         m = MeaningSource.load(l, fake("entries/en/go", DICT_GO), r);
-        ok(!m.senses.isEmpty(), "compound has a meaning");
+        ok(m.senses.isEmpty(), "no English meaning for a German word");
 
-        // a sentence: its words
+        // a compound: the German meaning of its last part
+        String assist = "== Assistentin ({{Sprache|Deutsch}}) ==\n=== {{Wortart|Substantiv|Deutsch}}, {{f}} ===\n"
+                + "{{Bedeutungen}}\n:[1] weibliche Hilfskraft\n";
+        l = lookup("Marketingassistentin", Lang.DE, "marketing assistant", "دستیار بازاریابی");
+        m = MeaningSource.load(l, fake("page=Assistentin", "{\"parse\":{\"wikitext\":" + jsonString(assist) + "}}"), r);
+        ok(!m.senses.isEmpty() && m.senses.get(0).text.contains("Hilfskraft"), "compound: meaning of Assistentin " + m.senses.size());
+
+        // a sentence: its words, explained in German
+        String hund = "== Hund ({{Sprache|Deutsch}}) ==\n=== {{Wortart|Substantiv|Deutsch}}, {{m}} ===\n"
+                + "{{Bedeutungen}}\n:[1] ein Haustier\n";
         l = lookup("Ich habe einen Hund", Lang.DE, "I have a dog", "من یک سگ دارم");
-        m = MeaningSource.load(l, fake(), r);
+        m = MeaningSource.load(l, fake("page=Hund", "{\"parse\":{\"wikitext\":" + jsonString(hund) + "}}"), r);
         eq(Meaning.NOTE_WORDS, m.note, "a sentence shows its words");
-        ok(!m.senses.isEmpty(), "with entries");
+        ok(!m.senses.isEmpty() && m.senses.get(0).text.contains("Haustier"), "in German: " + (m.senses.isEmpty() ? "" : m.senses.get(0).text));
 
         // a number: never Wikipedia (۲۱ is not the card game), its value and ordinal
         l = Resolver.number(21, Lang.FA, 1);
@@ -243,7 +252,9 @@ public final class ResolveTest {
         l = lookup("how are you", Lang.EN, "چطوری", "wie geht es dir");
         m = MeaningSource.load(l, fake("wikipedia", "{\"type\":\"standard\",\"extract\":\"A health program.\"}"), r);
         ok(!Meaning.NOTE_WIKIPEDIA.equals(m.note), "no Wikipedia article for a phrase");
-        ok(!m.senses.isEmpty(), "still a meaning");
+        l = lookup("how are you", Lang.EN, "چطوری", "wie geht es dir");
+        m = MeaningSource.load(l, fake("$entries/en/how", "[{\"word\":\"how\",\"meanings\":[{\"partOfSpeech\":\"adverb\",\"definitions\":[{\"definition\":\"In what way.\"}]}]}]"), r);
+        ok(!m.senses.isEmpty() && m.senses.get(0).text.startsWith("how: In what way"), "common words explained in English");
 
         // a name: Wikipedia's first sentences
         String wiki = "{\"type\":\"standard\",\"title\":\"Berlin\",\"extract\":\"Berlin is the capital of Germany. "
@@ -264,6 +275,10 @@ public final class ResolveTest {
         ok(!m.senses.isEmpty(), "the meanings are kept");
         Compounds.Split s = r.compounds.split("Marketingassistent", true);
         ok(s != null && s.parts.size() == 2 && s.parts.get(1).base.equals("Assistent"), "Assistent, not Assi + Stent");
+    }
+
+    static String jsonString(String s) {
+        return "\"" + s.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n") + "\"";
     }
 
     static String result(Lookup l, Lang t) {

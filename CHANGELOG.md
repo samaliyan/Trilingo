@@ -2,7 +2,7 @@
 
 ## 1.8 — 2026-11-26
 
-- **A meaning for every search**: when a word has no dictionary entry of its own, the meaning section shows the closest help instead of staying empty — the meaning of its dictionary form (ging → gehen, Häuser → Haus, aufgestanden → aufstehen, رفتم → رفتن), the Wikipedia summary for names (Berlin, EU), the meaning of the English translation, or for a sentence the meanings of its words. A line above it says what is shown.
+- **A meaning for every search**: when a word has no dictionary entry of its own, the meaning section shows the closest help instead of staying empty — the meaning of its dictionary form (ging → gehen, Häuser → Haus, aufgestanden → aufstehen, رفتم → رفتن), the Wikipedia summary for names (Berlin, EU), or for a sentence the meanings of its words. Always in the word’s own language: never the meaning of a translation. A line above it says what is shown.
 - **Numbers**: a number typed or spoken as digits (8, ۸, 1.000, 3,5, 8.) is written out in all three languages (eight, acht, هشت) with its ordinal, a meaning and a picture to count. Spoken in Persian, "هشت" no longer stays "8".
 - **German compound words** (Marketingassistentin, Kinderarztpraxis): recognised as German, a typo in one part is fixed (marketingassitentin → Marketingassistentin), the parts are shown with their translations (tap one to look it up), "Female form of …" for -in words, an offline translation from the parts, and the picture and meaning of the last part when the whole word has none. Saved and reviewed with the corrected spelling, and accepted in *Words from a text* and Review.
 - **Abbreviations** are written out before translating: z.B., usw., d.h., bzw., e.g., i.e., asap …

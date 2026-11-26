@@ -88,29 +88,40 @@ final class MeaningSource {
             // Wikipedia explains names and things (Berlin, EU, Kühlschrank), not phrases (how are you)
             if (m.isEmpty() && !Resolver.NUMBER.equals(l.service) && (!w.contains(" ") || Character.isUpperCase(w.charAt(0))))
                 wikipedia(m, l.source, w, net);
-            if (m.isEmpty() && l.source != Lang.EN) {
-                String e = englishWord(l);
-                if (e != null && !e.isEmpty() && e.split(" ").length <= 3) {
-                    Meaning x = own(Lang.EN, e.toLowerCase(Locale.ROOT).startsWith("to ") ? e.substring(3) : e, net, german, enWords);
-                    if (!x.isEmpty()) {
-                        m.senses.addAll(x.senses);
-                        m.note = Meaning.NOTE_ENGLISH;
-                        m.noteWord = e;
-                    }
-                }
-            }
         }
         if (m.isEmpty() && Resolver.NUMBER.equals(l.service)) number(m, l);
-        if (m.isEmpty() && r != null) {
-            for (String[] g : r.glossary(l.query, l.source, 12)) m.senses.add(new Meaning.Sense("", g[0] + ": " + g[1], ""));
-            if (!m.isEmpty()) m.note = Meaning.NOTE_WORDS;
-        }
-        if (m.isEmpty()) {
-            for (Lookup.Result x : l.results) m.senses.add(new Meaning.Sense("", x.lang.label + ": " + x.summary(4), ""));
-            if (!m.isEmpty()) m.note = Meaning.NOTE_TRANSLATION;
-        }
+        // a sentence (or a word with no entry of its own): the meanings of its words, in its own language
+        if (m.isEmpty() && r != null) words(m, l, net, german, enWords, r);
+        // never the meaning of a translation: the meaning section is only in the word's own language
         if (w != null) picture(m, l, net, german, r);
         return m;
+    }
+
+    /** "Hund: Haustier, das …" for up to 5 words of the text, each from its own language's dictionary. */
+    private static void words(Meaning m, Lookup l, Fetch net, java.util.function.UnaryOperator<String> german,
+                              Words enWords, Resolver r) {
+        int found = 0;
+        List<String> words = new ArrayList<>();
+        for (String[] g : r.glossary(l.query, l.source, 8)) words.add(g[0]);
+        // then the words as they are, the common ones too (how are you): used when nothing above has a meaning
+        int fromGlossary = words.size();
+        for (String t : Text.clean(l.query).split("[\\s,.;:!?()\"„“”«»]+"))
+            if (t.length() >= 2 && words.size() < fromGlossary + 4 && !words.contains(t)) words.add(t);
+        for (int i = 0; i < words.size(); i++) {
+            if (i >= fromGlossary && found > 0) break;
+            String word = words.get(i);
+            if (found >= 5) break;
+            String[] g = {l.source == Lang.EN ? word.toLowerCase(Locale.ROOT) : word};
+            try {
+                Meaning x = own(l.source, g[0], net, german, enWords);
+                if (x.senses.isEmpty()) continue;
+                m.senses.add(new Meaning.Sense("", g[0] + ": " + x.senses.get(0).text, ""));
+                found++;
+            } catch (IOException | RuntimeException e) {
+                // the next word
+            }
+        }
+        if (!m.isEmpty()) m.note = Meaning.NOTE_WORDS;
     }
 
     /** A number without a dictionary entry (twenty-one): its value and the other languages' words. */
