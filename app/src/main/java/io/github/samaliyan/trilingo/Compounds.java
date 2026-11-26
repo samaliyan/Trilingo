@@ -112,7 +112,8 @@ final class Compounds {
             front.add(new Part(cased(tail), cased(tail)));
             int score = 0;
             for (Part p : front) score += strength(p.base);
-            score = score * 100 - front.size() * 50 + tail.length();
+            // the average strength: more parts must not win just by adding up (Assistent, not Assi + Stent)
+            score = score * 100 / front.size() - front.size() * 50 + tail.length();
             if (score > bestScore) {
                 bestScore = score;
                 best = front;

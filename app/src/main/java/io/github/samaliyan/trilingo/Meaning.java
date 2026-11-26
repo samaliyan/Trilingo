@@ -345,7 +345,9 @@ final class Meaning {
             syn.addAll(linked(main(block(sec, "Sinnverwandte Wörter")), 8));
             ant.addAll(linked(main(block(sec, "Gegenwörter")), 6));
             fam.addAll(linked(block(sec, "Wortbildungen"), 12));
-            if (m.image.isEmpty()) {
+            // a name's picture (Essen the city, a person) does not show the word's meaning
+            boolean name = names.get(k).matches("(?i)Toponym|Eigenname|Vorname|Nachname|Familienname|Abkürzung");
+            if (m.image.isEmpty() && !name) {
                 Matcher b = Pattern.compile("\\|Bild(?: ?1)?=([^\\n]+)").matcher(sec);
                 if (b.find()) {
                     List<String> parts = topLevel(b.group(1));

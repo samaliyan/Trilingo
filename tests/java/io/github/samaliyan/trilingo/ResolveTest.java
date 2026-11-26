@@ -40,6 +40,7 @@ public final class ResolveTest {
         bases();
         persianVerbs();
         meaningChain();
+        namePicture();
         System.out.println(checks + " checks, " + failures + " failures");
         if (failures > 0) System.exit(1);
     }
@@ -235,6 +236,18 @@ public final class ResolveTest {
         m = MeaningSource.load(l, fake("wikipedia.org/api/rest_v1/page/summary/Berlin", wiki), r);
         eq(Meaning.NOTE_WIKIPEDIA, m.note, "a name is explained by Wikipedia");
         ok(!m.senses.isEmpty() && m.senses.get(0).text.contains("capital"), "the extract is the meaning");
+    }
+
+    static void namePicture() {
+        String page = "== Essen ({{Sprache|Deutsch}}) ==\n=== {{Wortart|Substantiv|Deutsch}}, {{n}} ===\n"
+                + "{{Bedeutungen}}\n:[1] das, was man isst\n\n"
+                + "=== {{Wortart|Toponym|Deutsch}} ===\n{{Deutsch Toponym Übersicht\n|Bild=Lage der Stadt Essen.png|mini|Lage\n}}\n"
+                + "{{Bedeutungen}}\n:[1] Stadt in Nordrhein-Westfalen\n";
+        Meaning m = Meaning.parseGerman(page, "Essen");
+        eq("", m.image, "the picture of the city Essen is not the picture of das Essen");
+        ok(!m.senses.isEmpty(), "the meanings are kept");
+        Compounds.Split s = r.compounds.split("Marketingassistent", true);
+        ok(s != null && s.parts.size() == 2 && s.parts.get(1).base.equals("Assistent"), "Assistent, not Assi + Stent");
     }
 
     static String result(Lookup l, Lang t) {
