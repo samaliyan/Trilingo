@@ -23,6 +23,7 @@ final class Lexicon {
     private static volatile Grammar grammar;
     private static volatile Levels enLevels, deLevels;
     private static volatile Dict enDict, deDict;
+    private static volatile Resolver resolver;
     private static boolean started;
     private static final List<Runnable> waiting = new ArrayList<>();
 
@@ -58,6 +59,7 @@ final class Lexicon {
             } catch (IOException | RuntimeException e) {
                 // no offline dictionary: answers come from the translation service only
             }
+            resolver = new Resolver(en, de, nouns, enDict, deDict);
             grammar = readGrammar(am);
             List<Runnable> run;
             synchronized (Lexicon.class) {
@@ -97,6 +99,15 @@ final class Lexicon {
         return Dict.choose(query, source, anyway, now, enDict, deDict, en, de);
     }
 
+    /**
+     * What typed text is (number, umlauts, compound typo, language) — see {@link Resolver}. Before the lists
+     * are loaded: the text as it is.
+     */
+    static Resolver resolver() {
+        Resolver r = resolver;
+        return r != null ? r : new Resolver(en, de, nouns, enDict, deDict);
+    }
+
     /** CEFR level of a word ("B1"), or null. */
     static String level(String word, Lang lang) {
         Levels l = lang == Lang.EN ? enLevels : lang == Lang.DE ? deLevels : null;
@@ -113,7 +124,7 @@ final class Lexicon {
 
     /** The right case of a German word for dictionary pages ("tisch" → "Tisch"). */
     static String germanCase(String w) {
-        return DetailSheets.germanCase(w);
+        return resolver().germanCase(w);
     }
 
     /** The grammar lessons (assets/grammar/*.txt), or null while loading. */
@@ -205,7 +216,7 @@ final class Lexicon {
      * (both have it, e.g. "Gift"), so the service decides.
      */
     static Lang guessLatin(String text) {
-        return Words.guessLatin(en, de, text);
+        return resolver().guess(text);
     }
 
     /** German umlaut correction of typed text (null if none), for automatic or German input. */

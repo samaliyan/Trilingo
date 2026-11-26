@@ -295,16 +295,21 @@ final class Notebook {
      * not long sentences, and with a real translation. Typos and half-typed words never become cards.
      */
     static List<Lookup> reviewable(List<Lookup> recent, Words en, Words de) {
+        if (en == null || de == null) return new ArrayList<>();
+        return reviewable(recent, (lang, w) -> (lang == Lang.EN ? en : de).known(w));
+    }
+
+    /** As above; {@code isWord} decides what a real word is (with German compounds: Marketingassistentin). */
+    static List<Lookup> reviewable(List<Lookup> recent, java.util.function.BiPredicate<Lang, String> isWord) {
         List<Lookup> out = new ArrayList<>();
-        if (recent == null || en == null || de == null) return out;
+        if (recent == null) return out;
         for (Lookup l : recent) {
             if (l.source == Lang.FA || l.hasSuggestion() || l.results.isEmpty()) continue;
             String q = Text.clean(l.query);
             String[] parts = q.split(" ");
             if (q.length() < 2 || parts.length > 3) continue;
-            Words w = l.source == Lang.EN ? en : de;
             boolean known = true;
-            for (String p : parts) known &= w.known(p.replaceAll("^[^\\p{L}]+|[^\\p{L}]+$", ""));
+            for (String p : parts) known &= isWord.test(l.source, p.replaceAll("^[^\\p{L}]+|[^\\p{L}]+$", ""));
             if (!known) continue;
             boolean echo = true;
             for (Lookup.Result r : l.results) echo &= Text.key(r.text).equals(Text.key(q));

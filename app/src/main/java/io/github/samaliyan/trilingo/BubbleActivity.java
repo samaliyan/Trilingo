@@ -205,17 +205,20 @@ public final class BubbleActivity extends Activity {
     }
 
     private void translate(boolean save) {
-        String q = Text.clean(input.getText().toString());
+        String typed = Text.clean(input.getText().toString());
         int g = ++generation;
+        // the same reading as the main screen: numbers, umlauts, compound typos, language
+        Resolver.Prepared prep = Lexicon.resolver().prepare(typed, null, null);
+        String q = prep.text;
         if (q.isEmpty() || !Text.hasLetter(q)) {
             results.removeAllViews();
             busy.setVisibility(View.INVISIBLE);
             return;
         }
-        Lookup instant = history.find(q, null);
-        if (instant == null) instant = Lexicon.dictionary(q, null, false, System.currentTimeMillis());
+        Lookup instant = history.find(q, prep.source);
+        if (instant == null) instant = Lexicon.resolver().offline(prep, false, System.currentTimeMillis());
         if (instant != null) show(instant);
-        if (instant != null && !Dict.SERVICE.equals(instant.service)) {
+        if (instant != null && !Dict.SERVICE.equals(instant.service) && !Compounds.SERVICE.equals(instant.service)) {
             busy.setVisibility(View.INVISIBLE);
             if (save) keep(instant);
             return;
@@ -226,7 +229,7 @@ public final class BubbleActivity extends Activity {
         Net.POOL.execute(() -> {
             Lookup r = null;
             try {
-                r = engine.translate(q, Lexicon.guessLatin(q), service, System.currentTimeMillis());
+                r = engine.translate(q, prep.source != null ? prep.source : Lexicon.guessLatin(q), service, System.currentTimeMillis());
             } catch (Engine.Failure | RuntimeException ignored) {
                 // shown below
             }
@@ -238,7 +241,7 @@ public final class BubbleActivity extends Activity {
                     show(res);
                     keep(res);
                 } else if (first == null) {
-                    Lookup any = Lexicon.dictionary(q, null, true, System.currentTimeMillis());
+                    Lookup any = Lexicon.resolver().offline(prep, true, System.currentTimeMillis());
                     if (any != null) show(any);
                     else message(res == null ? getString(R.string.error_service) : getString(R.string.bubble_unknown));
                 }

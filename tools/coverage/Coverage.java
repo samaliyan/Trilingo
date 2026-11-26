@@ -33,6 +33,8 @@ public final class Coverage {
         Words en = Words.read(Lang.EN, new FileInputStream(A + "words_en.txt"));
         Words de = Words.read(Lang.DE, new FileInputStream(A + "words_de.txt"));
         Nouns nouns = Nouns.read(new FileInputStream(A + "de_nouns.txt"));
+        Resolver res = new Resolver(en, de, nouns, Dict.read(Lang.EN, new FileInputStream(A + "dict_en.txt")),
+                Dict.read(Lang.DE, new FileInputStream(A + "dict_de.txt")));
         Engine engine = new Engine(Engine.NET);
         List<String> qs = Files.readAllLines(Paths.get(a[0]), StandardCharsets.UTF_8);
         System.out.println("query\tsource\ttranslations\tmeanings\tpicture\tnote");
@@ -41,11 +43,24 @@ public final class Coverage {
             if (q.isEmpty() || q.startsWith("#")) continue;
             Lookup l = null;
             String note = "";
-            try {
-                l = engine.translate(q, Words.guessLatin(en, de, q), Services.GOOGLE, System.currentTimeMillis());
-                if (l.hasSuggestion()) note += "did-you-mean:" + l.suggestion + " ";
-            } catch (Exception e) {
-                note += "lookup failed: " + e.getMessage();
+            // as the main screen does: a spoken line in Persian when the query starts with "fa:"
+            Lang spoken = null;
+            if (q.startsWith("fa:")) {
+                spoken = Lang.FA;
+                q = q.substring(3).trim();
+            }
+            Resolver.Prepared p = res.prepare(q, null, spoken);
+            if (p.corrected) note += "corrected:" + p.text + " ";
+            if (p.number >= 0 || p.decimal != null) l = res.offline(p, false, System.currentTimeMillis());
+            if (l == null) {
+                try {
+                    l = engine.translate(p.text, p.source != null ? p.source : res.guess(p.text), Services.GOOGLE,
+                            System.currentTimeMillis());
+                    if (l.hasSuggestion()) note += "did-you-mean:" + l.suggestion + " ";
+                } catch (Exception e) {
+                    note += "lookup failed: " + e.getMessage();
+                    l = res.offline(p, true, System.currentTimeMillis());
+                }
             }
             if (l == null) {
                 System.out.println(q + "\t-\t-\t-\t-\t" + note);
@@ -54,14 +69,10 @@ public final class Coverage {
             StringBuilder tr = new StringBuilder();
             for (Lookup.Result r : l.results) tr.append(r.lang.code).append('=').append(r.text).append(' ');
             String meanings = "-", pic = "-";
-            if (MeaningSource.word(l) == null) {
-                note += "no meaning section (not a word)";
-            } else {
+            {
                 try {
-                    Meaning m = MeaningSource.load(l, Coverage::get, w -> {
-                        Nouns.Info i = nouns.lookup(w);
-                        return i != null && w.equalsIgnoreCase(i.noun) ? i.noun : w;
-                    }, en);
+                    Meaning m = MeaningSource.load(l, Coverage::get, res);
+                    if (!m.note.isEmpty()) note += "meaning:" + m.note + (m.noteWord.isEmpty() ? "" : "(" + m.noteWord + ")") + " ";
                     meanings = String.valueOf(m.senses.size()) + (m.senses.isEmpty() ? "" : " (" + m.senses.get(0).text.replace('\t', ' ') + ")");
                     if (meanings.length() > 90) meanings = meanings.substring(0, 90);
                     pic = m.image.isEmpty() ? "-" : m.imageSource + ":" + m.image;

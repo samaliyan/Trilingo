@@ -407,4 +407,17 @@
     <string name="intro3_body">Star a word to save it. Review brings it back at the right time, and Listen &amp; write trains your spelling.</string>
     <string name="intro4_title">Learn from real texts</string>
     <string name="intro4_body">Scan a sign or a page, find the new words in any text, and check your own sentences.</string>
+
+    <!-- 1.8: compounds, numbers, a meaning for every search -->
+    <string name="word_parts">Word parts</string>
+    <string name="word_part_desc">%1$s: %2$s. Tap to look it up</string>
+    <string name="female_form">Female form of %1$s</string>
+    <string name="number_row">Number %1$s</string>
+    <string name="meaning_of_base">Meaning of %1$s</string>
+    <string name="meaning_from_wikipedia">From Wikipedia</string>
+    <string name="meaning_of_english">Meaning of the English word “%1$s”</string>
+    <string name="meaning_words">The words of this text</string>
+    <string name="meaning_translation_only">No dictionary explains this. Its translations:</string>
+    <string name="meaning_source_wikipedia">Source: Wikipedia (CC BY-SA)</string>
+    <string name="meaning_source_dictionary">Source: built-in dictionary</string>
 </resources>

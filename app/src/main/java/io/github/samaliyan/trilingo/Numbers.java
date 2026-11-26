@@ -48,6 +48,41 @@ final class Numbers {
         return (c >= '0' && c <= '9') || (c >= '۰' && c <= '۹') || (c >= '٠' && c <= '٩');
     }
 
+    /**
+     * A decimal number in words ("3,5" / "3.5" → three point five / drei Komma fünf / سه ممیز پنج), or null.
+     * Only a whole part and 1–3 digits after the point (a group of three after "." or "," is a thousands
+     * separator only when the whole part is 1–3 digits and there are more groups: 1.000 stays one thousand).
+     */
+    static String decimalWords(String text, Lang l) {
+        String s = text == null ? "" : text.trim();
+        StringBuilder d = new StringBuilder();
+        for (char c : s.toCharArray()) {
+            if (c >= '۰' && c <= '۹') d.append((char) ('0' + c - '۰'));
+            else if (c >= '٠' && c <= '٩') d.append((char) ('0' + c - '٠'));
+            else if (c == '٫') d.append('.');
+            else d.append(c);
+        }
+        String t = d.toString();
+        if (!t.matches("[0-9]{1,9}[.,][0-9]{1,3}") || parse(s) >= 0) return null;
+        int i = Math.max(t.indexOf('.'), t.indexOf(','));
+        long whole = Long.parseLong(t.substring(0, i));
+        String frac = t.substring(i + 1);
+        switch (l) {
+            case DE: {
+                StringBuilder b = new StringBuilder(german(whole)).append(" Komma");
+                for (char c : frac.toCharArray()) b.append(' ').append(german(c - '0'));
+                return b.toString();
+            }
+            case FA:
+                return persian(whole) + " ممیز " + persian(Long.parseLong(frac));
+            default: {
+                StringBuilder b = new StringBuilder(english(whole)).append(" point");
+                for (char c : frac.toCharArray()) b.append(' ').append(english(c - '0'));
+                return b.toString();
+            }
+        }
+    }
+
     /** The number written as a word in the language ("8" → eight / acht / هشت). */
     static String words(long n, Lang l) {
         if (n < 0 || n > MAX) return "";
