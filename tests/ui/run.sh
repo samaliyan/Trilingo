@@ -662,6 +662,11 @@ shot 14_back_online 1.5
 # 10. Not a word
 clear_field
 type_text "12345"; sleep 1.5
+# a number is translated as words (1.8)
+wait_for "number row" "^Number 12,345$" 10
+expect "twelve thousand" "(?i)^twelve thousand three hundred forty-five$"
+clear_field
+type_text "...%s!!"; sleep 1.5
 shot 15_no_letters
 expect "Type a word to translate."
 

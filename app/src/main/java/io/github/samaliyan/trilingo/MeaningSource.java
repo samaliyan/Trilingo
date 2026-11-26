@@ -251,8 +251,9 @@ final class MeaningSource {
                 String head = en.substring(en.lastIndexOf(' ') + 1);
                 wikipediaPicture(m, "en", capital(head), net);
             }
-            // then every part, last first: its Wiktionary picture, its Wikipedia article, its English article
-            for (int i = split.parts.size() - 1; i >= 0 && m.image.isEmpty(); i--) {
+            // then the last part (it says what the thing is): its Wikipedia article, its English article.
+            // Not the other parts: "Marketing" shows a person, not a marketing assistant.
+            for (int i = split.parts.size() - 1; i == split.parts.size() - 1 && m.image.isEmpty(); i--) {
                 String part = split.parts.get(i).base;
                 List<String> forms = new ArrayList<>();
                 forms.add(part);

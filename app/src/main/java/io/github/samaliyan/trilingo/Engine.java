@@ -155,7 +155,13 @@ final class Engine {
     @SafeVarargs
     private final List<Services.Answer> all(Callable<Services.Answer>... calls) throws IOException {
         List<Future<Services.Answer>> fs = new ArrayList<>();
-        for (Callable<Services.Answer> c : calls) fs.add(pool.submit(c));
+        try {
+            for (Callable<Services.Answer> c : calls) fs.add(pool.submit(c));
+        } catch (java.util.concurrent.RejectedExecutionException e) {
+            // the screen was closed while a lookup was still on its way: no answer, no crash
+            for (Future<Services.Answer> f : fs) f.cancel(true);
+            throw new IOException("closed", e);
+        }
         List<Services.Answer> out = new ArrayList<>();
         try {
             for (Future<Services.Answer> f : fs) out.add(f.get());
