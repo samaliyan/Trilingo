@@ -257,6 +257,21 @@ final class MeaningSource {
                 String head = en.substring(en.lastIndexOf(' ') + 1);
                 wikipediaPicture(m, "en", capital(head), net);
             }
+            // then every part, last first: its Wiktionary picture, its Wikipedia article, its English article
+            for (int i = split.parts.size() - 1; i >= 0 && m.image.isEmpty(); i--) {
+                String part = split.parts.get(i).base;
+                List<String> forms = new ArrayList<>();
+                forms.add(part);
+                if (i == split.parts.size() - 1 && !split.male.isEmpty()) forms.add(part.substring(0, part.length() - 2));
+                for (String f : forms) {
+                    if (i < split.parts.size() - 1) take(m, germanPage(f, net), f);
+                    if (m.image.isEmpty()) wikipediaPicture(m, "de", Compounds.capital(f), net);
+                    String[] tr = r.compounds.translate(f);
+                    String e = tr == null ? "" : tr[0].replaceFirst("^(to|a|an|the) ", "");
+                    if (m.image.isEmpty() && !e.isEmpty() && e.split(" ").length <= 2) wikipediaPicture(m, "en", capital(e), net);
+                    if (!m.image.isEmpty()) return;
+                }
+            }
         }
     }
 
