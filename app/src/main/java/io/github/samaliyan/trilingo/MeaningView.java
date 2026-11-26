@@ -159,7 +159,7 @@ final class MeaningView {
 
     /** A number has no photo: the digits, big, and up to 20 dots to count. */
     private void numberPicture(Lookup l, LinearLayout box) {
-        long n = Numbers.valueOf(l.query);
+        long n = Numbers.valueOfLookup(l);
         if (n < 0) return;
         LinearLayout card = new LinearLayout(act);
         card.setOrientation(LinearLayout.VERTICAL);

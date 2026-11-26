@@ -114,12 +114,7 @@ final class MeaningSource {
 
     /** A number without a dictionary entry (twenty-one): its value and the other languages' words. */
     private static void number(Meaning m, Lookup l) {
-        long n = Numbers.valueOf(l.query);
-        if (n < 0) {
-            Lookup.Result en = null;
-            for (Lookup.Result x : l.results) if (x.lang == Lang.EN) en = x;
-            n = en == null ? -1 : Numbers.valueOf(en.text);
-        }
+        long n = Numbers.valueOfLookup(l);
         if (n < 0) return;
         m.senses.add(new Meaning.Sense("number", Numbers.digits(n, l.source)
                 + (l.source == Lang.FA ? " (" + n + ")" : ""), ""));
@@ -203,10 +198,8 @@ final class MeaningSource {
 
     static void picture(Meaning m, Lookup l, Fetch net, java.util.function.UnaryOperator<String> german, Resolver r) {
         if (!m.image.isEmpty()) return;
-        // a number: the Wikipedia article of the number (8, 1990)
-        long n = Numbers.valueOf(Text.clean(l.query));
-        if (n < 0) n = Numbers.parse(l.query);
-        if (n >= 0 && wikipediaPicture(m, "en", String.valueOf(n), net)) return;
+        // a number: the app draws it (Wikipedia's "25" or "1000" is a year, a calendar)
+        if (Resolver.NUMBER.equals(l.service)) return;
         String de = germanWord(l);
         if (de != null && german != null) de = german.apply(de);
         if (m.image.isEmpty() && de != null && l.source != Lang.DE) take(m, germanPage(de, net), "");

@@ -89,6 +89,17 @@ final class Resolver {
             return p;
         }
         long n = Numbers.parse(q);
+        // a number written in words (einundzwanzig, چهل و دو): the same as its digits; small ones (acht) stay words
+        long w = n < 0 ? Numbers.valueOf(q) : -1;
+        if (w > 12) {
+            Lang l = Numbers.languageOf(q, w);
+            if (l != null && (forced == null || forced == l)) {
+                p.number = w;
+                p.source = l;
+                p.text = Numbers.words(w, l);
+                return p;
+            }
+        }
         if (n >= 0) {
             Lang l = forced != null ? forced : spoken != null ? spoken : Lang.FA;
             p.number = n;

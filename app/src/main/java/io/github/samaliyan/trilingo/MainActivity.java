@@ -1338,9 +1338,10 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
     /** "Number 8" above the translation of a number typed or spoken in digits. */
     private View numberRow(Lookup l) {
         String typed = Text.clean(input.getText().toString());
-        long n = Numbers.parse(typed);
+        long n = Resolver.NUMBER.equals(l.service) ? Numbers.valueOfLookup(l) : -1;
+        if (n < 0 && Numbers.parse(typed) >= 0 && Numbers.valueOf(l.query) == Numbers.parse(typed)) n = Numbers.parse(typed);
         String shown;
-        if (n >= 0 && (Resolver.NUMBER.equals(l.service) || Numbers.valueOf(l.query) == n)) shown = Numbers.digits(n, Lang.EN);
+        if (n >= 0 && Numbers.decimalWords(typed, Lang.EN) == null) shown = Numbers.digits(n, Lang.EN);
         else if (Numbers.decimalWords(typed, Lang.EN) != null) shown = typed;
         else return null;
         TextView t = ui.line(13, ui.sub, Ui.MEDIUM);

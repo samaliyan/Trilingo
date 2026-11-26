@@ -346,7 +346,8 @@ final class Meaning {
             ant.addAll(linked(main(block(sec, "Gegenwörter")), 6));
             fam.addAll(linked(block(sec, "Wortbildungen"), 12));
             // a name's picture (Essen the city, a person) does not show the word's meaning
-            boolean name = names.get(k).matches("(?i)Toponym|Eigenname|Vorname|Nachname|Familienname|Abkürzung");
+            String header = sec.substring(0, Math.max(0, sec.indexOf('\n')));
+            boolean name = header.matches("(?s).*\\|(Toponym|Eigenname|Vorname|Nachname|Familienname|Abkürzung)\\|.*");
             if (m.image.isEmpty() && !name) {
                 Matcher b = Pattern.compile("\\|Bild(?: ?1)?=([^\\n]+)").matcher(sec);
                 if (b.find()) {

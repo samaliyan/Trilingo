@@ -200,6 +200,40 @@ final class Numbers {
         return v == null ? -1 : v;
     }
 
+    /** English number words of any size ("one thousand nine hundred ninety" → 1990), as {@link #words} writes them; else -1. */
+    static long ofEnglish(String text) {
+        String t = Text.clean(text).toLowerCase(Locale.ROOT);
+        if (t.isEmpty()) return -1;
+        long total = 0, cur = 0;
+        boolean any = false;
+        for (String tok : t.split("[ -]+")) {
+            int v = java.util.Arrays.asList(EN_ONES).indexOf(tok);
+            int tens = java.util.Arrays.asList(EN_TENS).indexOf(tok);
+            if (v >= 0 && !tok.isEmpty()) cur += v;
+            else if (tens > 0) cur += tens * 10L;
+            else if (tok.equals("hundred")) cur *= 100;
+            else if (tok.equals("thousand")) { total += cur * 1000; cur = 0; }
+            else if (tok.equals("million")) { total += cur * 1_000_000; cur = 0; }
+            else return -1;
+            any = true;
+        }
+        return any ? total + cur : -1;
+    }
+
+    /** The value of a number lookup: its words in any language up to 1000, or the English words of any size. */
+    static long valueOfLookup(Lookup l) {
+        long n = valueOf(l.query);
+        if (n >= 0) return n;
+        Lookup.Result en = l.result(Lang.EN);
+        return en == null ? -1 : ofEnglish(en.text);
+    }
+
+    /** The language whose words for {@code n} are {@code word} (vierzig → German), or null. */
+    static Lang languageOf(String word, long n) {
+        for (Lang l : Lang.values()) if (key(words(n, l)).equals(key(word))) return l;
+        return null;
+    }
+
     private static String key(String s) {
         return Text.unifyPersian(Text.clean(s)).toLowerCase(Locale.ROOT).replace('‌', ' ');
     }

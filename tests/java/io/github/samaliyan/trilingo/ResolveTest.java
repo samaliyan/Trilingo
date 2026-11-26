@@ -85,6 +85,18 @@ public final class ResolveTest {
         // no language at all: Persian (the user's own) is the default
         p = r.prepare("۸", null, null);
         eq("هشت", p.text, "Persian digits typed");
+        // a number in words
+        p = r.prepare("چهل و دو", null, null);
+        eq(42L, p.number, "چهل و دو is the number 42");
+        eq(Lang.FA, p.source, "in Persian");
+        p = r.prepare("einundzwanzig", null, null);
+        eq(21L, p.number, "einundzwanzig is 21");
+        eq(Lang.DE, p.source, "in German");
+        p = r.prepare("acht", null, null);
+        eq(-1L, p.number, "a small number word stays a word (die Acht)");
+        eq(1990L, Numbers.ofEnglish(Numbers.words(1990, Lang.EN)), "English words of any size back to digits");
+        eq(1990L, Numbers.valueOfLookup(Resolver.number(1990, Lang.FA, 1)), "the value of a number lookup");
+        eq(-1L, Numbers.ofEnglish("house"), "not a number");
         // a decimal
         p = r.prepare("3,5", Lang.DE, null);
         eq("drei Komma fünf", p.text, "3,5 with German chosen");
@@ -241,7 +253,7 @@ public final class ResolveTest {
     static void namePicture() {
         String page = "== Essen ({{Sprache|Deutsch}}) ==\n=== {{Wortart|Substantiv|Deutsch}}, {{n}} ===\n"
                 + "{{Bedeutungen}}\n:[1] das, was man isst\n\n"
-                + "=== {{Wortart|Toponym|Deutsch}} ===\n{{Deutsch Toponym Übersicht\n|Bild=Lage der Stadt Essen.png|mini|Lage\n}}\n"
+                + "=== {{Wortart|Substantiv|Deutsch}}, {{n}}, {{Wortart|Toponym|Deutsch}} ===\n{{Deutsch Toponym Übersicht\n|Bild=Lage der Stadt Essen.png|mini|Lage\n}}\n"
                 + "{{Bedeutungen}}\n:[1] Stadt in Nordrhein-Westfalen\n";
         Meaning m = Meaning.parseGerman(page, "Essen");
         eq("", m.image, "the picture of the city Essen is not the picture of das Essen");
