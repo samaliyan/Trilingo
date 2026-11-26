@@ -72,7 +72,7 @@ public final class ReviewActivity extends Activity implements TextToSpeech.OnIni
     private List<Lookup> recent() {
         boolean fromHome = getIntent().getStringExtra(EXTRA_FOLDER) == null;
         return fromHome && new Store(this).reviewRecent()
-                ? Notebook.reviewable(Store.history(this).items(), Lexicon.words(Lang.EN), Lexicon.words(Lang.DE)) : null;
+                ? Notebook.reviewable(Store.history(this).items(), Lexicon.resolver()::isWord) : null;
     }
 
     /** Fills the queue with the cards due now; {@code anyway}: the oldest cards even if not due. */

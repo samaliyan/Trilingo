@@ -119,7 +119,8 @@ final class Nouns {
         return g.isEmpty() ? null : new Info(shownAs, g, p);
     }
 
-    private Info exact(String noun) {
+    /** The noun exactly as written (singular or plural form), without guessing compounds; null if unknown. */
+    Info exact(String noun) {
         int i = Arrays.binarySearch(lemmas, noun);
         if (i >= 0) return info(i, lemmas[i]);
         int j = Arrays.binarySearch(plurals, noun);

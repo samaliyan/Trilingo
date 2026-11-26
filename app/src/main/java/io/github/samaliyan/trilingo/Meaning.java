@@ -36,6 +36,14 @@ final class Meaning {
     final List<String> audio = new ArrayList<>();
     /** Picture: a Wikimedia Commons file name (or a full URL), its caption, and where it was found. */
     String image = "", imageCaption = "", imageSource = "";
+    /**
+     * When the meaning is not the word's own entry, what it is instead ("Meaning of Assistentin", "From
+     * Wikipedia", "The words of this sentence"); "" for the word's own meaning. Kind: one of NOTE_*.
+     */
+    String note = "", noteWord = "";
+    static final String NOTE_NUMBER = "number";
+    static final String NOTE_BASE = "base", NOTE_WIKIPEDIA = "wikipedia", NOTE_ENGLISH = "english", NOTE_WORDS = "words",
+            NOTE_TRANSLATION = "translation";
 
     Meaning(Lang lang, String word) {
         this.lang = lang;
@@ -337,7 +345,10 @@ final class Meaning {
             syn.addAll(linked(main(block(sec, "Sinnverwandte Wörter")), 8));
             ant.addAll(linked(main(block(sec, "Gegenwörter")), 6));
             fam.addAll(linked(block(sec, "Wortbildungen"), 12));
-            if (m.image.isEmpty()) {
+            // a name's picture (Essen the city, a person) does not show the word's meaning
+            String header = sec.substring(0, Math.max(0, sec.indexOf('\n')));
+            boolean name = header.matches("(?s).*\\|(Toponym|Eigenname|Vorname|Nachname|Familienname|Abkürzung)\\|.*");
+            if (m.image.isEmpty() && !name) {
                 Matcher b = Pattern.compile("\\|Bild(?: ?1)?=([^\\n]+)").matcher(sec);
                 if (b.find()) {
                     List<String> parts = topLevel(b.group(1));
@@ -452,6 +463,28 @@ final class Meaning {
     }
 
     // ------------------------------------------------------------------ Wikipedia
+
+    /** The first {@code sentences} sentences of a Wikipedia summary (not of a list of meanings); "" if none. */
+    @SuppressWarnings("unchecked")
+    static String wikipediaExtract(String body, int sentences) {
+        try {
+            Object o = Json.parse(body);
+            if (!(o instanceof Map)) return "";
+            Map<String, Object> m = (Map<String, Object>) o;
+            if (!"standard".equals(s(m, "type"))) return "";
+            String t = s(m, "extract").replace('\n', ' ').trim();
+            StringBuilder b = new StringBuilder();
+            int n = 0;
+            for (String part : t.split("(?<=[.!?؟])\\s+")) {
+                if (n++ >= sentences) break;
+                if (b.length() > 0) b.append(' ');
+                b.append(part);
+            }
+            return b.length() > 400 ? b.substring(0, 400).trim() + "…" : b.toString();
+        } catch (RuntimeException e) {
+            return "";
+        }
+    }
 
     /** The thumbnail of a Wikipedia article, or "" (no article, a list of meanings, or no picture). */
     @SuppressWarnings("unchecked")

@@ -42,37 +42,142 @@ final class MeaningSource {
         return null;
     }
 
-    /**
-     * Meaning of the typed word (in its language) with a picture. {@code german} gives the right case of a German
-     * word ("tisch" → "Tisch"), {@code enWords} keeps only real, common words in the English word family.
-     */
+    /** Meaning of the typed word (see {@link #load(Lookup, Fetch, Resolver)}), without the extra sources. */
     static Meaning load(Lookup l, Fetch net, java.util.function.UnaryOperator<String> german, Words enWords) throws IOException {
+        return load(l, net, german, enWords, null);
+    }
+
+    /**
+     * Meaning and picture for any lookup — there is always a meaning:
+     * 1. the word's own entry (English: dictionaryapi.dev; German, Persian: Wiktionary in that language);
+     * 2. else the entry of its dictionary form (ging → gehen, Assistentin → Assistent, a compound's last part);
+     * 3. else the Wikipedia article in the word's language (names, places, new words);
+     * 4. else the meaning of its English translation;
+     * 5. a sentence or longer phrase: its words with their translations;
+     * 6. at the very last, its translations, said as such.
+     */
+    static Meaning load(Lookup l, Fetch net, Resolver r) throws IOException {
+        return load(l, net, r == null ? null : r::germanCase, r == null ? null : r.en, r);
+    }
+
+    private static Meaning load(Lookup l, Fetch net, java.util.function.UnaryOperator<String> german, Words enWords, Resolver r)
+            throws IOException {
         String w = word(l);
-        Meaning m = new Meaning(l.source, w == null ? Text.clean(l.query) : w);
-        if (w == null) return m;
-        Meaning own;
-        switch (l.source) {
+        Meaning m;
+        if (w == null) {
+            m = new Meaning(l.source, Text.clean(l.query));
+        } else {
+            m = own(l.source, w, net, german, enWords);
+            if (m.isEmpty() && r != null && l.source != Lang.FA) {
+                // a German noun typed in lower case, an English word with a capital
+                String alt = l.source == Lang.DE ? r.germanCase(w) : w.toLowerCase(Locale.ROOT);
+                if (!alt.equals(w)) m = keepPicture(m, own(l.source, alt, net, german, enWords));
+            }
+            if (m.isEmpty() && r != null) {
+                for (String b : r.bases(w, l.source)) {
+                    Meaning x = own(l.source, b, net, german, enWords);
+                    if (!x.isEmpty()) {
+                        x.note = Meaning.NOTE_BASE;
+                        x.noteWord = b;
+                        m = keepPicture(m, x);
+                        break;
+                    }
+                }
+            }
+            if (m.isEmpty() && Resolver.NUMBER.equals(l.service)) number(m, l);
+            // Wikipedia explains names and things (Berlin, EU, Kühlschrank), not phrases (how are you)
+            if (m.isEmpty() && !Resolver.NUMBER.equals(l.service) && (!w.contains(" ") || Character.isUpperCase(w.charAt(0))))
+                wikipedia(m, l.source, w, net);
+            if (m.isEmpty() && l.source != Lang.EN) {
+                String e = englishWord(l);
+                if (e != null && !e.isEmpty() && e.split(" ").length <= 3) {
+                    Meaning x = own(Lang.EN, e.toLowerCase(Locale.ROOT).startsWith("to ") ? e.substring(3) : e, net, german, enWords);
+                    if (!x.isEmpty()) {
+                        m.senses.addAll(x.senses);
+                        m.note = Meaning.NOTE_ENGLISH;
+                        m.noteWord = e;
+                    }
+                }
+            }
+        }
+        if (m.isEmpty() && Resolver.NUMBER.equals(l.service)) number(m, l);
+        if (m.isEmpty() && r != null) {
+            for (String[] g : r.glossary(l.query, l.source, 12)) m.senses.add(new Meaning.Sense("", g[0] + ": " + g[1], ""));
+            if (!m.isEmpty()) m.note = Meaning.NOTE_WORDS;
+        }
+        if (m.isEmpty()) {
+            for (Lookup.Result x : l.results) m.senses.add(new Meaning.Sense("", x.lang.label + ": " + x.summary(4), ""));
+            if (!m.isEmpty()) m.note = Meaning.NOTE_TRANSLATION;
+        }
+        if (w != null) picture(m, l, net, german, r);
+        return m;
+    }
+
+    /** A number without a dictionary entry (twenty-one): its value and the other languages' words. */
+    private static void number(Meaning m, Lookup l) {
+        long n = Numbers.valueOfLookup(l);
+        if (n < 0) return;
+        m.senses.add(new Meaning.Sense("number", Numbers.digits(n, l.source)
+                + (l.source == Lang.FA ? " (" + n + ")" : ""), ""));
+        m.senses.add(new Meaning.Sense("ordinal", Numbers.ordinal(n, l.source), ""));
+        m.note = Meaning.NOTE_NUMBER;
+        m.noteWord = String.valueOf(n);
+    }
+
+    /** The entry of a word in its own language's dictionary (may be empty). */
+    private static Meaning own(Lang lang, String w, Fetch net, java.util.function.UnaryOperator<String> german, Words enWords)
+            throws IOException {
+        switch (lang) {
             case EN: {
-                own = Meaning.parseDictionary(net.get(Meaning.dictionaryUrl(w)), w);
+                Meaning own = Meaning.parseDictionary(net.get(Meaning.dictionaryUrl(w)), w);
                 try {
                     List<String> fam = Meaning.englishFamily(Meaning.wikitext(net.get(Meaning.wiktionaryUrl("en", w.replace(' ', '_')))), w, 600);
                     own.family.addAll(common(fam, enWords, 10));
                 } catch (IOException e) {
                     // the family is extra; the meanings are enough
                 }
-                break;
+                return own;
             }
             case DE: {
                 String page = german == null ? w : german.apply(w);
-                own = Meaning.parseGerman(Meaning.wikitext(net.get(Meaning.wiktionaryUrl("de", page))), page);
-                break;
+                return Meaning.parseGerman(Meaning.wikitext(net.get(Meaning.wiktionaryUrl("de", page))), page);
             }
             default:
-                own = Meaning.parsePersian(Meaning.wikitext(net.get(Meaning.wiktionaryUrl("fa", w))), w);
+                return Meaning.parsePersian(Meaning.wikitext(net.get(Meaning.wiktionaryUrl("fa", w))), w);
         }
-        m = own;
-        picture(m, l, net, german);
-        return m;
+    }
+
+    /** The other entry, with the first entry's picture and sound when it had them. */
+    private static Meaning keepPicture(Meaning first, Meaning other) {
+        if (other.image.isEmpty() && !first.image.isEmpty()) {
+            other.image = first.image;
+            other.imageCaption = first.imageCaption;
+            other.imageSource = first.imageSource;
+        }
+        if (other.audio.isEmpty()) other.audio.addAll(first.audio);
+        if (other.ipa.isEmpty()) other.ipa = first.ipa;
+        return other;
+    }
+
+    /** The first sentences of the Wikipedia article in the word's language (and its picture). */
+    private static void wikipedia(Meaning m, Lang lang, String w, Fetch net) {
+        String title = lang == Lang.FA ? w : Character.toUpperCase(w.charAt(0)) + w.substring(1);
+        try {
+            String body = net.get(Meaning.wikipediaUrl(lang.code, title));
+            String text = Meaning.wikipediaExtract(body, 2);
+            if (text.isEmpty()) return;
+            m.senses.add(new Meaning.Sense("", text, ""));
+            m.note = Meaning.NOTE_WIKIPEDIA;
+            if (m.image.isEmpty()) {
+                String img = Meaning.wikipediaImage(body);
+                if (!img.isEmpty()) {
+                    m.image = img;
+                    m.imageSource = "Wikipedia";
+                }
+            }
+        } catch (IOException | RuntimeException e) {
+            // no article
+        }
     }
 
     /** German prefixes of separable and inseparable verbs, longest first (einschlafen → schlafen). */
@@ -89,6 +194,13 @@ final class MeaningSource {
      *    "Einschlafen", or English "Running" / "Sleep".
      */
     static void picture(Meaning m, Lookup l, Fetch net, java.util.function.UnaryOperator<String> german) {
+        picture(m, l, net, german, null);
+    }
+
+    static void picture(Meaning m, Lookup l, Fetch net, java.util.function.UnaryOperator<String> german, Resolver r) {
+        if (!m.image.isEmpty()) return;
+        // a number: the app draws it (Wikipedia's "25" or "1000" is a year, a calendar)
+        if (Resolver.NUMBER.equals(l.service)) return;
         String de = germanWord(l);
         if (de != null && german != null) de = german.apply(de);
         if (m.image.isEmpty() && de != null && l.source != Lang.DE) take(m, germanPage(de, net), "");
@@ -118,18 +230,56 @@ final class MeaningSource {
                 }
             }
         }
+        // a German compound: its own Wikipedia article, then the picture of its last part (…lampe → Lampe)
+        Compounds.Split split = r == null || de == null || r.compounds == null ? null : r.compounds.split(de, true);
+        if (split != null) tries.add(0, new String[]{"de", Compounds.capital(de)});
         for (String[] t : tries) {
             try {
-                String img = Meaning.wikipediaImage(net.get(Meaning.wikipediaUrl(t[0], t[1])));
-                if (!img.isEmpty()) {
-                    m.image = img;
-                    m.imageCaption = "";
-                    m.imageSource = "Wikipedia";
-                    return;
-                }
-            } catch (IOException e) {
-                return;                                                 // no network: no picture
+                if (wikipediaPicture(m, t[0], t[1], net)) return;
+            } catch (RuntimeException e) {
+                return;
             }
+        }
+        if (split != null) {
+            String last = split.parts.get(split.parts.size() - 1).base;
+            take(m, germanPage(last, net), last);
+            if (m.image.isEmpty() && !split.male.isEmpty()) {
+                String male = last.substring(0, last.length() - 2);
+                take(m, germanPage(male, net), male);
+            }
+            if (m.image.isEmpty() && en != null && en.contains(" ")) {                   // "marketing assistant" → Assistant
+                String head = en.substring(en.lastIndexOf(' ') + 1);
+                wikipediaPicture(m, "en", capital(head), net);
+            }
+            // then every part, last first: its Wiktionary picture, its Wikipedia article, its English article
+            for (int i = split.parts.size() - 1; i >= 0 && m.image.isEmpty(); i--) {
+                String part = split.parts.get(i).base;
+                List<String> forms = new ArrayList<>();
+                forms.add(part);
+                if (i == split.parts.size() - 1 && !split.male.isEmpty()) forms.add(part.substring(0, part.length() - 2));
+                for (String f : forms) {
+                    if (i < split.parts.size() - 1) take(m, germanPage(f, net), f);
+                    if (m.image.isEmpty()) wikipediaPicture(m, "de", Compounds.capital(f), net);
+                    String[] tr = r.compounds.translate(f);
+                    String e = tr == null ? "" : tr[0].replaceFirst("^(to|a|an|the) ", "");
+                    if (m.image.isEmpty() && !e.isEmpty() && e.split(" ").length <= 2) wikipediaPicture(m, "en", capital(e), net);
+                    if (!m.image.isEmpty()) return;
+                }
+            }
+        }
+    }
+
+    /** Takes the picture of a Wikipedia article (not a list of meanings); false when it has none. */
+    private static boolean wikipediaPicture(Meaning m, String host, String title, Fetch net) {
+        try {
+            String img = Meaning.wikipediaImage(net.get(Meaning.wikipediaUrl(host, title)));
+            if (img.isEmpty()) return false;
+            m.image = img;
+            m.imageCaption = "";
+            m.imageSource = "Wikipedia";
+            return true;
+        } catch (IOException e) {
+            return false;
         }
     }
 

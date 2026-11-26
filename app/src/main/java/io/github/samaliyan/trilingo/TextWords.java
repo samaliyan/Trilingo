@@ -155,6 +155,9 @@ final class TextWords {
             if (n == null && t.length() > 5 && t.endsWith("es")) n = nouns.lookup(t.substring(0, t.length() - 2));
             // a compound guessed from its last part ("Kowalski" → …Ski) must be a known word itself
             if (n != null && (headword(n.noun) || leveled(n.noun) || (words != null && words.known(n.noun)))) return n.noun;
+            // a compound of known parts (Marketingassistentin): a real word, even though no list has it
+            Compounds.Split cs = words == null ? null : new Compounds(words, nouns, dict).split(t, true);
+            if (cs != null && !cs.corrected) return cs.word;
             if (!sentenceStart) return null;                                         // a name
         }
         if (GermanVerbs.isKnownForm(low)) {                                        // ging → gehen

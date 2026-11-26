@@ -52,8 +52,14 @@ final class MeaningView {
     }
 
     /** True when a meaning can be shown for this lookup (a word, not a sentence). */
+    /** A single word or short phrase: it has a level, can be saved, has a picture. */
     static boolean applies(Lookup l) {
         return MeaningSource.word(l) != null;
+    }
+
+    /** Every lookup has a meaning section: a sentence shows the meanings of its words. */
+    static boolean shows(Lookup l) {
+        return !Text.clean(l.query).isEmpty() && !l.results.isEmpty();
     }
 
     private static String key(Lookup l) {
@@ -80,7 +86,7 @@ final class MeaningView {
         if (loading.contains(key(l))) return;
         final String k = key(l);
         loading.add(k);
-        Net.run(() -> MeaningSource.load(l, Net::get, Lexicon::germanCase, Lexicon.words(Lang.EN)), (m, err) -> {
+        Net.run(() -> MeaningSource.load(l, Net::get, Lexicon.resolver()), (m, err) -> {
             loading.remove(k);
             if (m != null) CACHE.put(k, m);
             if (!k.equals(shownKey) || act.isDestroyed()) return;
@@ -102,6 +108,7 @@ final class MeaningView {
         pictureBox.removeAllViews();
         meaningBox.removeAllViews();
         if (!m.image.isEmpty()) picture(m, pictureBox);
+        else if (Resolver.NUMBER.equals(l.service)) numberPicture(l, pictureBox);
         meaningBox.addView(meaningCard(l, m));
     }
 
@@ -150,6 +157,42 @@ final class MeaningView {
         img.setOnClickListener(v -> zoom(url));
     }
 
+    /** A number has no photo: the digits, big, and up to 20 dots to count. */
+    private void numberPicture(Lookup l, LinearLayout box) {
+        long n = Numbers.valueOfLookup(l);
+        if (n < 0) return;
+        LinearLayout card = new LinearLayout(act);
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setGravity(Gravity.CENTER);
+        card.setBackground(ui.round(ui.surface, 18));
+        card.setPadding(ui.dp(16), ui.dp(14), ui.dp(16), ui.dp(16));
+        card.setMinimumHeight(ui.dp(170));
+        card.setContentDescription(act.getString(R.string.picture_of, Numbers.digits(n, Lang.EN)));
+        TextView big = ui.text(n < 1000 ? 64 : 40, ui.accent, Ui.MEDIUM);
+        big.setText(Numbers.digits(n, l.source == Lang.FA ? Lang.FA : Lang.EN));
+        big.setGravity(Gravity.CENTER);
+        big.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        card.addView(big);
+        if (n > 0 && n <= 20) {
+            for (int row = 0; row * 10 < n; row++) {
+                LinearLayout dots = new LinearLayout(act);
+                dots.setGravity(Gravity.CENTER);
+                for (int i = row * 10; i < Math.min(n, row * 10 + 10); i++) {
+                    View d = new View(act);
+                    d.setBackground(ui.round(ui.accent, 7));
+                    LinearLayout.LayoutParams dp = new LinearLayout.LayoutParams(ui.dp(14), ui.dp(14));
+                    dp.setMargins(ui.dp(4), ui.dp(4), ui.dp(i % 5 == 4 ? 10 : 4), ui.dp(4));
+                    dots.addView(d, dp);
+                }
+                dots.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+                card.addView(dots);
+            }
+        }
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.bottomMargin = ui.dp(12);
+        box.addView(card, lp);
+    }
+
     private void zoom(String url) {
         Bitmap b = Net.cachedBitmap(url);
         if (b == null) return;
@@ -181,12 +224,23 @@ final class MeaningView {
         head.setLetterSpacing(0.06f);
         card.addView(head);
 
-        TextView word = ui.text(22, ui.text, Ui.MEDIUM);
+        TextView word = ui.text(m.word.length() > 30 ? 17 : 22, ui.text, Ui.MEDIUM);
         word.setText(m.word);
         GrammarViews.direction(word, l.source);
         LinearLayout.LayoutParams wp = full();
         wp.topMargin = ui.dp(6);
         card.addView(word, wp);
+        // not the word's own entry: say what is shown instead
+        String note = note(m);
+        if (!note.isEmpty()) {
+            TextView n = ui.text(13, ui.sub, Ui.REGULAR);
+            n.setText(note);
+            n.setLineSpacing(0, 1.2f);
+            Ui.bidi(n);
+            LinearLayout.LayoutParams np = full();
+            np.topMargin = ui.dp(4);
+            card.addView(n, np);
+        }
         if (!m.ipa.isEmpty()) {
             TextView ipa = ui.text(15, ui.sub, Ui.REGULAR);
             ipa.setText(m.ipa);
@@ -208,33 +262,52 @@ final class MeaningView {
         LinearLayout senses = new LinearLayout(act);
         senses.setOrientation(LinearLayout.VERTICAL);
         card.addView(senses, full());
-        renderSenses(senses, l.source, m, false);
+        renderSenses(senses, Meaning.NOTE_ENGLISH.equals(m.note) ? Lang.EN : l.source, m, false);
 
         chips(card, R.string.synonyms, m.synonyms, l.source);
         chips(card, R.string.opposites, m.antonyms, l.source);
         chips(card, R.string.word_family, m.family, l.source);
 
         TextView src = ui.text(11, ui.sub, Ui.REGULAR);
-        src.setText(l.source == Lang.EN ? R.string.meaning_source_en : R.string.meaning_source_wiktionary);
+        if (Meaning.NOTE_WIKIPEDIA.equals(m.note)) src.setText(R.string.meaning_source_wikipedia);
+        else if (Meaning.NOTE_WORDS.equals(m.note) || Meaning.NOTE_TRANSLATION.equals(m.note)) src.setText(R.string.meaning_source_dictionary);
+        else src.setText(l.source == Lang.EN || Meaning.NOTE_ENGLISH.equals(m.note) ? R.string.meaning_source_en : R.string.meaning_source_wiktionary);
         LinearLayout.LayoutParams sp = full();
         sp.topMargin = ui.dp(12);
         card.addView(src, sp);
         return card;
     }
 
+    /** What the meaning card shows when it is not the word's own entry. */
+    private String note(Meaning m) {
+        switch (m.note) {
+            case Meaning.NOTE_BASE: return act.getString(R.string.meaning_of_base, m.noteWord);
+            case Meaning.NOTE_NUMBER: return act.getString(R.string.meaning_number, m.noteWord);
+            case Meaning.NOTE_WIKIPEDIA: return act.getString(R.string.meaning_from_wikipedia);
+            case Meaning.NOTE_ENGLISH: return act.getString(R.string.meaning_of_english, m.noteWord);
+            case Meaning.NOTE_WORDS: return act.getString(R.string.meaning_words);
+            case Meaning.NOTE_TRANSLATION: return act.getString(R.string.meaning_translation_only);
+            default: return "";
+        }
+    }
+
     private void renderSenses(LinearLayout box, Lang lang, Meaning m, boolean all) {
         box.removeAllViews();
         int hidden = 0;
         for (Map.Entry<String, List<Meaning.Sense>> g : m.byPos().entrySet()) {
-            TextView pos = ui.line(13, ui.accent, Ui.MEDIUM);
-            pos.setText(g.getKey());
-            GrammarViews.direction(pos, Lang.EN);
-            LinearLayout.LayoutParams pp = full();
-            pp.topMargin = ui.dp(14);
-            box.addView(pos, pp);
+            // no word type (the words of a sentence, a Wikipedia text): a plain list, all of it
+            boolean plain = g.getKey().isEmpty();
+            if (!plain) {
+                TextView pos = ui.line(13, ui.accent, Ui.MEDIUM);
+                pos.setText(g.getKey());
+                GrammarViews.direction(pos, Lang.EN);
+                LinearLayout.LayoutParams pp = full();
+                pp.topMargin = ui.dp(14);
+                box.addView(pos, pp);
+            }
             int n = 0;
             for (Meaning.Sense s : g.getValue()) {
-                if (!all && n >= 2) {
+                if (!all && !plain && n >= 2) {
                     hidden++;
                     continue;
                 }

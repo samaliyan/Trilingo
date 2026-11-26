@@ -53,6 +53,35 @@ final class PersianVerbs {
         String before = "", preverb = "", verb, presentStem, imperativeStem;
     }
 
+    /**
+     * The infinitive of a conjugated Persian verb form, or null: رفتم → رفتن, می‌روم → رفتن, نمی‌خورد → خوردن.
+     * Only verbs of the table (and regular -یدن verbs in the past).
+     */
+    static String infinitiveOf(String form) {
+        if (form == null) return null;
+        String s = Text.unifyPersian(Text.clean(form)).replace("\u200C", "");
+        if (s.contains(" ") || s.length() < 2 || !Text.hasPersian(s)) return null;
+        if (TABLE.containsKey(s)) return s;
+        boolean present = false;
+        for (String pre : new String[]{"نمی", "می"}) {
+            if (s.startsWith(pre) && s.length() > pre.length() + 1) {
+                s = s.substring(pre.length());
+                present = true;
+                break;
+            }
+        }
+        for (String end : new String[]{"یم", "ید", "ند", "م", "ی", "د", ""}) {
+            if (!s.endsWith(end) || s.length() - end.length() < 1) continue;
+            String stem = s.substring(0, s.length() - end.length());
+            if (present) {                                                          // می‌روم: present stem رو
+                for (String[] e : TABLE.values()) if (e[1].equals(stem)) return e[0];
+            } else if (TABLE.containsKey(stem + "ن")) {                            // رفتم: past stem رفت + ن
+                return stem + "ن";
+            }
+        }
+        return null;
+    }
+
     static boolean isInfinitive(String w) {
         return w.length() >= 3 && (w.endsWith("تن") || w.endsWith("دن")) && Text.hasPersian(w);
     }

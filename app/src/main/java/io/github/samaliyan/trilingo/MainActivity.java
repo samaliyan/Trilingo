@@ -503,46 +503,50 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
             showRecent();
             return;
         }
-        if (!Text.hasLetter(q)) {
+        // What the text is: a number (8 → هشت), German without umlauts (mude → müde), a compound with a
+        // typo (marketingassitentin → Marketingassistentin), its language — decided without the network.
+        final Resolver.Prepared prep = Lexicon.resolver().prepare(q, forced, null);
+        if (!Text.hasLetter(prep.text)) {
             busy.setVisibility(View.INVISIBLE);
             showMessage(getString(R.string.no_letters), null, false);
             return;
         }
-        // German typed without ä/ö/ü/ß (mude → müde): fixed before anything else, without the network.
-        Umlauts.Fix uf = Lexicon.umlauts(q, forced);
-        final boolean umlautFixed = uf != null && uf.sure;
-        final String umlautHint = uf != null && !uf.sure ? uf.text : null;
-        final String query = umlautFixed ? uf.text : q;
+        final boolean umlautFixed = prep.corrected;
+        final String umlautHint = prep.hint;
+        final String query = prep.text;
 
         long now0 = System.currentTimeMillis();
-        Lookup cached = history.find(query, forced);
+        Lookup cached = history.find(query, prep.source != null ? prep.source : forced);
         Lookup pre = cached == null ? prefetched.get(prefetchKey(query, forced)) : null;
         if (cached == null && pre != null) cached = pre;
-        // Shown at once: the saved lookup, or the built-in dictionary's. A dictionary answer is replaced by
-        // the translation service's (richer) answer when it arrives, and stays when there is no internet.
-        Lookup offline = cached != null ? cached : Lexicon.dictionary(query, forced, false, now0);
+        // Shown at once: the saved lookup, or what is known without the network (dictionary, number, a
+        // compound's parts). A dictionary answer is replaced by the translation service's (richer) answer
+        // when it arrives, and stays when there is no internet; a number needs no service.
+        Lookup offline = cached != null ? cached : Lexicon.resolver().offline(prep, false, now0);
         if (offline != null) {
             busy.setVisibility(View.INVISIBLE);
-            showLookup(offline, forced == null, umlautFixed);
+            showLookup(offline, forced == null && prep.number < 0 && prep.decimal == null, umlautFixed);
             shownFor = Text.key(q);
             scheduleSave(offline, now);
-            if (!Dict.SERVICE.equals(offline.service) || !online()) return;
+            boolean refresh = Dict.SERVICE.equals(offline.service) || Compounds.SERVICE.equals(offline.service);
+            if (!refresh || !online()) return;
         }
         final Lookup instant = offline;
         busy.setVisibility(View.VISIBLE);
         final Lang f = forced;
         // Automatic: a word only German (or only English) has is decided here; the rest by the service.
-        final Lang source = f != null ? f : Lexicon.guessLatin(query);
+        final Lang source = f != null ? f : prep.source != null ? prep.source : Lexicon.guessLatin(query);
         final int service = store.service();
         new Thread(() -> {
             Lookup res = null;
             Engine.Failure fail = null;
-            boolean corrected = umlautFixed;
+            boolean corrected = false;                       // the service's word was replaced by a corrected one
             try {
                 res = engine.translate(query, source, service, System.currentTimeMillis());
                 // No correction from the service for a word it does not know: the closest word of the built-in list.
                 if (!res.hasSuggestion() && echoes(res)) {
                     String near = Lexicon.closest(query, res.source);
+                    if (near == null && res.source == Lang.DE && prep.split != null) near = prep.split.word;
                     if (near != null) res = res.withSuggestion(near);
                 }
                 if (!res.hasSuggestion() && umlautHint != null) res = res.withSuggestion(umlautHint);
@@ -578,9 +582,9 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                     return;
                 }
                 Lookup shownNow = r;
-                if (shownNow == null) shownNow = Lexicon.dictionary(query, f, true, System.currentTimeMillis());
+                if (shownNow == null) shownNow = Lexicon.resolver().offline(prep, true, System.currentTimeMillis());
                 if (shownNow != null) {
-                    showLookup(shownNow, f == null, r != null ? fixedWord : umlautFixed);
+                    showLookup(shownNow, f == null && prep.number < 0, umlautFixed || (r != null && fixedWord));
                     shownFor = Text.key(q);
                     scheduleSave(shownNow, now);
                 } else {
@@ -715,12 +719,14 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         content.addView(src);
 
         if (!voiceAlternatives.isEmpty()) content.addView(alternativesRow(l));
+        View numRow = numberRow(l);
+        if (numRow != null) content.addView(numRow);
         View nounRow = typedNounRow(l);
         if (nounRow != null) content.addView(nounRow);
         if (corrected) content.addView(correctedRow(l.query));
         else if (l.hasSuggestion()) content.addView(suggestionRow(l.suggestion));
 
-        boolean meaning = MeaningView.applies(l);
+        boolean meaning = MeaningView.shows(l);
         LinearLayout picture = column(), meaningBox = column();
         if (meaning) content.addView(modeSwitch(l, detected, corrected));
         // Tablet or sideways: the two parts side by side; on a phone one below the other.
@@ -883,7 +889,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
     /** Tiles above the recent words: Review (with the number due), Saved words, the practices and tools. */
     private View homeTiles() {
         Notebook nb = Store.notebook(this);
-        List<Lookup> recent = store.reviewRecent() ? Notebook.reviewable(history.items(), Lexicon.words(Lang.EN), Lexicon.words(Lang.DE)) : null;
+        List<Lookup> recent = store.reviewRecent() ? Notebook.reviewable(history.items(), Lexicon.resolver()::isWord) : null;
         int due = nb.due(null, recent, System.currentTimeMillis(), 99).size();
         String[] labels = {due > 0 ? getString(R.string.review_n, due) : getString(R.string.review), getString(R.string.saved_words),
                 getString(R.string.listen_write), getString(R.string.text_words),
@@ -1263,10 +1269,85 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         View other = otherNumber(n, shown);
         if (other != null) box.addView(other);
         box.setContentDescription(getString(R.string.german_noun_desc, n.articles(), n.noun));
+        View parts = partsView(shown);
+        if (parts != null) box.addView(parts);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.bottomMargin = ui.dp(12);
         box.setLayoutParams(lp);
         return box;
+    }
+
+    /**
+     * The parts of a German compound the dictionary does not have as a whole, each with its translation;
+     * tap a part to look it up. "Female form of …" for a -in word.
+     */
+    private View partsView(String word) {
+        Resolver res = Lexicon.resolver();
+        Compounds.Split s = res.compounds == null ? null : res.compounds.split(word);
+        if (s == null) return null;
+        LinearLayout box = column();
+        box.setPadding(0, ui.dp(10), 0, 0);
+        TextView h = ui.line(12, ui.sub, Ui.MEDIUM);
+        h.setText(R.string.word_parts);
+        box.addView(h);
+        HorizontalScrollView hs = new HorizontalScrollView(this);
+        hs.setHorizontalScrollBarEnabled(false);
+        LinearLayout row = new LinearLayout(this);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        for (int i = 0; i < s.parts.size(); i++) {
+            Compounds.Part p = s.parts.get(i);
+            if (i > 0) {
+                TextView plus = ui.text(16, ui.sub, Ui.REGULAR);
+                plus.setText("+");
+                plus.setPadding(ui.dp(6), 0, ui.dp(6), 0);
+                plus.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+                row.addView(plus);
+            }
+            LinearLayout chip = new LinearLayout(this);
+            chip.setOrientation(LinearLayout.VERTICAL);
+            chip.setPadding(ui.dp(12), ui.dp(6), ui.dp(12), ui.dp(6));
+            chip.setBackground(ui.ripple(ui.outline(ui.bg, ui.line, 12), 12));
+            chip.setMinimumHeight(ui.dp(44));
+            TextView t = ui.line(15, ui.text, Ui.MEDIUM);
+            t.setText(p.base);
+            chip.addView(t);
+            String[] tr = res.compounds.translate(p.base);
+            String meaning = tr == null ? "" : tr[0];
+            if (!meaning.isEmpty()) {
+                TextView m = ui.line(12, ui.sub, Ui.REGULAR);
+                m.setText(meaning);
+                chip.addView(m);
+            }
+            chip.setContentDescription(getString(R.string.word_part_desc, p.base, meaning));
+            chip.setOnClickListener(v -> {
+                setInput(p.base);
+                lookup(true);
+            });
+            row.addView(chip);
+        }
+        hs.addView(row);
+        box.addView(hs, Page.full(ui.dp(6), 0));
+        if (!s.male.isEmpty()) {
+            TextView f = ui.line(13, ui.sub, Ui.REGULAR);
+            f.setText(getString(R.string.female_form, s.male));
+            box.addView(f, Page.full(ui.dp(8), 0));
+        }
+        return box;
+    }
+
+    /** "Number 8" above the translation of a number typed or spoken in digits. */
+    private View numberRow(Lookup l) {
+        String typed = Text.clean(input.getText().toString());
+        long n = Resolver.NUMBER.equals(l.service) ? Numbers.valueOfLookup(l) : -1;
+        if (n < 0 && Numbers.parse(typed) >= 0 && Numbers.valueOf(l.query) == Numbers.parse(typed)) n = Numbers.parse(typed);
+        String shown;
+        if (n >= 0 && Numbers.decimalWords(typed, Lang.EN) == null) shown = Numbers.digits(n, Lang.EN);
+        else if (Numbers.decimalWords(typed, Lang.EN) != null) shown = typed;
+        else return null;
+        TextView t = ui.line(13, ui.sub, Ui.MEDIUM);
+        t.setText(getString(R.string.number_row, shown));
+        t.setPadding(ui.dp(6), 0, 0, ui.dp(10));
+        return t;
     }
 
     private View card(Lookup l, Lookup.Result r) {

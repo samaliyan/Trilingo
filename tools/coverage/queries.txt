@@ -1,0 +1,101 @@
+# numbers (voice in Persian gives digits)
+8
+۸
+25
+1990
+# Persian
+هشت
+کتاب
+کتاب‌ها
+رفتم
+می‌روم
+دوستی
+خسته
+سلام
+تهران
+# German nouns and compounds
+Haus
+Häuser
+Marketingassistentin
+marketingassitentin
+Schreibtischlampe
+Kindergarten
+Fahrradschloss
+Freundschaft
+# German verbs and forms
+einschlafen
+ging
+habe
+gegangen
+aufgestanden
+fernsehen
+sich freuen
+# German adjectives
+schönen
+müde
+kleiner
+# English
+house
+went
+children
+beautiful
+give up
+marketing assistant
+mice
+better
+distinguish
+# names and abbreviations
+Berlin
+Einstein
+EU
+# phrases and sentences
+guten Morgen
+ich habe Hunger
+how are you
+wie geht es dir heute
+# more kinds of input
+8.
+12
+۲۵
+1.000
+3,5
+Schmeterling
+hous
+tisch
+HAUS
+House
+fängt an
+zum Beispiel
+z.B.
+USA
+don't
+I'm tired
+Ich gehe morgen mit meinen Freunden ins Kino
+I would like to book a table for two people
+من فردا به مدرسه می‌روم
+كتاب
+a
+?!
+Krankenversicherung
+Führerschein
+Arbeitsplatz
+Kühlschrank
+Bundesregierung
+hellblau
+Lieblingsessen
+schneller
+größten
+gefahren
+ran
+happily
+between
+mit
+از
+چهل و دو
+بیست
+fa:8
+fa:۲۱
+۳٫۵
+haustuer
+Kinderarztpraxis
+lieblingsessen

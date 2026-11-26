@@ -104,14 +104,7 @@ final class DetailSheets {
      * but "Tisch" finds many sentences. Single words only; the word list and the noun list decide.
      */
     static String germanCase(String word) {
-        String w = Text.clean(word);
-        if (w.isEmpty() || w.contains(" ")) return w;
-        Words de = Lexicon.words(Lang.DE);
-        if (de != null && de.known(w)) return de.canonical(w);
-        Nouns n = Lexicon.nouns();
-        if (n != null && Character.isLowerCase(w.charAt(0)) && n.lookup(w) != null && (de == null || !de.known(w)))
-            return Character.toUpperCase(w.charAt(0)) + w.substring(1);
-        return w;
+        return Lexicon.germanCase(word);
     }
 
     boolean hasExamples(Lookup l) {
