@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Trilingo</string>
+    <string name="process_text_label">Trilingo</string>
+    <string name="tile_label">Translate</string>
+
+    <!-- Main screen -->
+    <string name="input_hint">Type a word</string>
+    <string name="clear">Clear</string>
+    <string name="paste">Paste</string>
+    <string name="settings">Settings</string>
+    <string name="auto">Auto</string>
+    <string name="from_chip">Translate from %1$s</string>
+    <string name="from_lang">From %1$s</string>
+    <string name="from_detected">From %1$s · detected</string>
+    <string name="speak_lang">Listen in %1$s</string>
+    <string name="copy_lang">Copy %1$s</string>
+    <string name="copied">Copied</string>
+    <string name="speak_failed">Could not play the sound</string>
+    <string name="via_service">Translated by %1$s</string>
+    <string name="did_you_mean">Did you mean</string>
+    <string name="showing_results_for">Showing results for</string>
+    <string name="did_you_mean_desc">Did you mean %1$s? Tap to translate it</string>
+    <string name="suggestion_desc">Translate %1$s</string>
+    <string name="plural">Plural</string>
+    <string name="singular">Singular</string>
+    <string name="german_noun_desc">German noun: %1$s %2$s</string>
+    <string name="examples">Examples</string>
+    <string name="examples_loading">Finding examples…</string>
+    <string name="examples_none">No examples found for this word.</string>
+    <string name="examples_none_hint">Try its dictionary form, e.g. "go" instead of "went".</string>
+    <string name="examples_failed">Could not load examples.</string>
+    <string name="examples_source">Sentences from Tatoeba (tatoeba.org)</string>
+    <string name="conjugation">Conjugation</string>
+    <string name="phrasal_verbs">Phrasal verbs</string>
+    <string name="prefix_verbs">Prefix verbs</string>
+    <string name="phrasal_title">Phrasal verbs</string>
+    <string name="family_hint_en">Verb + small word, with a new meaning. Tap one to translate it.</string>
+    <string name="family_hint_de">German has no phrasal verbs; prefix verbs do the same job (kommen → ankommen). Tap one to translate it.</string>
+    <string name="examples_tab">%1$s examples: %2$s</string>
+    <string name="conjugation_tab">%1$s: %2$s</string>
+    <string name="close">Close</string>
+    <string name="clipboard_empty">Nothing to paste</string>
+    <string name="no_letters">Type a word to translate.</string>
+    <string name="error_offline">No internet connection.</string>
+    <string name="error_offline_hint">Words you looked up before still work without internet.</string>
+    <string name="error_service">The translation service did not answer.</string>
+    <string name="error_service_hint">Try again in a moment. If it keeps happening, choose the other service in Settings.</string>
+    <string name="retry">Try again</string>
+    <string name="recent">Recent</string>
+    <string name="recent_tip">Tip: select a word in any app and choose Trilingo from the menu.</string>
+    <string name="remove_word">Remove \"%1$s\" from history?</string>
+    <string name="remove">Remove</string>
+    <string name="intro_title">English · German · Persian</string>
+    <string name="intro_body">Type a word in any of the three languages and see it in the other two, with its different meanings.\n\nYou can also select a word in any app and choose Trilingo from the menu.</string>
+
+    <!-- Settings -->
+    <string name="back">Back</string>
+    <string name="section_translation">Translation</string>
+    <string name="section_display">Display</string>
+    <string name="section_history">History</string>
+    <string name="section_widget">Widget</string>
+    <string name="section_updates">Updates</string>
+    <string name="section_about">About</string>
+    <string name="service">Translation service</string>
+    <string name="service_google">Google Translate (recommended, shows all meanings)</string>
+    <string name="service_mymemory">MyMemory (one translation per word)</string>
+    <string name="service_hint">If it does not answer, the other one is used automatically.</string>
+    <string name="theme">Theme</string>
+    <string name="phone_setting">Phone setting</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="save_history">Save looked-up words</string>
+    <string name="save_history_hint">Shown under the search field and on the widget, and available without internet</string>
+    <string name="clear_history">Clear history</string>
+    <string name="clear_history_short">Clear</string>
+    <string name="clear_history_confirm">Remove all saved words?</string>
+    <string name="history_empty">History is already empty</string>
+    <plurals name="words_saved">
+        <item quantity="one">%d word saved</item>
+        <item quantity="other">%d words saved</item>
+    </plurals>
+    <string name="widget_add_home">Add widget to home screen</string>
+    <string name="widget_add_hint">A search bar on your home screen. Make it taller to see your recent words.</string>
+    <string name="widget_add_manual">Long-press your home screen, choose Widgets and find Trilingo.</string>
+    <string name="auto_update">Check for updates</string>
+    <string name="auto_update_hint">When the app opens</string>
+    <string name="check_now">Check for updates now</string>
+    <string name="version_value">Version %1$s (build %2$d)</string>
+    <string name="source_code">Source code</string>
+    <string name="data_sources">Word data</string>
+    <string name="data_sources_value">German nouns: Wiktionary (CC BY-SA 4.0)\nWord lists: FrequencyWords (MIT)\nExample sentences: Tatoeba (CC BY 2.0 FR)\nMeanings: Wiktionary (CC BY-SA), Free Dictionary API\nPictures: Wikimedia Commons, Wikipedia\nWord levels: Words-CEFR-Dataset, german-cefr-wordlist (MIT)\nSentence check: LanguageTool\nText recognition: Google ML Kit\nOffline dictionary: Wiktionary (CC BY-SA)</string>
+    <string name="no_browser">No browser found</string>
+
+    <!-- Updates -->
+    <string name="checking">Checking for updates…</string>
+    <string name="up_to_date">You have the latest version</string>
+    <string name="check_failed">Could not reach GitHub. Check your internet connection and try again.</string>
+    <string name="update_title">Update available</string>
+    <string name="update_message">Trilingo %1$s (build %2$d) is available. You have %3$s (build %4$d).</string>
+    <string name="update_now">Update</string>
+    <string name="later">Later</string>
+    <string name="downloading">Downloading…</string>
+    <string name="downloading_pct">Downloading… %1$d%%</string>
+    <string name="download_failed">Download failed. Please try again.</string>
+    <string name="install_failed">The update could not be installed. Please try again.</string>
+    <string name="install_conflict">This update is signed differently from the installed app. Uninstall Trilingo, then install the new version from GitHub.</string>
+
+    <!-- Widget -->
+    <string name="widget_name">Translate</string>
+    <string name="widget_description">Search bar for quick translation, with your recent words</string>
+    <string name="widget_hint">Translate a word</string>
+    <string name="widget_langs">EN · DE · FA</string>
+    <string name="grammar">Grammar</string>
+    <string name="grammar_open">Grammar lessons</string>
+    <string name="grammar_search_hint">Search a topic or a word</string>
+    <string name="grammar_german">German</string>
+    <string name="grammar_english">English</string>
+    <string name="grammar_nothing">No lessons found</string>
+    <string name="grammar_nothing_hint">Try a topic such as “Perfekt” or “passive”, or a word such as “fernsehen”.</string>
+    <string name="grammar_table">Table</string>
+    <string name="grammar_tab_desc">%1$s grammar</string>
+    <string name="grammar_related">Related lessons</string>
+    <string name="grammar_for_word">Grammar for this word</string>
+    <string name="grammar_all">All grammar lessons</string>
+    <string name="explain_in">Explain in</string>
+    <string name="explain_in_desc">Explanations in %1$s. Change</string>
+    <string name="loading">Loading…</string>
+    <plurals name="lessons_found">
+        <item quantity="one">%d lesson</item>
+        <item quantity="other">%d lessons</item>
+    </plurals>
+
+    <!-- Meaning, picture, pronunciation -->
+    <string name="mode_translation">Translation</string>
+    <string name="mode_meaning">Meaning</string>
+    <string name="mode_translation_desc">Show the translation first</string>
+    <string name="mode_meaning_desc">Show the meaning in the word\'s own language first</string>
+    <string name="show_translation">Show translation</string>
+    <string name="meaning_in">Meaning in %1$s</string>
+    <string name="meaning_loading">Loading the meaning…</string>
+    <string name="meaning_failed">Could not load the meaning.</string>
+    <string name="meaning_none">No dictionary entry for this word.</string>
+    <string name="meaning_none_fa">The Persian dictionary has no entry for this word.</string>
+    <string name="meaning_source_en">Meanings: Free Dictionary API and Wiktionary (CC BY-SA)</string>
+    <string name="meaning_source_wiktionary">Meanings: Wiktionary (CC BY-SA)</string>
+    <plurals name="more_meanings">
+        <item quantity="one">%d more meaning</item>
+        <item quantity="other">%d more meanings</item>
+    </plurals>
+    <string name="synonyms">Synonyms</string>
+    <string name="opposites">Opposites</string>
+    <string name="word_family">Word family</string>
+    <string name="picture_of">Picture: %1$s. Tap to enlarge</string>
+    <string name="picture_credit">Picture: %1$s (Wikimedia Commons)</string>
+    <string name="listen">Listen</string>
+    <string name="listen_real">Listen to a recording in %1$s</string>
+    <string name="listen_tts">Listen in %1$s</string>
+    <string name="record">Record</string>
+    <string name="record_desc">Record yourself saying the word</string>
+    <string name="stop">Stop</string>
+    <string name="stop_recording">Stop recording</string>
+    <string name="my_voice">My voice</string>
+    <string name="my_voice_desc">Play your recording</string>
+    <string name="record_failed">Could not record</string>
+    <string name="mic_denied">Recording needs the microphone. You can allow it in the phone\'s app settings.</string>
+    <string name="level_desc">Level %1$s, %2$s</string>
+
+    <!-- Voice search -->
+    <string name="voice_search">Voice search</string>
+    <string name="voice_which">Which language will you speak?</string>
+    <string name="voice_prompt">Say a word in %1$s</string>
+    <string name="voice_unavailable">Voice input is not available on this phone.</string>
+    <string name="voice_or">Or did you mean:</string>
+
+    <!-- Saved words -->
+    <string name="save_word">Save word</string>
+    <string name="unsave_word">Remove from saved words</string>
+    <string name="word_saved">Saved</string>
+    <string name="word_unsaved">Removed from saved words</string>
+    <string name="save_to">Save to</string>
+    <string name="no_folder">No folder</string>
+    <string name="no_folder_n">No folder  %1$d</string>
+    <string name="saved_words">Saved words</string>
+    <string name="all_words">All  %1$d</string>
+    <string name="new_folder">+ New folder</string>
+    <string name="folder_exists">A folder with this name already exists</string>
+    <string name="rename">Rename</string>
+    <string name="delete_folder">Delete folder</string>
+    <string name="delete_folder_confirm">Delete the folder "%1$s"? Its words stay saved.</string>
+    <string name="move_to_folder">Move to folder</string>
+    <string name="saved_empty">No saved words yet</string>
+    <string name="saved_empty_hint">Tap the star next to a word to save it here.</string>
+    <plurals name="review_these">
+        <item quantity="one">Review this word</item>
+        <item quantity="other">Review these %d words</item>
+    </plurals>
+    <string name="export_anki">Export for Anki</string>
+    <string name="exported">%1$d words exported. In Anki: File, Import.</string>
+    <string name="export_failed">Could not export</string>
+
+    <!-- Review -->
+    <string name="review">Review</string>
+    <string name="review_n">Review (%1$d)</string>
+    <string name="review_progress">Review %1$d of %2$d</string>
+    <string name="review_think">Do you know what it means?</string>
+    <string name="show_answer">Show answer</string>
+    <string name="review_how">How well did you know it?</string>
+    <string name="again">Again</string>
+    <string name="good">Good</string>
+    <string name="easy">Easy</string>
+    <string name="new_word">new</string>
+    <string name="review_nothing">Nothing to review right now</string>
+    <plurals name="reviewed_n">
+        <item quantity="one">Done: %d word reviewed</item>
+        <item quantity="other">Done: %d words reviewed</item>
+    </plurals>
+    <plurals name="learned_n">
+        <item quantity="one">%d word learned so far</item>
+        <item quantity="other">%d words learned so far</item>
+    </plurals>
+    <string name="review_anyway">Practise anyway</string>
+    <string name="review_empty_hint">Look up words or save them with the star; they come back here to review.</string>
+    <string name="review_recent">Review looked-up words</string>
+    <string name="review_recent_hint">Words you look up also come back for review, not only saved ones</string>
+
+    <!-- Exercises -->
+    <string name="practice">Practice</string>
+    <string name="practice_lesson">Practice this lesson</string>
+    <string name="practice_which">Practice up to which level?</string>
+    <string name="up_to_level">up to %1$s</string>
+    <string name="practice_none">No questions for this yet.</string>
+    <string name="find_mistake">Find the mistake</string>
+    <string name="find_mistake_practice">Practice: find the mistake</string>
+    <string name="five_more">5 new questions</string>
+    <string name="question_n">Question %1$d</string>
+    <string name="correct">Correct!</string>
+    <string name="wrong">Not quite.</string>
+    <string name="score">%1$d of %2$d correct</string>
+    <string name="open_lesson">Lesson: %1$s</string>
+    <string name="order_hint">Tap the words in the right order</string>
+    <string name="order_desc">Your sentence. Tap to take back the last word</string>
+
+    <!-- Check a sentence -->
+    <string name="check_sentence">Check a sentence</string>
+    <string name="check_hint">Write a sentence…</string>
+    <string name="check">Check</string>
+    <string name="check_in">Check %1$s</string>
+    <string name="check_ok">No mistakes found.</string>
+    <string name="sentence_check_failed">Could not check the sentence. Check the internet connection.</string>
+    <plurals name="mistakes_found">
+        <item quantity="one">%d possible mistake</item>
+        <item quantity="other">%d possible mistakes</item>
+    </plurals>
+    <string name="use_fix">Use %1$s</string>
+    <string name="check_source">Checked by LanguageTool</string>
+
+    <!-- Scan text -->
+    <string name="scan_text">Scan text</string>
+    <string name="scan_share_label">Scan text (Trilingo)</string>
+    <string name="scan_intro">Take a photo of a sign, a page or a menu. The text is read on your phone, without internet; then tap any word to translate it.</string>
+    <string name="take_photo">Take photo</string>
+    <string name="choose_picture">Choose picture</string>
+    <string name="scan_reading">Reading the text…</string>
+    <string name="scan_failed">Could not read the picture</string>
+    <string name="scan_no_text">No text found in this picture.</string>
+    <string name="scan_tap_word">Tap a word to translate it.</string>
+    <string name="scan_again">New photo</string>
+    <string name="copy_all_text">Copy all text</string>
+    <string name="scan_photo_desc">Photo with %1$d words. Tap a word to translate it</string>
+    <string name="open_word">More</string>
+    <string name="no_camera">No camera app found</string>
+    <string name="no_picker">No app to choose pictures found</string>
+
+    <!-- Settings -->
+    <string name="text_size">Text size</string>
+    <string name="size_small">Small</string>
+    <string name="size_normal">Normal</string>
+    <string name="size_large">Large</string>
+    <string name="size_xlarge">Extra large</string>
+    <string name="widget_theme">Widget colours</string>
+
+    <!-- 1.7: offline dictionary, swipe, undo -->
+    <string name="via_dictionary">From the built-in dictionary</string>
+    <string name="removed_word">Removed “%1$s”</string>
+    <string name="undo">Undo</string>
+
+    <!-- Saved words: search and sort -->
+    <string name="search_saved">Search saved words</string>
+    <string name="search_none">No saved word matches “%1$s”.</string>
+    <plurals name="found_n">
+        <item quantity="one">%d word found</item>
+        <item quantity="other">%d words found</item>
+    </plurals>
+    <string name="sort">Sort</string>
+    <string name="sort_newest">Newest first</string>
+    <string name="sort_oldest">Oldest first</string>
+    <string name="sort_az">A to Z</string>
+    <string name="sort_level">By level</string>
+    <string name="sort_hardest">Hardest first</string>
+    <string name="sort_due">Next to review</string>
+
+    <!-- Listen and write -->
+    <string name="listen_write">Listen &amp; write</string>
+    <string name="sentences">Sentences</string>
+    <string name="level_words">%1$s words</string>
+    <string name="slowly">Slowly</string>
+    <string name="write_what_you_hear">Write what you hear</string>
+    <string name="answer_n">Answer %1$d</string>
+    <string name="dictation_how">Listen, then write the word or sentence. German nouns come with their article.</string>
+    <string name="dictation_no_saved">No saved %1$s words yet. Save some words with the star, or choose a level.</string>
+    <string name="five_new">5 new</string>
+    <string name="almost">Almost: %1$s</string>
+    <string name="note_capital">mind the capital letters</string>
+    <string name="note_umlaut">write ä, ö, ü and ß</string>
+    <string name="note_typo">one letter is wrong</string>
+    <string name="note_article">write the article too</string>
+    <string name="no_voice">No %1$s voice on this phone</string>
+    <string name="no_voice_hint">Listening practice uses the phone\'s text-to-speech. Install the voice data, then come back.</string>
+    <string name="install_voice">Install voice</string>
+    <string name="no_voice_settings">Open the phone\'s Settings, search for “Text-to-speech” and install the language there.</string>
+
+    <!-- Words from a text -->
+    <string name="text_words">Words from a text</string>
+    <string name="text_words_intro">Paste an English or German text. You get its new words for your level, ready to save and review.</string>
+    <string name="text_words_hint">Paste or type a text</string>
+    <string name="find_words">Find words</string>
+    <string name="find_new_words">Find new words in this text</string>
+    <string name="text_words_empty">Paste or type a text first</string>
+    <string name="text_words_language">This works for English and German texts</string>
+    <string name="text_words_language_hint">The text looks like neither. Persian texts are not supported here.</string>
+    <string name="text_lang_level">%1$s text · Your level</string>
+    <string name="my_level_desc">My level: %1$s, %2$s</string>
+    <string name="text_words_none">No new words at this level</string>
+    <string name="text_words_none_hint">Every word is at your level or already saved. Choose a higher level to see more.</string>
+    <plurals name="new_words_found">
+        <item quantity="one">%d new word</item>
+        <item quantity="other">%d new words</item>
+    </plurals>
+    <string name="select_all">Select all</string>
+    <string name="select_none">Select none</string>
+    <string name="times_n">×%1$d</string>
+    <string name="text_words_tip">Tap a word to select it. Long press to open it.</string>
+    <string name="choose_words">Choose words to save</string>
+    <plurals name="save_n_words">
+        <item quantity="one">Save %d word</item>
+        <item quantity="other">Save %d words</item>
+    </plurals>
+    <plurals name="saved_n_words">
+        <item quantity="one">%d word saved</item>
+        <item quantity="other">%d words saved</item>
+    </plurals>
+    <string name="text_folder_name">Text %1$s</string>
+    <string name="new_folder_named">New folder “%1$s”</string>
+
+    <!-- Quick-translate bubble -->
+    <string name="section_quick">Over other apps</string>
+    <string name="bubble">Quick-translate bubble</string>
+    <string name="bubble_hint">A small button over other apps. Copy a word, tap the bubble, see the translation.</string>
+    <string name="bubble_permission">To show the bubble over other apps, Android asks you to allow “Display over other apps” for Trilingo. Turn it on, then come back.</string>
+    <string name="allow">Allow</string>
+    <string name="bubble_no_permission">This phone does not allow showing the bubble.</string>
+    <string name="bubble_started">The bubble is on. Drag it to the × to turn it off.</string>
+    <string name="bubble_channel">Quick-translate bubble</string>
+    <string name="bubble_on">Quick translate is on</string>
+    <string name="bubble_on_text">Copy text, then tap the bubble.</string>
+    <string name="turn_off">Turn off</string>
+    <string name="bubble_desc">Translate copied text</string>
+    <string name="bubble_hint_input">Copy text, or type here</string>
+    <string name="bubble_unknown">No translation found.</string>
+    <string name="open_in_app">Open in Trilingo</string>
+
+    <!-- Settings: vibration, backup, introduction -->
+    <string name="haptics">Vibration</string>
+    <string name="haptics_hint">A short vibration on right and wrong answers</string>
+    <string name="section_backup">Backup</string>
+    <string name="backup_now">Back up now</string>
+    <string name="backup_hint">Saved words, review progress, recent words and settings, in one file</string>
+    <string name="backup_failed">Could not save the backup</string>
+    <plurals name="backup_done">
+        <item quantity="one">Backup saved (%d word)</item>
+        <item quantity="other">Backup saved (%d words)</item>
+    </plurals>
+    <string name="restore">Restore a backup</string>
+    <string name="restore_hint">Adds the words of a backup file. Nothing on this phone is deleted.</string>
+    <string name="restore_failed">Could not open the file picker</string>
+    <string name="restore_not_backup">This file is not a Trilingo backup.</string>
+    <string name="restore_confirm">Backup from %1$s: %2$d saved words and %3$d recent words. They are added to what you have now, and its settings are used.</string>
+    <string name="restore_short">Restore</string>
+    <plurals name="restored_n">
+        <item quantity="one">Restored. %d new word added.</item>
+        <item quantity="other">Restored. %d new words added.</item>
+    </plurals>
+    <string name="show_intro">Show the introduction</string>
+    <string name="show_intro_hint">A short tour of what Trilingo can do</string>
+
+    <!-- Introduction (first start) -->
+    <string name="skip">Skip</string>
+    <string name="next">Next</string>
+    <string name="get_started">Get started</string>
+    <string name="intro_page">Page %1$d of %2$d</string>
+    <string name="intro1_title">Translate in a moment</string>
+    <string name="intro1_body">Type, paste or say a word and see it in English, German and Persian. Common words work even without internet.</string>
+    <string name="intro2_title">Understand the meaning</string>
+    <string name="intro2_body">Switch to Meaning to read the word explained in its own language, with a picture and its level.</string>
+    <string name="intro3_title">Keep what you learn</string>
+    <string name="intro3_body">Star a word to save it. Review brings it back at the right time, and Listen &amp; write trains your spelling.</string>
+    <string name="intro4_title">Learn from real texts</string>
+    <string name="intro4_body">Scan a sign or a page, find the new words in any text, and check your own sentences.</string>
+</resources>

@@ -1,0 +1,308 @@
+# English B2 and C1. Examples: English | Persian | German
+
+=== en-conditional-3-mixed
+level: B2
+cat: conditionals
+title.fa: شرطی نوع سه و شرطی ترکیبی: If I had known, I would have …
+title.en: Third and mixed conditionals: If I had known, I would have …
+title.de: Bedingungssatz Typ 3 und gemischte Bedingungssätze
+keys: third conditional, mixed conditional, شرطی نوع سوم, would have, had known, regret, پشیمانی, Konjunktiv II Vergangenheit
+see: en-conditional-2, en-wish, en-modals-past, en-past-perfect
+--- fa
+شرطی نوع سه برای گذشته‌ای که اتفاق نیفتاد: If + past perfect، would have + اسم مفعول:
+If I had known, I would have come (اگر می‌دانستم، می‌آمدم – ولی نمی‌دانستم).
+could have و might have هم به جای would have می‌آیند.
+
+شرطی ترکیبی: شرط در گذشته، نتیجه در حال (یا برعکس):
+• If I had studied medicine, I would be a doctor now.
+• If I spoke German, I would have got the job.
+
+در نوشتار رسمی if حذف می‌شود و فعل جلو می‌آید: Had I known, I would have come.
+--- en
+Third conditional for an unreal past: If + past perfect, would have + past participle: If I had known, I would have come. could have / might have are also possible.
+
+Mixed conditionals: past condition → present result (If I had studied medicine, I would be a doctor now) or present condition → past result (If I spoke German, I would have got the job).
+
+Formal inversion: Had I known, I would have come.
+--- de
+Typ 3: If + past perfect, would have + past participle (= hätte/wäre … + Partizip II). Gemischte Formen verbinden Vergangenheit und Gegenwart. Formell: Had I known …
+--- examples
+If we had left earlier, we wouldn't have missed the flight. | اگر زودتر راه افتاده بودیم، پرواز را از دست نمی‌دادیم. | Wenn wir früher losgefahren wären, hätten wir den Flug nicht verpasst.
+If you had told me, I could have helped you. | اگر به من گفته بودی، می‌توانستم کمکت کنم. | Wenn du es mir gesagt hättest, hätte ich dir helfen können.
+If I hadn't met her, my life would be very different now. | اگر با او آشنا نشده بودم، زندگی‌ام الان خیلی فرق داشت. | Wenn ich sie nicht kennengelernt hätte, wäre mein Leben jetzt ganz anders.
+Had I known about the problem, I would have fixed it. | اگر از مشکل خبر داشتم، درستش می‌کردم. | Hätte ich von dem Problem gewusst, hätte ich es behoben.
+She would have passed if she had studied more. | اگر بیشتر درس خوانده بود، قبول می‌شد. | Sie hätte bestanden, wenn sie mehr gelernt hätte.
+
+=== en-wish
+level: B2
+cat: conditionals
+title.fa: آرزو و پشیمانی: I wish، If only
+title.en: Wishes and regrets: I wish, If only
+title.de: Wünsche und Bedauern: I wish, If only
+keys: wish, if only, آرزو, کاش, ای کاش, regret, would rather, it's time, ich wünschte, hätte
+words: wish, if only, rather
+see: en-conditional-2, en-conditional-3-mixed
+--- fa
+• آرزو درباره‌ی حال: wish + گذشته‌ی ساده: I wish I had more time (کاش وقت بیشتری داشتم). با be: I wish I were taller.
+• پشیمانی درباره‌ی گذشته: wish + past perfect: I wish I hadn't said that (کاش آن را نگفته بودم).
+• نارضایتی از رفتار کسی / خواستن تغییر: wish + would: I wish you would stop smoking.
+• If only = همان wish ولی قوی‌تر: If only I had listened!
+
+ساختارهای مشابه: I'd rather you didn't … (ترجیح می‌دهم که نکنی)، It's time we left (وقتش است برویم).
+--- en
+• present wishes: wish + past simple (I wish I had more time; I wish I were taller)
+• past regrets: wish + past perfect (I wish I hadn't said that)
+• complaints / wanting change: wish + would (I wish you would stop smoking)
+• If only = stronger wish
+
+Similar: I'd rather you didn't …; It's time we left.
+--- de
+I wish + past = Ich wünschte, ich hätte …; I wish + past perfect = Bedauern über die Vergangenheit; I wish you would … = Kritik/Wunsch nach Änderung.
+--- examples
+I wish I could speak German fluently. | کاش می‌توانستم روان آلمانی صحبت کنم. | Ich wünschte, ich könnte fließend Deutsch sprechen.
+I wish I hadn't eaten so much. | کاش این‌قدر نخورده بودم. | Ich wünschte, ich hätte nicht so viel gegessen.
+If only I had more time! | ای کاش وقت بیشتری داشتم! | Wenn ich nur mehr Zeit hätte!
+I wish you would listen to me. | کاش به حرفم گوش می‌دادی. | Ich wünschte, du würdest mir zuhören.
+It's time we went home. | وقتش است برویم خانه. | Es ist Zeit, nach Hause zu gehen.
+
+=== en-modals-past
+level: B2
+cat: verbs
+title.fa: مُدال در گذشته: should have، must have، might have، could have
+title.en: Past modals: should have, must have, might have, could have
+title.de: Modalverben in der Vergangenheit: should have, must have …
+keys: past modals, should have, must have, might have, could have, can't have, would have, needn't have, مُدال گذشته, پشیمانی, حدس گذشته
+see: en-modals-deduction, en-modals-advice, en-conditional-3-mixed
+--- fa
+مُدال + have + اسم مفعول برای گذشته:
+• should have / shouldn't have = باید … می‌کردم / نباید … می‌کردم (پشیمانی، انتقاد): I should have called you.
+• must have = حتماً … (حدس مطمئن درباره‌ی گذشته): She must have forgotten.
+• might / may / could have = شاید …: He might have missed the bus.
+• can't / couldn't have = امکان ندارد که …: You can't have seen him – he's in Paris.
+• could have = می‌توانست (ولی نشد): You could have been killed!
+• needn't have = لازم نبود (ولی انجام شد): You needn't have bought flowers.
+--- en
+modal + have + past participle:
+• should(n't) have = regret / criticism: I should have called you.
+• must have = confident deduction: She must have forgotten.
+• might / may / could have = possibility: He might have missed the bus.
+• can't / couldn't have = impossible: You can't have seen him.
+• could have = possible but didn't happen: You could have been killed!
+• needn't have = unnecessary but done: You needn't have bought flowers.
+--- de
+should have = hätte … sollen; must have = muss … haben; might have = könnte … haben; can't have = kann nicht … haben; needn't have = hätte nicht … müssen.
+--- examples
+I should have listened to you. | باید به حرفت گوش می‌دادم. | Ich hätte auf dich hören sollen.
+She must have left already. | حتماً رفته است. | Sie muss schon gegangen sein.
+They might have got lost. | شاید گم شده باشند. | Sie haben sich vielleicht verlaufen.
+He can't have finished so quickly. | امکان ندارد این‌قدر زود تمام کرده باشد. | Er kann nicht so schnell fertig geworden sein.
+You needn't have waited for me. | لازم نبود منتظرم بمانی. | Du hättest nicht auf mich warten müssen.
+
+=== en-future-continuous-perfect
+level: B2
+cat: tenses
+title.fa: آینده‌ی استمراری و آینده‌ی کامل: will be doing، will have done
+title.en: Future continuous and future perfect: will be doing, will have done
+title.de: Future continuous und future perfect
+keys: future continuous, future perfect, will be doing, will have done, by then, by the time, this time tomorrow, آینده استمراری, آینده کامل, Futur II
+see: en-future
+--- fa
+• آینده‌ی استمراری (will be + ‎-ing‎): کاری که در یک لحظه از آینده در جریان است: This time tomorrow I'll be flying to Berlin. همچنین برای پرسیدن مؤدبانه درباره‌ی برنامه‌ها: Will you be using the car tonight?
+• آینده‌ی کامل (will have + اسم مفعول): کاری که تا زمانی در آینده تمام شده است، معمولاً با by: By next year I'll have finished my degree.
+--- en
+• Future continuous (will be + -ing): in progress at a future moment (This time tomorrow I'll be flying to Berlin); also polite questions about plans (Will you be using the car tonight?).
+• Future perfect (will have + participle): completed before a future time, often with by: By next year I'll have finished my degree.
+--- de
+will be + -ing = Handlung zu einem Zeitpunkt in der Zukunft im Verlauf; will have + past participle = Futur II (bis dahin abgeschlossen).
+--- examples
+At 8 tomorrow I'll be sitting on the plane. | فردا ساعت هشت در هواپیما نشسته‌ام. | Morgen um acht sitze ich im Flugzeug.
+Don't call at seven – we'll be having dinner. | ساعت هفت زنگ نزن – داریم شام می‌خوریم. | Ruf nicht um sieben an – da essen wir zu Abend.
+By the time you arrive, I'll have cooked dinner. | تا تو برسی، شام را درست کرده‌ام. | Bis du ankommst, habe ich das Abendessen gekocht.
+She will have finished the report by Friday. | تا جمعه گزارش را تمام کرده است. | Bis Freitag wird sie den Bericht fertig haben.
+Will you be coming to the meeting? | به جلسه می‌آیید؟ | Kommen Sie zur Besprechung?
+
+=== en-causative
+level: B2
+cat: passive
+title.fa: have/get something done: دادن کاری به دیگری
+title.en: Causative: have/get something done
+title.de: Kausativ: have/get something done
+keys: causative, have something done, get something done, have someone do, make someone do, let, سبب‌ساز, lassen
+see: en-passive
+--- fa
+وقتی کاری را خودمان انجام نمی‌دهیم و به کس دیگری می‌سپاریم: have + مفعول + اسم مفعول:
+I had my car repaired (ماشینم را دادم تعمیر کردند). I'm having my hair cut tomorrow.
+get به جای have در گفتار رایج است: I need to get my phone fixed.
+
+همچنین برای اتفاق بد: She had her bag stolen (کیفش را دزدیدند).
+
+ساختارهای نزدیک:
+• have someone do something = از کسی خواستن کاری انجام دهد: I'll have my assistant call you.
+• make someone do = مجبور کردن: She made me apologise.
+• let someone do = اجازه دادن: My parents let me stay out late.
+
+این همان lassen در آلمانی است: Ich lasse mein Auto reparieren.
+--- en
+have + object + past participle when someone else does a job for us: I had my car repaired. get is common in speech: I need to get my phone fixed. Also for bad experiences: She had her bag stolen.
+
+Related: have someone do (arrange), make someone do (force), let someone do (allow). German equivalent: etwas machen lassen.
+--- de
+have/get + Objekt + past participle = etwas machen lassen. make someone do = jemanden zwingen; let someone do = jemanden lassen (erlauben).
+--- examples
+I'm going to have my eyes tested. | می‌خواهم چشم‌هایم را معاینه کنم (بدهم معاینه کنند). | Ich lasse meine Augen untersuchen.
+We had the house painted last summer. | تابستان گذشته خانه را دادیم رنگ کنند. | Wir haben letzten Sommer das Haus streichen lassen.
+Where do you get your hair cut? | موهایت را کجا کوتاه می‌کنی؟ | Wo lässt du dir die Haare schneiden?
+He had his wallet stolen on the train. | کیف پولش را در قطار دزدیدند. | Ihm wurde im Zug das Portemonnaie gestohlen.
+The teacher made us rewrite the essay. | معلم وادارمان کرد انشا را دوباره بنویسیم. | Die Lehrerin ließ uns den Aufsatz neu schreiben.
+
+=== en-linking-contrast
+level: B2
+cat: sentences
+title.fa: کلمه‌های ربط برای تضاد و علت: although، despite، however، whereas، due to
+title.en: Linking words: although, despite, however, whereas, due to
+title.de: Konnektoren: although, despite, however, whereas, due to
+keys: although, though, even though, despite, in spite of, however, nevertheless, whereas, while, due to, because of, therefore, linking words, connectors, با اینکه, با وجود, obwohl, trotz
+words: although, though, despite, however, nevertheless, whereas, therefore, moreover, due
+see: en-conjunctions
+--- fa
+تضاد:
+• although / even though + جمله: Although it was raining, we went out.
+• despite / in spite of + اسم یا ‎-ing‎ (نه جمله): Despite the rain, we went out. Despite being tired, she kept working.
+• however / nevertheless (با این حال): اول جمله‌ی جدید، با ویرگول: It was raining. However, we went out.
+• whereas / while (در حالی که): مقایسه‌ی دو چیز: I like tea, whereas my wife prefers coffee.
+
+علت و نتیجه:
+• because + جمله / because of، due to + اسم
+• therefore / as a result (در نتیجه) در شروع جمله‌ی جدید
+
+اشتباه رایج: despite of غلط است؛ despite یا in spite of.
+--- en
+Contrast: although / even though + clause; despite / in spite of + noun or -ing (never a clause, never "despite of"); however / nevertheless at the start of a new sentence; whereas / while for comparing two things.
+
+Cause and result: because + clause; because of / due to + noun; therefore / as a result at the start of a sentence.
+--- de
+although = obwohl (Satz), despite = trotz (Nomen/-ing), however = jedoch, whereas = während/wohingegen, due to = aufgrund, therefore = deshalb.
+--- examples
+Although he's rich, he isn't happy. | با اینکه پولدار است، خوشحال نیست. | Obwohl er reich ist, ist er nicht glücklich.
+Despite the traffic, we arrived on time. | با وجود ترافیک، به موقع رسیدیم. | Trotz des Verkehrs kamen wir pünktlich an.
+The plan was good. However, it was too expensive. | برنامه خوب بود. با این حال، خیلی گران بود. | Der Plan war gut. Er war jedoch zu teuer.
+My brother loves sport, whereas I prefer reading. | برادرم عاشق ورزش است، در حالی که من کتاب خواندن را ترجیح می‌دهم. | Mein Bruder liebt Sport, während ich lieber lese.
+The flight was cancelled due to bad weather. | پرواز به دلیل هوای بد لغو شد. | Der Flug wurde wegen schlechten Wetters gestrichen.
+
+=== en-participle-clauses
+level: C1
+cat: sentences
+title.fa: جمله‌های وصفی کوتاه با ‎-ing‎ و اسم مفعول: Feeling tired, I went to bed
+title.en: Participle clauses: Feeling tired, I went to bed
+title.de: Partizipialkonstruktionen: Feeling tired, I went to bed
+keys: participle clause, reduced relative clause, -ing clause, having done, written by, جمله کوتاه شده, Partizipialsatz
+see: en-relative-clauses, en-passive
+--- fa
+در انگلیسیِ نوشتاری، جمله‌های وابسته را می‌شود کوتاه کرد:
+• ‎-ing‎ (معلوم، همزمان یا علت): Feeling tired, I went to bed early (چون خسته بودم …). Walking home, I saw an accident.
+• Having + اسم مفعول (کار قبلی): Having finished my work, I went home.
+• اسم مفعول (مجهول): Built in 1890, the house needs a lot of repairs.
+• کوتاه‌کردن جمله‌ی موصولی: The man standing at the door (= who is standing) … / A book written by a child (= which was written).
+
+قانون مهم: فاعل دو بخش باید یکی باشد. «Walking home, the rain started» غلط است، چون باران راه نمی‌رفت.
+--- en
+Written English often shortens clauses:
+• -ing (active, same time or reason): Feeling tired, I went to bed early.
+• Having + participle (earlier action): Having finished my work, I went home.
+• past participle (passive): Built in 1890, the house needs a lot of repairs.
+• reduced relative clauses: the man standing at the door; a book written by a child.
+
+Both parts must have the same subject – "Walking home, the rain started" is wrong.
+--- de
+Partizipialsätze verkürzen Neben- und Relativsätze: -ing (aktiv), having done (vorzeitig), past participle (passiv). Das Subjekt muss in beiden Teilen gleich sein.
+--- examples
+Not knowing what to do, I called my brother. | نمی‌دانستم چه کنم، به برادرم زنگ زدم. | Da ich nicht wusste, was ich tun sollte, rief ich meinen Bruder an.
+Having lived in Germany for years, she speaks perfect German. | چون سال‌ها در آلمان زندگی کرده، آلمانی را عالی صحبت می‌کند. | Da sie jahrelang in Deutschland gelebt hat, spricht sie perfekt Deutsch.
+Written in simple English, the book is easy to read. | کتاب چون به انگلیسی ساده نوشته شده، راحت خوانده می‌شود. | Da das Buch in einfachem Englisch geschrieben ist, ist es leicht zu lesen.
+The woman sitting next to me was a doctor. | خانمی که کنارم نشسته بود پزشک بود. | Die Frau, die neben mir saß, war Ärztin.
+Most of the goods sold here are made locally. | بیشتر کالاهایی که اینجا فروخته می‌شود محلی‌اند. | Die meisten hier verkauften Waren werden vor Ort hergestellt.
+
+=== en-inversion
+level: C1
+cat: sentences
+title.fa: وارونگی برای تأکید: Never have I seen …، Not only … but also
+title.en: Inversion for emphasis: Never have I seen …, Not only … but also
+title.de: Inversion zur Betonung: Never have I seen …
+keys: inversion, emphasis, never have I, rarely, seldom, not only, no sooner, hardly, little did I know, under no circumstances, only then, تأکید, وارونگی, Inversion
+words: never, rarely, seldom, hardly, scarcely, sooner, only
+see: en-cleft-sentences, en-conditional-3-mixed
+--- fa
+در انگلیسی رسمی و ادبی، وقتی جمله با یک کلمه‌ی منفی یا محدودکننده شروع شود، فعل کمکی قبل از فاعل می‌آید (مثل سؤال). این کار جمله را تأکیدی‌تر می‌کند:
+• Never have I seen such a beautiful place.
+• Rarely / Seldom do we get such good weather.
+• Not only did she win, but she also broke the record.
+• No sooner had I arrived than it started raining (هنوز نرسیده بودم که …).
+• Hardly had we sat down when the phone rang.
+• Under no circumstances should you open this door.
+• Little did I know that … (اصلاً خبر نداشتم که …)
+• Only then did I understand.
+
+این ساختار برای کسی که آلمانی می‌داند آشناست، چون در آلمانی هم فعل بعد از بخش اول می‌آید.
+--- en
+In formal or literary English, starting with a negative or restrictive expression puts the auxiliary before the subject: Never have I seen … / Rarely do we … / Not only did she win, but … / No sooner had I arrived than … / Hardly had we sat down when … / Under no circumstances should you … / Little did I know … / Only then did I understand.
+--- de
+Nach negativen oder einschränkenden Ausdrücken am Satzanfang steht im Englischen das Hilfsverb vor dem Subjekt – ähnlich wie die deutsche Verbzweitstellung.
+--- examples
+Never have I eaten such delicious food. | هرگز چنین غذای خوشمزه‌ای نخورده بودم. | Noch nie habe ich so leckeres Essen gegessen.
+Not only is he smart, but he is also very kind. | او نه تنها باهوش است، بلکه خیلی هم مهربان است. | Er ist nicht nur klug, sondern auch sehr freundlich.
+No sooner had we left than it started to rain. | تازه راه افتاده بودیم که باران شروع شد. | Kaum waren wir losgegangen, fing es an zu regnen.
+Under no circumstances should you share your password. | تحت هیچ شرایطی نباید رمزتان را به کسی بدهید. | Unter keinen Umständen sollten Sie Ihr Passwort weitergeben.
+Little did they know what was about to happen. | اصلاً خبر نداشتند چه اتفاقی در شرف وقوع است. | Sie ahnten nicht, was gleich passieren würde.
+
+=== en-cleft-sentences
+level: C1
+cat: sentences
+title.fa: جمله‌های تأکیدی: It was … that …، What I need is …
+title.en: Cleft sentences: It was … that …, What I need is …
+title.de: Spaltsätze: It was … that …, What I need is …
+keys: cleft sentence, emphasis, it is that, what I need is, the thing is, all I want, تأکید, Spaltsatz, Hervorhebung
+see: en-inversion, en-relative-clauses
+--- fa
+برای تأکید روی یک بخش جمله، آن را جدا می‌کنیم:
+• It is/was … that/who …: It was Sara who called (سارا بود که زنگ زد، نه کس دیگری). It's the price that worries me.
+• What … is/was …: What I need is a holiday (چیزی که لازم دارم یک تعطیلات است). What surprised me was his reaction.
+• All … is …: All I want is some peace (تنها چیزی که می‌خواهم کمی آرامش است).
+• The reason why … is that …، The thing is, …
+
+در آلمانی معمولاً همین تأکید را با جابه‌جا کردن کلمات یا با Es war … , der … می‌سازند.
+--- en
+Cleft sentences emphasise one part: It was Sara who called. What I need is a holiday. All I want is some peace. The reason why … is that …
+--- de
+Spaltsätze heben einen Satzteil hervor: It was Sara who called (Es war Sara, die angerufen hat). What I need is … (Was ich brauche, ist …).
+--- examples
+It was my father who taught me to drive. | پدرم بود که رانندگی یادم داد. | Es war mein Vater, der mir das Autofahren beigebracht hat.
+What I really need is a good night's sleep. | چیزی که واقعاً لازم دارم یک خواب خوب شبانه است. | Was ich wirklich brauche, ist eine Nacht guter Schlaf.
+It's not the money that matters, it's the time. | پول مهم نیست، وقت مهم است. | Nicht das Geld ist wichtig, sondern die Zeit.
+All I want is to be happy. | تنها چیزی که می‌خواهم این است که خوشحال باشم. | Ich will nur glücklich sein.
+What annoys me is his attitude. | چیزی که اذیتم می‌کند رفتار اوست. | Was mich ärgert, ist seine Einstellung.
+
+=== en-passive-reporting
+level: C1
+cat: passive
+title.fa: مجهول گزارشی: It is said that …، He is believed to …
+title.en: Reporting passive: It is said that …, He is believed to …
+title.de: Berichtendes Passiv: It is said that …, He is believed to …
+keys: reporting passive, it is said, is believed to, is thought to, is reported, is known, is expected, گفته می‌شود, sagt man, soll
+see: en-passive, en-modals-deduction
+--- fa
+در اخبار و متن‌های رسمی، برای نقل باور یا شایعه بدون گفتن منبع:
+• It is said / believed / reported / thought that + جمله: It is said that he is very rich.
+• فاعل + is said / believed + to + فعل: He is said to be very rich.
+• برای گذشته: to have + اسم مفعول: The fire is believed to have started in the kitchen.
+
+این همان soll در آلمانی است: Er soll sehr reich sein.
+--- en
+News and formal texts report beliefs without naming the source: It is said / believed / reported that … or Subject + is said / believed + to + verb (He is said to be very rich). Past: to have + participle (The fire is believed to have started in the kitchen). German equivalent: Er soll sehr reich sein.
+--- de
+It is said that … / He is said to … = man sagt, dass … / Er soll … Vergangenheit: to have + past participle (soll … haben).
+--- examples
+It is believed that the painting is a fake. | گمان می‌رود که این نقاشی تقلبی است. | Man glaubt, dass das Gemälde eine Fälschung ist.
+The singer is said to be very shy. | گفته می‌شود این خواننده خیلی خجالتی است. | Der Sänger soll sehr schüchtern sein.
+The thieves are thought to have escaped by car. | تصور می‌شود دزدها با ماشین فرار کرده‌اند. | Die Diebe sollen mit dem Auto geflohen sein.
+It has been reported that the minister will resign. | گزارش شده که وزیر استعفا خواهد داد. | Es wird berichtet, dass der Minister zurücktreten wird.
+Prices are expected to rise next year. | انتظار می‌رود قیمت‌ها سال آینده بالا برود. | Man erwartet, dass die Preise nächstes Jahr steigen.

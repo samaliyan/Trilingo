@@ -1,0 +1,71 @@
+plugins {
+    id 'com.android.application'
+}
+
+// Release builds are signed with signing/trilingo.p12 when the SIGNING_PASSWORD secret is available
+// (GitHub Actions). Without it (local builds, UI tests) the debug key is used.
+def signingPassword = System.getenv('SIGNING_PASSWORD')
+
+android {
+    namespace 'io.github.samaliyan.trilingo'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'io.github.samaliyan.trilingo'
+        minSdk 26
+        targetSdk 34
+        // Every GitHub build gets a higher number, so the in-app updater and Android accept it as newer.
+        versionCode((System.getenv('BUILD_NUMBER') ?: '1') as int)
+        versionName '1.7'
+        // Text recognition (Scan text) ships native code. Phones are ARM; the x86_64 code is only added
+        // for the emulator test (TEST_EMULATOR=1), so the published APK stays small.
+        ndk {
+            abiFilters 'arm64-v8a', 'armeabi-v7a'
+            if (System.getenv('TEST_EMULATOR')) abiFilters 'x86_64'
+        }
+    }
+
+    signingConfigs {
+        release {
+            if (signingPassword) {
+                storeFile rootProject.file('signing/trilingo.p12')
+                storeType 'pkcs12'
+                storePassword signingPassword
+                keyAlias 'trilingo'
+                keyPassword signingPassword
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingPassword ? signingConfigs.release : signingConfigs.debug
+        }
+    }
+
+    // Native code compressed inside the APK: a much smaller download (it is unpacked once at install).
+    packaging {
+        jniLibs {
+            useLegacyPackaging true
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    lint {
+        abortOnError true
+        checkReleaseBuilds true
+        // Version-freshness checks are not code problems.
+        disable 'GradleDependency', 'OldTargetApi', 'AndroidGradlePluginVersion'
+    }
+}
+// One library: Google ML Kit text recognition for "Scan text" (works on the phone, without internet).
+dependencies {
+    implementation 'com.google.mlkit:text-recognition:16.0.1'
+}

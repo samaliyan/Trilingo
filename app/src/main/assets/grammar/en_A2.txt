@@ -1,0 +1,427 @@
+# English A2. Examples: English | Persian | German
+
+=== en-past-simple
+level: A2
+cat: tenses
+title.fa: گذشته‌ی ساده (Past simple): worked، went، did
+title.en: Past simple: worked, went, did
+title.de: Past simple: worked, went, did
+keys: past simple, simple past, گذشته ساده, ماضی, -ed, did, didn't, yesterday, ago, last, Vergangenheit
+tags: en-verb, en-irregular-verb
+see: en-irregular-verbs, en-past-continuous, en-present-perfect, en-be
+--- fa
+گذشته‌ی ساده برای کاری است که در زمان مشخصی در گذشته تمام شده: yesterday، last week، in 2010، two days ago.
+
+• فعل‌های باقاعده ‎-ed‎ می‌گیرند: work → worked، live → lived، stop → stopped، study → studied
+• فعل‌های بی‌قاعده شکل خودشان را دارند: go → went، see → saw، buy → bought (درس بعدی)
+• منفی: didn't + فعل ساده: I didn't go (نه didn't went)
+• سؤال: Did + فاعل + فعل ساده: Did you see him? What did you eat?
+• be: was (I/he/she/it) و were (you/we/they)
+
+شکل گذشته برای همه‌ی شخص‌ها یکی است: I worked، she worked.
+--- en
+The past simple is for finished actions at a definite past time: yesterday, last week, in 2010, two days ago.
+
+• regular verbs add -ed: worked, lived, stopped, studied
+• irregular verbs have their own form: went, saw, bought
+• negative: didn't + base verb (I didn't go – not didn't went)
+• question: Did + subject + base verb: Did you see him?
+• be: was / were
+
+The form is the same for all persons.
+--- de
+Past simple: abgeschlossene Handlung zu einem bestimmten Zeitpunkt (yesterday, last week, ago). Regelmäßig -ed, unregelmäßige Formen lernen. Verneinung didn't + Grundform, Frage Did …? Im Deutschen meist Perfekt.
+--- table
+ | positive | negative | question
+regular | I worked | I didn't work | Did you work?
+irregular | she went | she didn't go | Did she go?
+be | I was / they were | I wasn't / they weren't | Were you …?
+--- examples
+I watched a film last night. | دیشب یک فیلم دیدم. | Ich habe gestern Abend einen Film gesehen.
+We went to Shiraz two years ago. | دو سال پیش به شیراز رفتیم. | Vor zwei Jahren sind wir nach Schiras gefahren.
+She didn't call me yesterday. | دیروز به من زنگ نزد. | Sie hat mich gestern nicht angerufen.
+Did you enjoy the party? | از مهمانی لذت بردی؟ | Hat dir die Party gefallen?
+I was very tired after work. | بعد از کار خیلی خسته بودم. | Nach der Arbeit war ich sehr müde.
+
+=== en-irregular-verbs
+level: A2
+cat: verbs
+title.fa: فعل‌های بی‌قاعده‌ی انگلیسی: go – went – gone
+title.en: Irregular verbs: go – went – gone
+title.de: Unregelmäßige Verben: go – went – gone
+keys: irregular verbs, بی‌قاعده, past participle, اسم مفعول, three forms, went, gone, unregelmäßig, V2, V3
+tags: en-irregular-verb
+see: en-past-simple, en-present-perfect, en-passive
+--- fa
+فعل‌های بی‌قاعده سه شکل دارند: مصدر (go)، گذشته (went) و اسم مفعول (gone). شکل سوم برای present perfect (have gone)، past perfect و جمله‌ی مجهول لازم است.
+
+چند گروه برای آسان‌تر حفظ کردن:
+• هر سه یکی: cut – cut – cut، put، let، hit، cost
+• دوم و سوم یکی: buy – bought – bought، think – thought، bring – brought، make – made، say – said
+• هر سه متفاوت: go – went – gone، see – saw – seen، write – wrote – written، eat – ate – eaten، take – took – taken
+
+برنامه وقتی یک فعل انگلیسی را جستجو کنی، در بخش Conjugation هر سه شکل را نشان می‌دهد.
+--- en
+Irregular verbs have three forms: base (go), past (went) and past participle (gone). The third form is used in perfect tenses (have gone) and the passive.
+
+Groups that help: all three the same (cut, put, let, hit, cost); past = participle (bought, thought, brought, made, said); all different (go – went – gone, see – saw – seen, write – wrote – written).
+
+The Conjugation panel shows all three forms for every English verb.
+--- de
+Unregelmäßige Verben haben drei Formen: Grundform, Past simple, Past participle (go – went – gone). Die dritte Form braucht man für Perfekt-Zeiten und Passiv.
+--- table
+base | past | past participle
+be | was / were | been
+have | had | had
+do | did | done
+go | went | gone
+see | saw | seen
+take | took | taken
+buy | bought | bought
+write | wrote | written
+--- examples
+I took the bus this morning. | امروز صبح با اتوبوس رفتم. | Ich habe heute Morgen den Bus genommen.
+She has written three books. | او سه کتاب نوشته است. | Sie hat drei Bücher geschrieben.
+We bought a new car last month. | ماه پیش یک ماشین نو خریدیم. | Wir haben letzten Monat ein neues Auto gekauft.
+Have you ever seen snow? | تا حالا برف دیده‌ای؟ | Hast du schon mal Schnee gesehen?
+He forgot his phone at home. | تلفنش را خانه جا گذاشت. | Er hat sein Handy zu Hause vergessen.
+
+=== en-past-continuous
+level: A2
+cat: tenses
+title.fa: گذشته‌ی استمراری: I was working when …
+title.en: Past continuous: I was working when …
+title.de: Past continuous: I was working when …
+keys: past continuous, گذشته استمراری, was were + ing, while, when, داشتم, Verlaufsform Vergangenheit
+tags: en-verb
+see: en-past-simple, en-present-continuous
+--- fa
+گذشته‌ی استمراری = was/were + فعل ‎-ing‎. برای کاری که در یک لحظه از گذشته در جریان بود: At 8 o'clock I was having dinner.
+
+بیشتر همراه گذشته‌ی ساده می‌آید: کار طولانی (استمراری) که کار کوتاه (ساده) وسطش اتفاق افتاد:
+I was watching TV when the phone rang (داشتم تلویزیون می‌دیدم که تلفن زنگ زد).
+
+while = در حالی که، برای دو کار همزمان: While I was cooking, he was cleaning.
+--- en
+Past continuous = was/were + -ing, for an action in progress at a past moment: At 8 o'clock I was having dinner.
+
+Often with the past simple: a longer action interrupted by a short one: I was watching TV when the phone rang. while for two simultaneous actions: While I was cooking, he was cleaning.
+--- de
+Past continuous (was/were + -ing): Handlung, die zu einem Zeitpunkt in der Vergangenheit im Gange war, oft unterbrochen durch eine Handlung im past simple (when). Deutsch: gerade, als …
+--- examples
+I was sleeping when you called. | وقتی زنگ زدی خواب بودم. | Ich habe geschlafen, als du angerufen hast.
+What were you doing at ten last night? | دیشب ساعت ده داشتی چه کار می‌کردی؟ | Was hast du gestern um zehn Uhr gemacht?
+It was raining all day. | تمام روز باران می‌آمد. | Es hat den ganzen Tag geregnet.
+While she was driving, she was listening to music. | وقتی رانندگی می‌کرد، موسیقی گوش می‌داد. | Während sie fuhr, hörte sie Musik.
+They weren't listening to the teacher. | به معلم گوش نمی‌دادند. | Sie haben dem Lehrer nicht zugehört.
+
+=== en-future
+level: A2
+cat: tenses
+title.fa: آینده: will، be going to و حال استمراری
+title.en: The future: will, going to and the present continuous
+title.de: Zukunft: will, going to und present continuous
+keys: future, آینده, will, won't, going to, gonna, plan, prediction, promise, decision, Zukunft
+words: will, won't, going, shall
+see: en-present-continuous, en-future-continuous-perfect, en-conditionals-0-1
+--- fa
+انگلیسی چند راه برای آینده دارد:
+• be going to + فعل: برنامه و قصدی که از قبل داشتیم: I'm going to visit my parents this weekend. و پیش‌بینی بر اساس نشانه‌ها: Look at the clouds – it's going to rain.
+• will + فعل: تصمیمی که همین الان گرفتیم (I'll get the door)، قول (I'll call you)، پیش‌بینی و نظر (I think she'll win). منفی: won't.
+• حال استمراری: قرار و برنامه‌ی قطعی با زمان و آدم مشخص: I'm meeting the doctor at five.
+
+will برای همه‌ی شخص‌هاست و بعدش فعل ساده می‌آید.
+--- en
+• be going to: plans already made (I'm going to visit my parents) and predictions from evidence (It's going to rain).
+• will: decisions made now (I'll get the door), promises (I'll call you), opinions and predictions (I think she'll win). Negative won't.
+• present continuous: fixed arrangements (I'm meeting the doctor at five).
+--- de
+going to: Plan, Absicht, sichtbare Anzeichen. will: spontane Entscheidung, Versprechen, Vermutung. Present continuous: feste Verabredung. Im Deutschen reicht oft das Präsens.
+--- examples
+I'm going to learn German next year. | سال بعد قرار است آلمانی یاد بگیرم. | Nächstes Jahr werde ich Deutsch lernen.
+I'll help you with your bags. | در بردن کیف‌ها کمکت می‌کنم. | Ich helfe dir mit den Taschen.
+Don't worry, I won't tell anyone. | نگران نباش، به کسی نمی‌گویم. | Keine Sorge, ich sage es niemandem.
+Be careful! You're going to fall! | مراقب باش! الان می‌افتی! | Vorsicht! Du fällst gleich!
+We're having dinner with Ali on Friday. | جمعه با علی شام داریم. | Am Freitag essen wir mit Ali zu Abend.
+
+=== en-present-perfect
+level: A2
+cat: tenses
+title.fa: حال کامل (Present perfect): I have done
+title.en: Present perfect: I have done
+title.de: Present perfect: I have done
+keys: present perfect, ماضی نقلی, have done, has been, ever, never, already, yet, just, since, for, experience, Perfekt
+tags: en-verb
+see: en-past-simple, en-irregular-verbs, en-present-perfect-continuous
+--- fa
+present perfect = have / has + اسم مفعول (شکل سوم فعل). این زمان گذشته را به حال وصل می‌کند و زمان دقیق مهم نیست:
+
+• تجربه در زندگی: Have you ever been to Germany? I've never eaten sushi.
+• کاری که نتیجه‌اش الان مهم است: I've lost my keys (الان کلید ندارم).
+• با just، already، yet: I've just arrived. Have you finished yet?
+• کاری که از گذشته شروع شده و هنوز ادامه دارد، با for (مدت) و since (از زمانِ): I've lived here for five years / since 2020.
+
+مهم: اگر زمان مشخص گذشته گفته شود (yesterday، in 2019، ago)، باید گذشته‌ی ساده به کار برد: I saw him yesterday (نه I have seen him yesterday). این فرق بزرگی با Perfekt آلمانی است.
+--- en
+Present perfect = have / has + past participle. It links the past to now; the exact time is not important:
+• life experience: Have you ever been to Germany? I've never eaten sushi.
+• a past action with a result now: I've lost my keys.
+• with just, already, yet: I've just arrived. Have you finished yet?
+• something that started in the past and continues, with for (duration) and since (starting point): I've lived here for five years / since 2020.
+
+With a finished time (yesterday, in 2019, ago) use the past simple: I saw him yesterday.
+--- de
+Present perfect (have/has + past participle): Erfahrungen, Ergebnisse in der Gegenwart, just/already/yet, und mit for/since für Andauerndes. Achtung: Mit Zeitangaben der Vergangenheit (yesterday, ago) steht im Englischen das past simple – anders als im deutschen Perfekt. I have lived here for five years = Ich wohne seit fünf Jahren hier.
+--- examples
+I've been to Germany three times. | سه بار آلمان رفته‌ام. | Ich war schon dreimal in Deutschland.
+She has just left. | همین الان رفت. | Sie ist gerade gegangen.
+Have you finished your homework yet? | تکلیفت را تمام کرده‌ای؟ | Hast du deine Hausaufgaben schon fertig?
+We've known each other since 2015. | از سال ۲۰۱۵ همدیگر را می‌شناسیم. | Wir kennen uns seit 2015.
+I haven't seen him for a long time. | خیلی وقت است ندیده‌امش. | Ich habe ihn lange nicht gesehen.
+
+=== en-comparatives
+level: A2
+cat: adjectives
+title.fa: مقایسه‌ی صفت‌ها: bigger، more expensive، the best
+title.en: Comparatives and superlatives: bigger, more expensive, the best
+title.de: Steigerung: bigger, more expensive, the best
+keys: comparative, superlative, مقایسه, تفضیلی, عالی, -er, -est, more, most, than, as as, better, best, worse, worst, Komparativ
+words: than, more, most, better, best, worse, worst, less, least, further, farther
+see: en-adverbs
+--- fa
+• صفت‌های کوتاه (یک‌هجایی و دوهجایی با ‎-y‎): ‎-er / the -est‎: cheap → cheaper → the cheapest، big → bigger → the biggest، happy → happier → the happiest
+• صفت‌های بلند: more / the most: expensive → more expensive → the most expensive
+• بی‌قاعده: good → better → the best، bad → worse → the worst، far → further → the furthest
+
+مقایسه با than: Tehran is bigger than Shiraz. برابری: as … as: She is as tall as her mother. نابرابری: not as … as.
+--- en
+• short adjectives: -er / the -est (cheaper, the biggest, happier)
+• long adjectives: more / the most (more expensive, the most expensive)
+• irregular: good – better – the best, bad – worse – the worst, far – further – the furthest
+
+Compare with than; equality with as … as; not as … as.
+--- de
+Kurze Adjektive: -er / the -est; lange: more / the most. Unregelmäßig: good – better – best, bad – worse – worst. than = als, as … as = so … wie.
+--- table
+adjective | comparative | superlative
+cheap | cheaper | the cheapest
+big | bigger | the biggest
+easy | easier | the easiest
+expensive | more expensive | the most expensive
+good | better | the best
+bad | worse | the worst
+--- examples
+My brother is older than me. | برادرم از من بزرگ‌تر است. | Mein Bruder ist älter als ich.
+This is the best pizza in town. | این بهترین پیتزای شهر است. | Das ist die beste Pizza der Stadt.
+German is more difficult than English. | آلمانی از انگلیسی سخت‌تر است. | Deutsch ist schwieriger als Englisch.
+Today is worse than yesterday. | امروز از دیروز بدتر است. | Heute ist es schlimmer als gestern.
+He isn't as tall as his father. | او به بلندی پدرش نیست. | Er ist nicht so groß wie sein Vater.
+
+=== en-adverbs-frequency
+level: A2
+cat: adverbs
+title.fa: قیدهای تکرار: always، usually، often، sometimes، never
+title.en: Adverbs of frequency: always, usually, often, sometimes, never
+title.de: Häufigkeitsadverbien: always, usually, often, sometimes, never
+keys: frequency, adverbs, تکرار, always, usually, often, sometimes, rarely, never, how often, Häufigkeit
+words: always, usually, often, sometimes, rarely, seldom, never, ever
+see: en-present-simple, en-adverbs
+--- fa
+از بیشترین به کمترین: always (همیشه)، usually (معمولاً)، often (اغلب)، sometimes (گاهی)، rarely (به‌ندرت)، never (هرگز).
+
+جای این قیدها:
+• قبل از فعل اصلی: I usually get up at seven.
+• بعد از be: She is always late.
+• بعد از فعل کمکی اول: I have never been there.
+
+سؤال: How often do you …? جواب‌های دیگر: every day، once a week، twice a month (آخر جمله).
+--- en
+From most to least: always, usually, often, sometimes, rarely, never.
+
+Position: before the main verb (I usually get up at seven), after be (She is always late), after the first auxiliary (I have never been there). Ask How often …? Other answers: every day, once a week (at the end).
+--- de
+always, usually, often, sometimes, rarely, never stehen vor dem Vollverb, aber nach be und nach dem ersten Hilfsverb – anders als im Deutschen.
+--- examples
+I always drink tea in the morning. | همیشه صبح چای می‌خورم. | Ich trinke morgens immer Tee.
+He is never late. | او هیچ‌وقت دیر نمی‌کند. | Er kommt nie zu spät.
+We sometimes eat out on Fridays. | گاهی جمعه‌ها بیرون غذا می‌خوریم. | Freitags gehen wir manchmal essen.
+How often do you go to the gym? | هر چند وقت یک بار باشگاه می‌روی؟ | Wie oft gehst du ins Fitnessstudio?
+I have rarely seen him so happy. | به‌ندرت او را این‌قدر خوشحال دیده‌ام. | Ich habe ihn selten so glücklich gesehen.
+
+=== en-adverbs
+level: A2
+cat: adverbs
+title.fa: قید حالت: quickly، carefully، well
+title.en: Adverbs of manner: quickly, carefully, well
+title.de: Adverbien der Art und Weise: quickly, carefully, well
+keys: adverb, قید, -ly, quickly, well, hard, fast, adjective or adverb, Adverb
+words: well, fast, hard, hardly, late, lately
+see: en-comparatives, en-adverbs-frequency
+--- fa
+قید حالت نشان می‌دهد کاری «چطور» انجام می‌شود. معمولاً صفت + ‎-ly‎: quick → quickly، careful → carefully، easy → easily.
+
+صفت اسم را توصیف می‌کند، قید فعل را: He is a careful driver (صفت). He drives carefully (قید).
+
+بی‌قاعده: good → well، fast → fast، hard → hard، late → late. دقت کن: hardly یعنی «به‌زحمت / تقریباً هیچ» و lately یعنی «اخیراً».
+
+بعد از فعل‌هایی مثل be، look، feel، sound، taste صفت می‌آید نه قید: You look tired. It sounds good.
+
+در آلمانی صفت و قید معمولاً یک شکل‌اند (schnell)، ولی در انگلیسی فرق دارند.
+--- en
+Adverbs of manner say how something is done: adjective + -ly (quickly, carefully, easily). Adjectives describe nouns, adverbs describe verbs: He is a careful driver / He drives carefully.
+
+Irregular: good → well, fast, hard, late. Careful: hardly = almost not, lately = recently. After be, look, feel, sound, taste use an adjective: You look tired.
+--- de
+Adverbien mit -ly (quickly). Unregelmäßig: well, fast, hard, late. Im Deutschen sind Adjektiv und Adverb meist gleich, im Englischen nicht. Nach look, feel, sound steht ein Adjektiv.
+--- examples
+Please drive carefully. | لطفاً با احتیاط رانندگی کن. | Bitte fahr vorsichtig.
+She speaks English very well. | او خیلی خوب انگلیسی صحبت می‌کند. | Sie spricht sehr gut Englisch.
+He works hard every day. | او هر روز سخت کار می‌کند. | Er arbeitet jeden Tag hart.
+I can hardly hear you. | به‌زحمت صدایت را می‌شنوم. | Ich kann dich kaum hören.
+This soup tastes delicious. | این سوپ خوشمزه است. | Diese Suppe schmeckt köstlich.
+
+=== en-modals-obligation
+level: A2
+cat: verbs
+title.fa: اجبار و منع: must، have to، don't have to، mustn't
+title.en: Obligation: must, have to, don't have to, mustn't
+title.de: Pflicht: must, have to, don't have to, mustn't
+keys: must, have to, has to, had to, don't have to, mustn't, obligation, اجبار, باید, نباید, لازم نیست, müssen, dürfen nicht
+words: must, mustn't, have to, has to, had to
+see: en-can, en-modals-advice, en-modals-deduction
+--- fa
+• must و have to هر دو یعنی «باید». must بیشتر اجبار از طرف خود گوینده یا قانون نوشته‌شده است؛ have to اجبار از بیرون (قانون، کار). در گفتار have to رایج‌تر است.
+• گذشته فقط had to: I had to work yesterday.
+• mustn't = نباید (ممنوع است): You mustn't smoke here.
+• don't have to = لازم نیست: You don't have to come.
+
+این همان تله‌ی آلمانی است: «Du musst nicht» یعنی لازم نیست (don't have to)، نه mustn't.
+--- en
+• must and have to both mean necessity. must often comes from the speaker or written rules; have to from outside. In speech have to is more common. Past: had to.
+• mustn't = it's not allowed; don't have to = it isn't necessary.
+
+German learners: du musst nicht = you don't have to, NOT you mustn't.
+--- de
+must / have to = müssen; Vergangenheit had to. mustn't = nicht dürfen (Verbot)! don't have to = nicht müssen. Häufige Fehlerquelle für Deutschsprachige.
+--- examples
+I have to get up early tomorrow. | فردا باید زود بیدار شوم. | Ich muss morgen früh aufstehen.
+You must wear a seatbelt. | باید کمربند ببندید. | Man muss sich anschnallen.
+You mustn't park here. | اینجا نباید پارک کنید. | Hier darfst du nicht parken.
+You don't have to pay – it's free. | لازم نیست پول بدهی – مجانی است. | Du musst nicht bezahlen – es ist kostenlos.
+She had to wait for an hour. | مجبور شد یک ساعت صبر کند. | Sie musste eine Stunde warten.
+
+=== en-modals-advice
+level: A2
+cat: verbs
+title.fa: توصیه: should، ought to، had better
+title.en: Advice: should, ought to, had better
+title.de: Ratschläge: should, ought to, had better
+keys: should, shouldn't, ought to, had better, advice, توصیه, بهتر است, sollte, Ratschlag
+words: should, shouldn't, ought, better
+see: en-modals-obligation, en-modals-past
+--- fa
+• should / shouldn't + فعل ساده = بهتر است / بهتر نیست (توصیه): You should see a doctor.
+• ought to = همان should، رسمی‌تر و کمتر رایج.
+• had better ('d better) = بهتر است وگرنه مشکل پیش می‌آید (قوی‌تر): You'd better hurry, or you'll miss the train.
+
+سؤال برای نظرخواهی: Should I call him? What should I do?
+--- en
+• should / shouldn't + base verb for advice: You should see a doctor.
+• ought to = should (more formal, less common).
+• had better ('d better) = strong advice with a warning: You'd better hurry, or you'll miss the train.
+
+Ask for advice: Should I call him? What should I do?
+--- de
+should = sollte (Rat), ought to (formeller), had better (dringender Rat mit Warnung).
+--- examples
+You should drink more water. | بهتر است آب بیشتری بخوری. | Du solltest mehr Wasser trinken.
+You shouldn't work so much. | نباید این‌قدر کار کنی. | Du solltest nicht so viel arbeiten.
+What should I wear to the interview? | برای مصاحبه چه بپوشم؟ | Was soll ich zum Vorstellungsgespräch anziehen?
+We'd better leave now – it's getting dark. | بهتر است الان برویم – دارد تاریک می‌شود. | Wir sollten jetzt gehen – es wird dunkel.
+You ought to apologise. | باید عذرخواهی کنی. | Du solltest dich entschuldigen.
+
+=== en-reflexive
+level: A2
+cat: pronouns
+title.fa: ضمیرهای انعکاسی و each other: myself، yourself …
+title.en: Reflexive pronouns and each other: myself, yourself …
+title.de: Reflexivpronomen und each other: myself, yourself …
+keys: reflexive, myself, yourself, himself, herself, itself, ourselves, yourselves, themselves, each other, by myself, خودم, همدیگر, sich
+words: myself, yourself, himself, herself, itself, ourselves, yourselves, themselves
+see: en-pronouns-possessive
+--- fa
+ضمیرهای انعکاسی وقتی فاعل و مفعول یک نفرند: I cut myself. Enjoy yourselves!
+
+همچنین برای تأکید: I made it myself (خودم ساختمش). و by myself = تنهایی: She lives by herself.
+
+برخلاف آلمانی، خیلی از فعل‌ها در انگلیسی بازتابی نیستند: sich freuen → be happy، sich erinnern → remember، sich setzen → sit down، sich waschen → wash (معمولاً بدون myself).
+
+each other = همدیگر (دو نفر یا بیشتر، کار متقابل): They love each other (نه themselves).
+--- en
+Use reflexive pronouns when subject and object are the same person: I cut myself. Enjoy yourselves! Also for emphasis (I made it myself) and by myself = alone.
+
+Many German reflexive verbs are not reflexive in English: sich freuen = be happy, sich erinnern = remember, sich setzen = sit down. each other = mutual action: They love each other.
+--- de
+myself, yourself … stehen, wenn Subjekt und Objekt gleich sind, oder zur Betonung. Viele deutsche reflexive Verben sind im Englischen nicht reflexiv (sich erinnern = remember). each other = einander.
+--- examples
+Did you hurt yourself? | به خودت آسیب زدی؟ | Hast du dich verletzt?
+I painted the room myself. | اتاق را خودم رنگ کردم. | Ich habe das Zimmer selbst gestrichen.
+She lives by herself. | او تنها زندگی می‌کند. | Sie lebt allein.
+We met each other at university. | در دانشگاه با هم آشنا شدیم. | Wir haben uns an der Uni kennengelernt.
+Please help yourselves to some food. | لطفاً از غذا بردارید. | Bitte bedient euch.
+
+=== en-conjunctions
+level: A2
+cat: sentences
+title.fa: حرف ربط‌ها: and، but، or، so، because، when
+title.en: Linking words: and, but, or, so, because, when
+title.de: Konjunktionen: and, but, or, so, because, when
+keys: conjunction, linking words, حرف ربط, and, but, or, so, because, when, if, before, after, Konjunktion
+words: and, but, or, so, because, when, before, after, if
+see: en-linking-contrast, en-conditionals-0-1
+--- fa
+• and (و)، but (ولی)، or (یا)
+• so (پس، برای همین): نتیجه: It was late, so I took a taxi.
+• because (چون): علت: I took a taxi because it was late.
+• when، before، after، until: زمان.
+
+مهم: در انگلیسی ترتیب کلمات در جمله‌ی دوم عوض نمی‌شود (برخلاف آلمانی که با weil فعل به آخر می‌رود): because I am tired.
+
+در جمله‌های زمانی برای آینده از زمان حال استفاده می‌شود: I'll call you when I arrive (نه when I will arrive).
+--- en
+and, but, or; so (result); because (reason); when, before, after, until (time). English word order does not change after these words (unlike German weil). Use the present for the future in time clauses: I'll call you when I arrive.
+--- de
+Englische Konjunktionen verändern die Wortstellung nicht: because I am tired (≠ weil ich müde bin). In Zeitsätzen mit Zukunftsbezug steht das Präsens: when I arrive.
+--- examples
+I like tea but my wife prefers coffee. | من چای دوست دارم ولی همسرم قهوه را ترجیح می‌دهد. | Ich mag Tee, aber meine Frau trinkt lieber Kaffee.
+It was raining, so we stayed at home. | باران می‌آمد، برای همین خانه ماندیم. | Es regnete, also blieben wir zu Hause.
+She's learning German because she wants to study in Berlin. | آلمانی یاد می‌گیرد چون می‌خواهد در برلین درس بخواند. | Sie lernt Deutsch, weil sie in Berlin studieren will.
+I'll call you when I get home. | وقتی رسیدم خانه، زنگت می‌زنم. | Ich rufe dich an, wenn ich zu Hause bin.
+Wash your hands before you eat. | قبل از غذا خوردن دست‌هایت را بشور. | Wasch dir die Hände, bevor du isst.
+
+=== en-gerund-infinitive-basic
+level: A2
+cat: verbs
+title.fa: like doing / want to do: فعل بعد از فعل
+title.en: like doing / want to do: verb after verb
+title.de: like doing / want to do: Verb nach Verb
+keys: gerund, infinitive, -ing, to, like doing, want to, enjoy, would like, verb patterns, Gerundium
+words: like, love, enjoy, hate, want, would like, need, hope, decide, finish, mind
+see: en-gerund-infinitive
+--- fa
+وقتی بعد از یک فعل، فعل دیگری می‌آید، شکلش به فعل اول بستگی دارد:
+• بعد از enjoy، finish، mind، stop، avoid: فعل + ing: I enjoy swimming.
+• بعد از want، need، hope، decide، would like، plan: to + فعل: I want to learn German. I'd like to order.
+• بعد از like، love، hate، start: هر دو درست است: I like reading / I like to read.
+
+بعد از حرف اضافه همیشه ‎-ing‎: I'm interested in learning. Thanks for coming.
+--- en
+After some verbs use -ing (enjoy, finish, mind, stop, avoid): I enjoy swimming. After others use to + verb (want, need, hope, decide, would like, plan): I want to learn German. After like, love, hate, start both are possible. After a preposition always -ing: Thanks for coming.
+--- de
+-ing nach enjoy, finish, mind, stop; to + Infinitiv nach want, need, hope, decide, would like; beides nach like, love, start. Nach Präpositionen immer -ing.
+--- examples
+I enjoy cooking for my friends. | از آشپزی برای دوستانم لذت می‌برم. | Ich koche gern für meine Freunde.
+We want to buy a house. | می‌خواهیم خانه بخریم. | Wir wollen ein Haus kaufen.
+Would you like to come with us? | دوست داری با ما بیایی؟ | Möchtest du mitkommen?
+Have you finished writing the report? | نوشتن گزارش را تمام کرده‌ای؟ | Bist du mit dem Bericht fertig?
+I'm thinking about changing my job. | دارم به عوض کردن کارم فکر می‌کنم. | Ich denke darüber nach, meinen Job zu wechseln.

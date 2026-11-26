@@ -1,0 +1,676 @@
+# German A2. Examples: German | Persian | English
+
+=== de-perfekt
+level: A2
+cat: tenses
+title.fa: گذشته‌ی نقلی (Perfekt): habe gemacht، bin gegangen
+title.en: The Perfekt (spoken past): habe gemacht, bin gegangen
+title.de: Das Perfekt
+keys: Perfekt, past, گذشته, ماضی, Partizip II, gemacht, gegangen, haben oder sein, ge-
+tags: de-verb
+see: de-praeteritum, de-separable-verbs, de-insep-verbs, de-word-order-v2
+--- fa
+در آلمانیِ گفتاری، برای گذشته تقریباً همیشه Perfekt به کار می‌رود. ساختارش این است: haben یا sein (صرف‌شده، جایگاه دوم) + اسم مفعول (Partizip II، آخر جمله): Ich habe Pizza gegessen.
+
+ساختن Partizip II:
+• فعل‌های باقاعده: ge + ریشه + t: machen → gemacht، kaufen → gekauft، arbeiten → gearbeitet
+• فعل‌های بی‌قاعده: ge + ریشه (اغلب با حرف صدادار دیگر) + en: gehen → gegangen، trinken → getrunken، sehen → gesehen. این‌ها را باید حفظ کرد.
+• فعل‌های جداشدنی: ge وسط می‌آید: einkaufen → eingekauft
+• فعل‌هایی که پیشوند جدانشدنی دارند (be-، ver-، er- …) و فعل‌های ‎-ieren‎ اصلاً ge نمی‌گیرند: bezahlt، verstanden، studiert
+
+haben یا sein؟ بیشتر فعل‌ها با haben می‌آیند. فعل‌هایی که حرکت از جایی به جایی (gehen، fahren، fliegen، kommen) یا تغییر حالت (aufstehen، einschlafen، sterben، werden) را نشان می‌دهند، و همچنین sein و bleiben، با sein می‌آیند.
+--- en
+In spoken German the past is almost always the Perfekt: haben or sein (conjugated, position 2) + past participle (Partizip II, at the end): Ich habe Pizza gegessen.
+
+Forming the participle:
+• regular verbs: ge + stem + t: machen → gemacht, kaufen → gekauft, arbeiten → gearbeitet
+• irregular verbs: ge + stem (often a new vowel) + en: gehen → gegangen, trinken → getrunken, sehen → gesehen. Learn these by heart.
+• separable verbs: ge in the middle: einkaufen → eingekauft
+• inseparable prefixes (be-, ver-, er- …) and verbs in -ieren take no ge: bezahlt, verstanden, studiert
+
+haben or sein? Most verbs use haben. Verbs of movement from A to B (gehen, fahren, fliegen, kommen), verbs of change of state (aufstehen, einschlafen, sterben, werden), and sein and bleiben use sein.
+
+The German Perfekt translates both "I ate" and "I have eaten".
+--- de
+Perfekt = haben/sein (Position 2) + Partizip II (Satzende). Regelmäßig: ge…t (gemacht), unregelmäßig: ge…en (gegangen). Trennbare Verben: eingekauft. Keine ge- bei be-, ver-, er-, ent-, zer-, ge-, emp-, miss- und bei -ieren.
+
+Mit sein: Bewegung von A nach B, Zustandsänderung, sein, bleiben, passieren. Alle anderen mit haben.
+--- table
+Infinitiv | Hilfsverb | Partizip II
+machen | haben | gemacht
+arbeiten | haben | gearbeitet
+essen | haben | gegessen
+gehen | sein | gegangen
+fahren | sein | gefahren
+aufstehen | sein | aufgestanden
+bezahlen | haben | bezahlt
+studieren | haben | studiert
+--- examples
+Ich habe gestern lange gearbeitet. | دیروز تا دیر وقت کار کردم. | I worked late yesterday.
+Wir sind nach Hamburg gefahren. | به هامبورگ رفتیم. | We went to Hamburg.
+Hast du schon gegessen? | غذا خورده‌ای؟ | Have you eaten yet?
+Er ist um sechs Uhr aufgestanden. | ساعت شش بیدار شد. | He got up at six.
+Ich habe das nicht verstanden. | این را نفهمیدم. | I didn't understand that.
+
+=== de-praeteritum-basic
+level: A2
+cat: tenses
+title.fa: گذشته‌ی ساده‌ی sein، haben و فعل‌های مُدال: war، hatte، konnte
+title.en: Simple past of sein, haben and modals: war, hatte, konnte
+title.de: Präteritum von sein, haben und Modalverben
+keys: Präteritum, war, hatte, konnte, musste, wollte, simple past, گذشته ساده, was, had
+words: war, warst, waren, wart, hatte, hattest, hatten, konnte, musste, wollte, durfte, sollte
+see: de-perfekt, de-praeteritum, de-modal-verbs
+--- fa
+حتی در گفتار، برای sein، haben و فعل‌های مُدال معمولاً گذشته‌ی ساده (Präteritum) را به کار می‌برند، نه Perfekt. یعنی می‌گویند Ich war krank، نه Ich bin krank gewesen.
+
+• sein → war، haben → hatte
+• مُدال‌ها: ریشه بدون اوملاوت + te: können → konnte، müssen → musste، dürfen → durfte، wollen → wollte، sollen → sollte
+
+برای ich و er/sie/es شکل یکسان است و پسوندی ندارد: ich war، er war.
+--- en
+Even in speech, sein, haben and the modal verbs usually use the simple past (Präteritum), not the Perfekt: Ich war krank rather than Ich bin krank gewesen.
+
+• sein → war, haben → hatte
+• modals: stem without umlaut + te: können → konnte, müssen → musste, dürfen → durfte, wollen → wollte, sollen → sollte
+
+ich and er/sie/es have the same form with no ending: ich war, er war.
+--- de
+Bei sein, haben und den Modalverben benutzt man auch mündlich meist das Präteritum: war, hatte, konnte, musste, durfte, wollte, sollte. 1. und 3. Person Singular sind gleich.
+--- table
+Person | sein | haben | können | müssen
+ich | war | hatte | konnte | musste
+du | warst | hattest | konntest | musstest
+er / sie / es | war | hatte | konnte | musste
+wir | waren | hatten | konnten | mussten
+ihr | wart | hattet | konntet | musstet
+sie / Sie | waren | hatten | konnten | mussten
+--- examples
+Gestern war ich krank. | دیروز مریض بودم. | Yesterday I was ill.
+Wir hatten keine Zeit. | وقت نداشتیم. | We had no time.
+Ich konnte nicht schlafen. | نمی‌توانستم بخوابم. | I couldn't sleep.
+Er musste lange warten. | مجبور شد مدت زیادی صبر کند. | He had to wait a long time.
+Wo warst du am Wochenende? | آخر هفته کجا بودی؟ | Where were you at the weekend?
+
+=== de-dative
+level: A2
+cat: cases
+title.fa: حالت Dativ (مفعول غیرمستقیم)
+title.en: The dative case
+title.de: Der Dativ
+keys: Dativ, dative, مفعول غیرمستقیم, به کسی, dem, der, einem, einer, den -n, wem
+words: dem, einem, einer, meinem, meiner, ihm, ihr, ihnen
+see: de-nominative-accusative, de-prep-dative, de-dative-verbs, de-pronouns-cases
+--- fa
+Dativ معمولاً برای «به کسی» است: کسی که چیزی را دریافت می‌کند. سؤالش Wem? (به چه کسی؟) است: Ich gebe dem Kind einen Apfel (سیب را به بچه می‌دهم).
+
+حرف تعریف‌ها در Dativ:
+• مذکر و خنثی: dem / einem
+• مؤنث: der / einer
+• جمع: den، و خود اسم جمع هم ‎-n‎ می‌گیرد: den Kindern (مگر اینکه به ‎-n‎ یا ‎-s‎ تمام شود)
+
+Dativ بعد از بعضی حرف اضافه‌ها (mit، bei، von، zu، aus، nach …) و بعضی فعل‌ها (helfen، danken، gefallen …) هم همیشه می‌آید.
+
+ترتیب دو مفعول: اگر هر دو اسم‌اند، اول Dativ بعد Akkusativ: Ich gebe dem Mann das Buch. اگر Akkusativ ضمیر باشد، اول می‌آید: Ich gebe es dem Mann.
+--- en
+The dative is usually the "to someone" case – the person who receives something. Its question is Wem? (to whom?): Ich gebe dem Kind einen Apfel.
+
+Articles in the dative:
+• masculine and neuter: dem / einem
+• feminine: der / einer
+• plural: den, and the noun adds -n: den Kindern (unless it already ends in -n or -s)
+
+The dative also always follows certain prepositions (mit, bei, von, zu, aus, nach …) and certain verbs (helfen, danken, gefallen …).
+
+Order of two objects: two nouns → dative before accusative (Ich gebe dem Mann das Buch); an accusative pronoun comes first (Ich gebe es dem Mann).
+--- de
+Dativ: indirektes Objekt (Frage: Wem?). Artikel: dem/einem (m, n), der/einer (f), den + -n (Plural). Der Dativ steht auch nach Dativpräpositionen und Dativverben.
+--- table
+ | maskulin | feminin | neutral | Plural
+Nominativ | der / ein | die / eine | das / ein | die
+Akkusativ | den / einen | die / eine | das / ein | die
+Dativ | dem / einem | der / einer | dem / einem | den …n
+--- examples
+Ich schenke meiner Mutter Blumen. | به مادرم گل هدیه می‌دهم. | I'm giving my mother flowers.
+Er hilft dem Mann. | او به آن مرد کمک می‌کند. | He is helping the man.
+Wir zeigen den Kindern den Zoo. | باغ‌وحش را به بچه‌ها نشان می‌دهیم. | We're showing the children the zoo.
+Kannst du mir das Salz geben? | می‌توانی نمک را به من بدهی؟ | Can you pass me the salt?
+Ich gebe es dir morgen. | فردا آن را به تو می‌دهم. | I'll give it to you tomorrow.
+
+=== de-pronouns-cases
+level: A2
+cat: pronouns
+title.fa: ضمیرهای شخصی در Akkusativ و Dativ: mich، mir، dich، dir …
+title.en: Personal pronouns in accusative and dative: mich, mir …
+title.de: Personalpronomen im Akkusativ und Dativ
+keys: mich, mir, dich, dir, ihn, ihm, uns, euch, ihnen, Pronomen, object pronoun, ضمیر مفعولی, me, him
+words: mich, mir, dich, dir, ihn, ihm, uns, euch, ihnen
+see: de-nominative-accusative, de-dative, de-reflexive-verbs
+--- fa
+ضمیرهای شخصی هم مثل حرف تعریف‌ها در هر حالت شکل خودشان را دارند. Akkusativ برای مفعول مستقیم (Ich sehe dich) و Dativ برای مفعول غیرمستقیم یا بعد از فعل/حرف اضافه‌ی Dativ (Ich helfe dir، mit mir).
+
+مهم‌ترین‌ها: ich → mich / mir، du → dich / dir، er → ihn / ihm، sie → sie / ihr، wir → uns / uns، ihr → euch / euch، sie → sie / ihnen، Sie → Sie / Ihnen.
+
+دقت کن که ihr در Dativ (برای «او، مؤنث») با ihr (شما) و ihr (مال او) هم‌شکل است؛ از جمله معلوم می‌شود.
+--- en
+Personal pronouns change with the case, like articles. Accusative for the direct object (Ich sehe dich), dative for the indirect object or after dative verbs/prepositions (Ich helfe dir, mit mir).
+
+Key forms: ich → mich / mir, du → dich / dir, er → ihn / ihm, sie → sie / ihr, wir → uns / uns, ihr → euch / euch, sie → sie / ihnen, Sie → Sie / Ihnen.
+--- de
+Personalpronomen im Akkusativ: mich, dich, ihn, sie, es, uns, euch, sie, Sie. Im Dativ: mir, dir, ihm, ihr, ihm, uns, euch, ihnen, Ihnen.
+--- table
+Nominativ | Akkusativ | Dativ
+ich | mich | mir
+du | dich | dir
+er | ihn | ihm
+sie | sie | ihr
+es | es | ihm
+wir | uns | uns
+ihr | euch | euch
+sie / Sie | sie / Sie | ihnen / Ihnen
+--- examples
+Ich liebe dich. | دوستت دارم. | I love you.
+Kannst du mir helfen? | می‌توانی کمکم کنی؟ | Can you help me?
+Ich rufe ihn morgen an. | فردا به او زنگ می‌زنم. | I'll call him tomorrow.
+Das Kleid gefällt ihr. | لباس را دوست دارد (به نظرش قشنگ است). | She likes the dress.
+Wie geht es Ihnen? | حالتان چطور است؟ | How are you? (formal)
+
+=== de-prep-accusative
+level: A2
+cat: prepositions
+title.fa: حرف اضافه‌هایی که همیشه Akkusativ می‌خواهند
+title.en: Prepositions with the accusative
+title.de: Präpositionen mit Akkusativ
+keys: Akkusativ Präposition, durch, für, gegen, ohne, um, bis, entlang, DOGFU, حرف اضافه
+words: durch, für, gegen, ohne, um, bis
+see: de-prep-dative, de-two-way-prepositions, de-nominative-accusative
+--- fa
+بعد از این حرف اضافه‌ها همیشه Akkusativ می‌آید: durch (از میان)، für (برای)، gegen (علیه، حدود ساعت)، ohne (بدون)، um (دور، ساعت)، bis (تا) و entlang (در امتداد؛ معمولاً بعد از اسم).
+
+راه حفظ کردن: DOGFU = durch، ohne، gegen، für، um.
+
+یادآوری: در Akkusativ فقط مذکر عوض می‌شود: für den Vater، ohne meinen Bruder.
+--- en
+These prepositions always take the accusative: durch (through), für (for), gegen (against; around a time), ohne (without), um (around; at a time), bis (until) and entlang (along, usually after the noun).
+
+Memory aid: DOGFU = durch, ohne, gegen, für, um. Only masculine changes: für den Vater, ohne meinen Bruder.
+--- de
+Immer mit Akkusativ: durch, für, gegen, ohne, um, bis, entlang (nachgestellt). Merkwort: DOGFU.
+--- examples
+Das Geschenk ist für dich. | هدیه برای توست. | The present is for you.
+Wir gehen durch den Park. | از وسط پارک می‌رویم. | We're walking through the park.
+Ich trinke Kaffee ohne Zucker. | قهوه را بدون شکر می‌خورم. | I drink coffee without sugar.
+Wir sitzen um den Tisch. | دور میز نشسته‌ایم. | We're sitting around the table.
+Er ist gegen den Plan. | او مخالف این برنامه است. | He is against the plan.
+
+=== de-prep-dative
+level: A2
+cat: prepositions
+title.fa: حرف اضافه‌هایی که همیشه Dativ می‌خواهند
+title.en: Prepositions with the dative
+title.de: Präpositionen mit Dativ
+keys: Dativ Präposition, aus, bei, mit, nach, seit, von, zu, gegenüber, حرف اضافه, zum, zur, beim, vom
+words: aus, bei, mit, nach, seit, von, zu, zum, zur, beim, vom, gegenüber, ab
+see: de-dative, de-prep-accusative, de-two-way-prepositions, de-time-prepositions
+--- fa
+بعد از این حرف اضافه‌ها همیشه Dativ می‌آید: aus (از / اهلِ)، bei (نزدِ، پیشِ)، mit (با)، nach (بعد از، به سمتِ شهر و کشور)، seit (از … تا حالا)، von (از / مالِ)، zu (به سمتِ آدم یا مکان)، gegenüber (روبه‌روی).
+
+ادغام‌های رایج: zu + dem = zum، zu + der = zur، bei + dem = beim، von + dem = vom.
+
+نکته‌ی مهم: seit برای کاری است که از گذشته شروع شده و هنوز ادامه دارد، و فعلش در زمان حال است: Ich wohne seit zwei Jahren hier (دو سال است اینجا زندگی می‌کنم).
+
+nach یا zu؟ برای شهر و کشور بی‌حرف‌تعریف nach (nach Berlin)، برای آدم‌ها و مکان‌های دیگر zu (zum Arzt، zur Arbeit)، و برای خانه nach Hause (ولی zu Hause یعنی «در خانه»).
+--- en
+These prepositions always take the dative: aus (out of, from), bei (at, near, with), mit (with), nach (after; to cities and countries), seit (since, for), von (from, of), zu (to people and places), gegenüber (opposite).
+
+Contractions: zum, zur, beim, vom.
+
+seit + present tense for something that started in the past and still continues: Ich wohne seit zwei Jahren hier (I have lived here for two years).
+
+nach or zu? Cities/countries → nach Berlin; people and other places → zum Arzt, zur Arbeit; home → nach Hause (but zu Hause = at home).
+--- de
+Immer mit Dativ: aus, bei, mit, nach, seit, von, zu, gegenüber, ab. Kurzformen: zum, zur, beim, vom. seit + Präsens für Handlungen, die noch andauern.
+--- examples
+Ich komme aus dem Iran. | من اهل ایران هستم. | I'm from Iran.
+Sie fährt mit dem Bus zur Arbeit. | او با اتوبوس سر کار می‌رود. | She goes to work by bus.
+Nach dem Essen gehen wir spazieren. | بعد از غذا قدم می‌زنیم. | After the meal we go for a walk.
+Ich lerne seit einem Jahr Deutsch. | یک سال است که آلمانی یاد می‌گیرم. | I have been learning German for a year.
+Morgen muss ich zum Arzt. | فردا باید پیش دکتر بروم. | Tomorrow I have to go to the doctor.
+
+=== de-two-way-prepositions
+level: A2
+cat: prepositions
+title.fa: حرف اضافه‌های دوحالته: Wo? (Dativ) یا Wohin? (Akkusativ)
+title.en: Two-way prepositions: Wo? (dative) or Wohin? (accusative)
+title.de: Wechselpräpositionen: Wo? oder Wohin?
+keys: Wechselpräposition, two-way, in, an, auf, über, unter, vor, hinter, neben, zwischen, wo wohin, stellen stehen, legen liegen, دوحالته
+words: in, an, auf, über, unter, vor, hinter, neben, zwischen, ins, im, am, legen, liegen, stellen, stehen, hängen, setzen, sitzen
+see: de-prep-dative, de-prep-accusative, de-dative
+--- fa
+نُه حرف اضافه‌ی مکان گاهی Dativ و گاهی Akkusativ می‌گیرند: in، an، auf، über، unter، vor، hinter، neben، zwischen.
+
+قاعده:
+• Wo? (کجا؟ = جای ثابت، بدون جابه‌جایی) ← Dativ: Das Buch liegt auf dem Tisch.
+• Wohin? (به کجا؟ = حرکت به سمت یک مقصد) ← Akkusativ: Ich lege das Buch auf den Tisch.
+
+جفت‌فعل‌های مهم (جای ثابت ← قرار دادن):
+• liegen → legen (خوابیده: کتاب، تلفن)
+• stehen → stellen (ایستاده: بطری، کمد)
+• sitzen → setzen (نشستن ← نشاندن، sich setzen)
+• hängen → hängen
+
+ادغام‌ها: in + dem = im، in + das = ins، an + dem = am، an + das = ans.
+--- en
+Nine place prepositions can take either case: in, an, auf, über, unter, vor, hinter, neben, zwischen.
+
+The rule:
+• Wo? (where – a fixed location) → dative: Das Buch liegt auf dem Tisch.
+• Wohin? (where to – movement to a destination) → accusative: Ich lege das Buch auf den Tisch.
+
+Important verb pairs (position → putting): liegen → legen (lying flat), stehen → stellen (standing upright), sitzen → setzen / sich setzen, hängen → hängen.
+
+Contractions: im, ins, am, ans.
+--- de
+Wechselpräpositionen (in, an, auf, über, unter, vor, hinter, neben, zwischen): Wo? → Dativ (Position), Wohin? → Akkusativ (Richtung). Verbpaare: liegen/legen, stehen/stellen, sitzen/setzen, hängen/hängen.
+--- table
+Wo? + Dativ | Wohin? + Akkusativ
+Das Buch liegt auf dem Tisch. | Ich lege das Buch auf den Tisch.
+Die Flasche steht im Kühlschrank. | Ich stelle die Flasche in den Kühlschrank.
+Ich bin im Kino. | Ich gehe ins Kino.
+Das Bild hängt an der Wand. | Ich hänge das Bild an die Wand.
+--- examples
+Die Katze schläft unter dem Bett. | گربه زیر تخت خوابیده. | The cat is sleeping under the bed.
+Die Katze läuft unter das Bett. | گربه می‌دود زیر تخت. | The cat runs under the bed.
+Wir gehen heute Abend ins Theater. | امشب به تئاتر می‌رویم. | We're going to the theatre tonight.
+Stell die Milch bitte in den Kühlschrank! | لطفاً شیر را بگذار توی یخچال! | Please put the milk in the fridge!
+Das Auto steht vor dem Haus. | ماشین جلوی خانه پارک است. | The car is in front of the house.
+
+=== de-dative-verbs
+level: A2
+cat: verbs
+title.fa: فعل‌هایی که Dativ می‌خواهند: helfen، gefallen، gehören …
+title.en: Verbs with the dative: helfen, gefallen, gehören …
+title.de: Verben mit Dativ
+keys: Dativverben, dative verbs, helfen, danken, gefallen, gehören, schmecken, passen, antworten, gratulieren, فعل دتیو
+words: helfen, danken, gefallen, gehören, schmecken, passen, antworten, gratulieren, folgen, glauben, fehlen, wehtun, leidtun, gelingen
+see: de-dative, de-pronouns-cases
+--- fa
+بعضی فعل‌ها مفعولشان را در Dativ می‌خواهند، در حالی که در فارسی یا انگلیسی مفعول مستقیم به نظر می‌رسد: Ich helfe dir (نه dich).
+
+پرکاربردها: helfen (کمک کردن)، danken (تشکر کردن)، antworten (جواب دادن)، gratulieren (تبریک گفتن)، glauben (باور کردن حرف کسی)، folgen (دنبال کردن)، gehören (مال کسی بودن)، gefallen (خوش آمدن)، schmecken (خوشمزه بودن برای کسی)، passen (اندازه بودن)، fehlen (کم بودن / دلتنگی)، wehtun (درد کردن)، leidtun (متأسف بودن).
+
+در gefallen، schmecken، fehlen و wehtun، کسی که حس را دارد Dativ است و چیز فاعل است: Der Film gefällt mir (فیلم به نظرم خوب است). Mir tut der Kopf weh (سرم درد می‌کند). Du fehlst mir (دلم برایت تنگ شده).
+--- en
+Some verbs take a dative object where English uses a direct object: Ich helfe dir (not dich).
+
+Common ones: helfen, danken, antworten, gratulieren, glauben, folgen, gehören, gefallen, schmecken, passen, fehlen, wehtun, leidtun.
+
+With gefallen, schmecken, fehlen and wehtun the person who feels it is dative and the thing is the subject: Der Film gefällt mir (I like the film). Mir tut der Kopf weh (my head hurts). Du fehlst mir (I miss you).
+--- de
+Verben mit Dativobjekt: helfen, danken, antworten, gratulieren, glauben, folgen, gehören, gefallen, schmecken, passen, fehlen, wehtun, leidtun. Bei gefallen, schmecken, fehlen ist die Person im Dativ.
+--- examples
+Kann ich Ihnen helfen? | می‌توانم کمکتان کنم؟ | Can I help you?
+Das Buch gehört meinem Bruder. | کتاب مال برادرم است. | The book belongs to my brother.
+Die Suppe schmeckt mir sehr gut. | سوپ خیلی به من مزه می‌دهد. | I really like the soup.
+Ich danke dir für deine Hilfe. | از کمکت ممنونم. | Thank you for your help.
+Meine Familie fehlt mir. | دلم برای خانواده‌ام تنگ شده. | I miss my family.
+
+=== de-reflexive-verbs
+level: A2
+cat: verbs
+title.fa: فعل‌های بازتابی: sich freuen، sich waschen …
+title.en: Reflexive verbs: sich freuen, sich waschen …
+title.de: Reflexive Verben
+keys: reflexiv, reflexive, sich, mich, dich, بازتابی, خود, myself, sich freuen, sich interessieren, sich treffen
+words: sich, freuen, interessieren, beeilen, erinnern, ärgern, ausruhen, anziehen, waschen, setzen, fühlen, verlieben, entschuldigen, kümmern
+tags: de-reflexive
+see: de-pronouns-cases, de-verbs-prepositions
+--- fa
+فعل بازتابی فعلی است که با ضمیر sich (خود) می‌آید. ضمیر با فاعل عوض می‌شود: ich → mich، du → dich، er/sie/es → sich، wir → uns، ihr → euch، sie/Sie → sich.
+
+بعضی فعل‌ها فقط بازتابی‌اند و sich در فارسی ترجمه نمی‌شود: sich freuen (خوشحال شدن)، sich beeilen (عجله کردن)، sich erinnern (به یاد آوردن)، sich verlieben (عاشق شدن). بعضی هم می‌توانند مفعول دیگری بگیرند: Ich wasche mich (خودم را می‌شویم) / Ich wasche das Auto.
+
+اگر جمله مفعول مستقیم دیگری هم داشته باشد، ضمیر بازتابی Dativ می‌شود (فقط برای ich و du فرق دارد): Ich wasche mir die Hände. Ich ziehe mir die Jacke an.
+
+جای sich: بلافاصله بعد از فعل صرف‌شده (یا بعد از فاعل اگر فاعل بعد از فعل بیاید): Heute freue ich mich.
+--- en
+A reflexive verb comes with the pronoun sich (oneself). It changes with the subject: mich, dich, sich, uns, euch, sich.
+
+Some verbs are always reflexive and sich is not translated: sich freuen (be happy), sich beeilen (hurry), sich erinnern (remember), sich verlieben (fall in love). Others can also take a normal object: Ich wasche mich / Ich wasche das Auto.
+
+If there is another direct object, the reflexive pronoun is dative (only differs for ich and du): Ich wasche mir die Hände.
+
+Position: right after the conjugated verb, or after the subject if it follows the verb: Heute freue ich mich.
+--- de
+Reflexive Verben stehen mit einem Reflexivpronomen (mich, dich, sich, uns, euch, sich). Gibt es ein weiteres Akkusativobjekt, steht das Pronomen im Dativ (mir, dir): Ich wasche mir die Hände.
+--- table
+Person | Akkusativ | Dativ
+ich | mich | mir
+du | dich | dir
+er / sie / es | sich | sich
+wir | uns | uns
+ihr | euch | euch
+sie / Sie | sich | sich
+--- examples
+Ich freue mich auf das Wochenende. | منتظر آخر هفته‌ام (با خوشحالی). | I'm looking forward to the weekend.
+Beeil dich, der Bus kommt! | عجله کن، اتوبوس دارد می‌آید! | Hurry up, the bus is coming!
+Erinnerst du dich an ihn? | او را یادت می‌آید؟ | Do you remember him?
+Ich putze mir die Zähne. | مسواک می‌زنم. | I'm brushing my teeth.
+Wir treffen uns um acht. | ساعت هشت همدیگر را می‌بینیم. | We're meeting at eight.
+
+=== de-insep-verbs
+level: A2
+cat: verbs
+title.fa: فعل‌های جدانشدنی: besuchen، verstehen، erklären …
+title.en: Inseparable verbs: besuchen, verstehen, erklären …
+title.de: Untrennbare Verben
+keys: untrennbar, inseparable, جدانشدنی, be, ver, er, ent, emp, ge, miss, zer, Präfix, پیشوند
+words: besuchen, bezahlen, bekommen, beginnen, verstehen, vergessen, verkaufen, erklären, erzählen, empfehlen, entscheiden, gehören, gefallen, zerstören
+tags: de-insep-verb
+see: de-separable-verbs, de-perfekt
+--- fa
+پیشوندهای be-، emp-، ent-، er-، ge-، miss-، ver- و zer- هیچ‌وقت از فعل جدا نمی‌شوند و تکیه رویشان نیست: verSTEHen.
+
+دو نکته:
+• در Perfekt این فعل‌ها ge نمی‌گیرند: besuchen → besucht، verstehen → verstanden، erklären → erklärt.
+• پیشوند معنی را عوض می‌کند: kommen (آمدن) ← bekommen (دریافت کردن، نه become!)، stehen → verstehen (فهمیدن)، kaufen → verkaufen (فروختن).
+
+چند پیشوند (über، unter، um، durch، wieder) گاهی جداشدنی و گاهی جدانشدنی‌اند و معنی‌ها فرق دارد؛ این‌ها در سطح بالاتر می‌آیند.
+--- en
+The prefixes be-, emp-, ent-, er-, ge-, miss-, ver- and zer- never split from the verb and are never stressed: verSTEHen.
+
+Two points:
+• no ge in the participle: besuchen → besucht, verstehen → verstanden, erklären → erklärt.
+• the prefix changes the meaning: kommen → bekommen (to receive – not "become"!), stehen → verstehen (understand), kaufen → verkaufen (sell).
+
+A few prefixes (über, unter, um, durch, wieder) can be separable or inseparable with different meanings.
+--- de
+Untrennbare Präfixe: be-, emp-, ent-, er-, ge-, miss-, ver-, zer-. Sie sind unbetont, werden nie abgetrennt und das Partizip II hat kein ge-: besucht, verstanden.
+--- examples
+Ich besuche morgen meine Oma. | فردا به مادربزرگم سر می‌زنم. | I'm visiting my grandma tomorrow.
+Verstehen Sie mich? | حرفم را می‌فهمید؟ | Do you understand me?
+Ich habe meinen Schlüssel vergessen. | کلیدم را جا گذاشتم. | I forgot my key.
+Kannst du mir das erklären? | می‌توانی این را برایم توضیح بدهی؟ | Can you explain that to me?
+Ich habe eine E-Mail bekommen. | یک ایمیل گرفتم. | I received an email.
+
+=== de-conjunctions
+level: A2
+cat: sentences
+title.fa: حرف ربط‌های هم‌پایه: und، aber، oder، denn، sondern
+title.en: Coordinating conjunctions: und, aber, oder, denn, sondern
+title.de: Konjunktionen: und, aber, oder, denn, sondern
+keys: Konjunktion, conjunction, حرف ربط, und, aber, oder, denn, sondern, ADUSO, Position 0
+words: und, aber, oder, denn, sondern
+see: de-weil-dass, de-word-order-v2
+--- fa
+این پنج حرف ربط دو جمله‌ی اصلی را به هم وصل می‌کنند و ترتیب کلمات را عوض نمی‌کنند (در «جایگاه صفر» هستند): aber، denn، und، sondern، oder (برای حفظ کردن: ADUSO).
+
+• und = و، oder = یا، aber = ولی
+• denn = چون (مثل weil ولی بدون تغییر ترتیب کلمات): Ich bleibe zu Hause, denn ich bin krank.
+• sondern = بلکه، فقط بعد از جمله‌ی منفی: Das ist nicht rot, sondern blau.
+
+قبل از aber، denn و sondern ویرگول لازم است.
+--- en
+These five conjunctions join two main clauses and do not change the word order ("position 0"): aber, denn, und, sondern, oder (memory aid: ADUSO).
+
+• und = and, oder = or, aber = but
+• denn = because (like weil, but with normal word order): Ich bleibe zu Hause, denn ich bin krank.
+• sondern = but rather, only after a negative: Das ist nicht rot, sondern blau.
+
+Put a comma before aber, denn and sondern.
+--- de
+und, oder, aber, denn, sondern verbinden Hauptsätze; sie stehen auf Position 0, danach normale Wortstellung. sondern nur nach Negation. Komma vor aber, denn, sondern.
+--- examples
+Ich trinke Tee und meine Frau trinkt Kaffee. | من چای می‌خورم و همسرم قهوه. | I drink tea and my wife drinks coffee.
+Das Hotel ist schön, aber teuer. | هتل قشنگ است، ولی گران. | The hotel is nice but expensive.
+Ich komme nicht mit, denn ich habe keine Zeit. | با شما نمی‌آیم، چون وقت ندارم. | I'm not coming, because I don't have time.
+Er wohnt nicht in München, sondern in Köln. | او نه در مونیخ، بلکه در کلن زندگی می‌کند. | He doesn't live in Munich but in Cologne.
+Möchtest du Tee oder Kaffee? | چای می‌خواهی یا قهوه؟ | Would you like tea or coffee?
+
+=== de-weil-dass
+level: A2
+cat: sentences
+title.fa: جمله‌ی وابسته: weil، dass، wenn، ob — فعل به آخر جمله می‌رود
+title.en: Subordinate clauses: weil, dass, wenn – the verb goes to the end
+title.de: Nebensätze mit weil, dass, wenn – Verb am Ende
+keys: Nebensatz, subordinate clause, جمله وابسته, weil, dass, wenn, obwohl, فعل آخر جمله, Verb am Ende, because, that, if
+words: weil, dass, wenn, obwohl, ob, damit, als, bevor, nachdem, während
+see: de-conjunctions, de-temporal-clauses, de-indirect-questions, de-word-order-v2
+--- fa
+حرف ربط‌هایی مثل weil (چون)، dass (که)، wenn (اگر / وقتی)، obwohl (با اینکه) یک «جمله‌ی وابسته» می‌سازند. در جمله‌ی وابسته، فعل صرف‌شده به آخر جمله می‌رود: …, weil ich krank bin.
+
+• اگر دو فعل باشد، فعل صرف‌شده آخرین است: …, weil ich arbeiten muss. / …, dass er gekommen ist.
+• فعل جداشدنی کامل می‌ماند: …, weil ich jeden Abend fernsehe.
+• جمله‌ی وابسته همیشه با ویرگول جدا می‌شود.
+
+اگر جمله‌ی وابسته اول بیاید، کل آن جایگاه اول را می‌گیرد، پس فعل جمله‌ی اصلی بلافاصله بعد از ویرگول می‌آید: Wenn ich Zeit habe, komme ich.
+--- en
+Conjunctions like weil (because), dass (that), wenn (if/when) and obwohl (although) start a subordinate clause. In it the conjugated verb goes to the very end: …, weil ich krank bin.
+
+• with two verbs the conjugated one is last: …, weil ich arbeiten muss / …, dass er gekommen ist.
+• separable verbs stay joined: …, weil ich jeden Abend fernsehe.
+• always separate it with a comma.
+
+If the subordinate clause comes first, it counts as position 1, so the main verb follows right after the comma: Wenn ich Zeit habe, komme ich.
+--- de
+In Nebensätzen (weil, dass, wenn, obwohl, ob …) steht das konjugierte Verb am Ende. Steht der Nebensatz vorne, beginnt der Hauptsatz mit dem Verb: Wenn ich Zeit habe, komme ich.
+--- table
+Hauptsatz | Nebensatz
+Ich bin müde. | …, weil ich müde bin.
+Er kommt morgen. | …, dass er morgen kommt.
+Ich muss arbeiten. | …, weil ich arbeiten muss.
+Sie hat angerufen. | …, dass sie angerufen hat.
+Ich sehe fern. | …, wenn ich fernsehe.
+--- examples
+Ich lerne Deutsch, weil ich in Deutschland arbeiten möchte. | آلمانی یاد می‌گیرم چون می‌خواهم در آلمان کار کنم. | I'm learning German because I want to work in Germany.
+Ich glaube, dass er recht hat. | فکر می‌کنم حق با اوست. | I think he's right.
+Wenn das Wetter gut ist, gehen wir schwimmen. | اگر هوا خوب باشد، شنا می‌رویم. | If the weather is good, we'll go swimming.
+Sie kommt nicht, obwohl sie Zeit hat. | نمی‌آید، با اینکه وقت دارد. | She isn't coming although she has time.
+Er sagt, dass er heute nicht kommen kann. | می‌گوید امروز نمی‌تواند بیاید. | He says he can't come today.
+
+=== de-comparison
+level: A2
+cat: adjectives
+title.fa: مقایسه‌ی صفت‌ها: größer، am größten
+title.en: Comparison: größer, am größten
+title.de: Komparativ und Superlativ
+keys: Komparativ, Superlativ, comparative, superlative, مقایسه, صفت تفضیلی, عالی, als, wie, so wie, besser, am besten, mehr, lieber
+words: als, wie, besser, am besten, mehr, am meisten, lieber, am liebsten, größer, älter
+see: de-adjective-endings
+--- fa
+• صفت تفضیلی (بیشتر): صفت + er: schnell → schneller. مقایسه با als: Er ist größer als ich.
+• صفت عالی (بیشترین): am + صفت + sten: am schnellsten. یا قبل از اسم: der schnellste Zug.
+• برابری: so … wie: Sie ist so alt wie ich.
+
+بیشتر صفت‌های یک‌هجایی اوملاوت می‌گیرند: alt → älter → am ältesten، groß → größer → am größten، jung → jünger.
+
+بی‌قاعده‌ها را حفظ کن: gut → besser → am besten، viel → mehr → am meisten، gern → lieber → am liebsten، hoch → höher → am höchsten، nah → näher → am nächsten.
+
+اگر صفت به ‎-t، ‎-d، ‎-s، ‎-ß، ‎-z‎ تمام شود، در عالی ‎-esten‎ می‌گیرد: am kältesten، am heißesten.
+--- en
+• Comparative: adjective + er: schnell → schneller. Compare with als: Er ist größer als ich.
+• Superlative: am + adjective + sten: am schnellsten, or before a noun: der schnellste Zug.
+• Equality: so … wie: Sie ist so alt wie ich.
+
+Most one-syllable adjectives add an umlaut: alt → älter → am ältesten, groß → größer → am größten.
+
+Irregular: gut → besser → am besten, viel → mehr → am meisten, gern → lieber → am liebsten, hoch → höher, nah → näher → am nächsten.
+
+Adjectives ending in -t, -d, -s, -ß, -z take -esten: am kältesten.
+--- de
+Komparativ: -er (+ als), Superlativ: am -sten. Gleichheit: so … wie. Oft Umlaut (alt – älter – am ältesten). Unregelmäßig: gut – besser – am besten, viel – mehr – am meisten, gern – lieber – am liebsten.
+--- table
+Positiv | Komparativ | Superlativ
+schnell | schneller | am schnellsten
+alt | älter | am ältesten
+gut | besser | am besten
+viel | mehr | am meisten
+gern | lieber | am liebsten
+hoch | höher | am höchsten
+--- examples
+Berlin ist größer als München. | برلین از مونیخ بزرگ‌تر است. | Berlin is bigger than Munich.
+Mein Bruder ist so groß wie ich. | برادرم هم‌قد من است. | My brother is as tall as me.
+Ich trinke lieber Tee als Kaffee. | چای را به قهوه ترجیح می‌دهم. | I prefer tea to coffee.
+Im Winter ist es hier am kältesten. | اینجا زمستان از همه سردتر است. | It's coldest here in winter.
+Das ist das beste Restaurant der Stadt. | این بهترین رستوران شهر است. | This is the best restaurant in town.
+
+=== de-adjective-endings
+level: A2
+cat: adjectives
+title.fa: پسوند صفت‌ها قبل از اسم: der gute Mann، ein guter Mann
+title.en: Adjective endings: der gute Mann, ein guter Mann
+title.de: Adjektivdeklination
+keys: Adjektivendung, adjective endings, پسوند صفت, صرف صفت, schwach, stark, gemischt, guten, guter, gutes
+see: de-gender-articles, de-nominative-accusative, de-dative, de-comparison
+--- fa
+صفت بعد از اسم (Der Mann ist gut) پسوند ندارد. ولی وقتی قبل از اسم می‌آید، پسوند می‌گیرد. سه حالت هست:
+
+۱) بعد از der/die/das (و dieser، jeder، welcher): پسوند ‎-e‎ یا ‎-en‎. در Nominativ مفرد و Akkusativ مؤنث و خنثی ‎-e‎، بقیه‌ی جاها ‎-en‎: der gute Mann، den guten Mann، mit dem guten Mann.
+
+۲) بعد از ein/kein/mein: وقتی خود ein پسوند ندارد، صفت جنس را نشان می‌دهد: ein guter Mann، ein gutes Kind. بقیه مثل حالت ۱: einen guten Mann، einer guten Frau.
+
+۳) بدون حرف تعریف: صفت پسوند حرف تعریف را می‌گیرد: guter Wein (der)، frische Milch (die)، kaltes Wasser (das)، mit kaltem Wasser (dem).
+
+قاعده‌ی ساده: «یک کلمه باید جنس و حالت را نشان دهد». اگر حرف تعریف نشان داده، صفت ‎-e/-en‎ می‌گیرد؛ اگر نه، صفت خودش نشان می‌دهد.
+--- en
+An adjective after the noun (Der Mann ist gut) has no ending. Before a noun it takes one. Three situations:
+
+1) After der/die/das (and dieser, jeder, welcher): -e in the nominative singular and feminine/neuter accusative, otherwise -en: der gute Mann, den guten Mann, mit dem guten Mann.
+
+2) After ein/kein/mein: where ein has no ending the adjective shows the gender: ein guter Mann, ein gutes Kind. Otherwise like 1: einen guten Mann, einer guten Frau.
+
+3) Without an article: the adjective takes the article's ending: guter Wein, frische Milch, kaltes Wasser, mit kaltem Wasser.
+
+Simple rule: one word must show gender and case. If the article shows it, the adjective gets -e/-en; if not, the adjective shows it.
+--- de
+Nach bestimmtem Artikel: -e (Nom. Sg., Akk. f/n) sonst -en. Nach ein/kein/mein: ohne Artikelendung zeigt das Adjektiv das Genus (ein guter Mann, ein gutes Kind). Ohne Artikel: Adjektiv hat die Artikelendung (kaltes Wasser, mit kaltem Wasser).
+--- table
+nach der/die/das | maskulin | feminin | neutral | Plural
+Nominativ | der gute Wein | die gute Milch | das gute Brot | die guten Äpfel
+Akkusativ | den guten Wein | die gute Milch | das gute Brot | die guten Äpfel
+Dativ | dem guten Wein | der guten Milch | dem guten Brot | den guten Äpfeln
+nach ein/kein | maskulin | feminin | neutral | Plural (keine)
+Nominativ | ein guter Wein | eine gute Milch | ein gutes Brot | keine guten Äpfel
+Akkusativ | einen guten Wein | eine gute Milch | ein gutes Brot | keine guten Äpfel
+Dativ | einem guten Wein | einer guten Milch | einem guten Brot | keinen guten Äpfeln
+--- examples
+Der neue Kollege ist sehr nett. | همکار جدید خیلی مهربان است. | The new colleague is very nice.
+Ich habe einen neuen Computer. | یک کامپیوتر جدید دارم. | I have a new computer.
+Sie wohnt in einem kleinen Dorf. | او در یک روستای کوچک زندگی می‌کند. | She lives in a small village.
+Ich trinke gern kaltes Wasser. | آب سرد را دوست دارم. | I like drinking cold water.
+Das ist ein schönes Geschenk. | این هدیه‌ی قشنگی است. | That's a lovely present.
+
+=== de-konjunktiv-polite
+level: A2
+cat: verbs
+title.fa: درخواست مؤدبانه: würde، könnte، hätte gern
+title.en: Polite requests: würde, könnte, hätte gern
+title.de: Höfliche Bitten: würde, könnte, hätte gern
+keys: höflich, polite, مؤدبانه, würde, könnte, hätte gern, möchte, Konjunktiv II, Bitte, would, could
+words: würde, würden, könnte, könnten, hätte, hätten, wäre
+see: de-konjunktiv2, de-modal-verbs
+--- fa
+برای درخواست مؤدبانه آلمانی‌ها از Konjunktiv II استفاده می‌کنند (مثل would و could در انگلیسی):
+
+• Könnten Sie …? (ممکن است … ؟): Könnten Sie mir helfen?
+• Würden Sie …? (لطف می‌کنید …؟): Würden Sie bitte das Fenster schließen?
+• Ich hätte gern … (… می‌خواستم؛ در فروشگاه و رستوران): Ich hätte gern ein Kilo Äpfel.
+• Ich möchte … (می‌خواهم، مؤدبانه)
+• Es wäre schön, wenn … (خوب می‌شد اگر …)
+
+ساختار مثل فعل مُدال است: فعل اصلی به شکل مصدر به آخر جمله می‌رود.
+--- en
+For polite requests German uses the Konjunktiv II (like "would" and "could"):
+
+• Könnten Sie …? (Could you …?): Könnten Sie mir helfen?
+• Würden Sie …? (Would you …?): Würden Sie bitte das Fenster schließen?
+• Ich hätte gern … (I'd like … – in shops and restaurants)
+• Ich möchte … (I would like)
+• Es wäre schön, wenn … (It would be nice if …)
+
+As with modals, the main verb goes to the end as an infinitive.
+--- de
+Höflich bittet man mit dem Konjunktiv II: Könnten Sie …? Würden Sie …? Ich hätte gern … Es wäre nett, wenn …
+--- examples
+Könnten Sie das bitte wiederholen? | ممکن است لطفاً دوباره بگویید؟ | Could you repeat that, please?
+Ich hätte gern einen Kaffee. | یک قهوه می‌خواستم. | I'd like a coffee.
+Würdest du mir kurz helfen? | یک لحظه کمکم می‌کنی؟ | Would you help me for a moment?
+Könnte ich bitte die Rechnung haben? | می‌شود لطفاً صورتحساب را بیاورید؟ | Could I have the bill, please?
+Es wäre schön, wenn du kommen würdest. | خوب می‌شد اگر می‌آمدی. | It would be nice if you came.
+
+=== de-future
+level: A2
+cat: tenses
+title.fa: زمان آینده (Futur I): werden + مصدر
+title.en: The future: werden + infinitive
+title.de: Futur I
+keys: Futur, future, آینده, werden, will, wird, morgen, nächste Woche
+words: werden, werde, wirst, wird, werdet
+see: de-present-regular, de-passive
+--- fa
+در آلمانی برای آینده معمولاً همان زمان حال + یک قید زمان کافی است: Morgen fahre ich nach Köln.
+
+Futur I (werden + مصدر در آخر جمله) بیشتر برای این‌ها به کار می‌رود:
+• قول و تصمیم محکم: Ich werde dir helfen.
+• پیش‌بینی: Es wird morgen regnen.
+• حدس درباره‌ی حال: Er wird krank sein (احتمالاً مریض است).
+
+مراقب باش: ich will یعنی «می‌خواهم» (از wollen)، نه «خواهم»! «خواهم کرد» می‌شود ich werde.
+
+صرف werden: ich werde، du wirst، er wird، wir werden، ihr werdet، sie werden. werden به‌تنهایی یعنی «شدن»: Ich werde Arzt.
+--- en
+For the future German usually uses the present + a time word: Morgen fahre ich nach Köln.
+
+Futur I (werden + infinitive at the end) is used mainly for:
+• promises and firm decisions: Ich werde dir helfen.
+• predictions: Es wird morgen regnen.
+• guesses about the present: Er wird krank sein (he's probably ill).
+
+Careful: ich will means "I want" (wollen), not "I will"! "I will" is ich werde.
+
+werden alone means "to become": Ich werde Arzt.
+--- de
+Zukunft meist mit Präsens + Zeitangabe. Futur I (werden + Infinitiv) für Versprechen, Prognosen und Vermutungen. Achtung: ich will ≠ I will.
+--- table
+Person | werden
+ich | werde
+du | wirst
+er / sie / es | wird
+wir | werden
+ihr | werdet
+sie / Sie | werden
+--- examples
+Ich werde dich nie vergessen. | هرگز فراموشت نخواهم کرد. | I will never forget you.
+Morgen wird es regnen. | فردا باران خواهد آمد. | It will rain tomorrow.
+Nächstes Jahr fliegen wir nach Kanada. | سال بعد به کانادا پرواز می‌کنیم. | Next year we're flying to Canada.
+Sie wird wohl noch im Büro sein. | احتمالاً هنوز در دفتر است. | She's probably still at the office.
+Mein Sohn will Pilot werden. | پسرم می‌خواهد خلبان شود. | My son wants to become a pilot.
+
+=== de-word-order-tekamolo
+level: A2
+cat: sentences
+title.fa: ترتیب بخش‌های وسط جمله: زمان، علت، حالت، مکان (TeKaMoLo)
+title.en: Middle of the sentence: time, cause, manner, place (TeKaMoLo)
+title.de: Mittelfeld: TeKaMoLo
+keys: TeKaMoLo, Wortstellung, Mittelfeld, word order, ترتیب, زمان مکان, temporal kausal modal lokal
+see: de-word-order-v2, de-dative
+--- fa
+وقتی در وسط جمله چند قید داریم، ترتیب معمول این است: Te (زمان: wann?)، Ka (علت: warum?)، Mo (حالت: wie?)، Lo (مکان: wo/wohin?).
+
+Ich fahre morgen wegen der Arbeit mit dem Zug nach Berlin.
+
+در انگلیسی معمولاً برعکس است (مکان قبل از زمان)، پس فارسی‌زبان‌ها و انگلیسی‌زبان‌ها اینجا زیاد اشتباه می‌کنند. یک قانون دیگر: ضمیرها جلوتر از اسم‌ها می‌آیند، و nicht قبل از قید مکان و حالت.
+--- en
+When several adverbials are in the middle of the sentence, the usual order is Te (time: when?), Ka (cause: why?), Mo (manner: how?), Lo (place: where?).
+
+Ich fahre morgen wegen der Arbeit mit dem Zug nach Berlin.
+
+English usually puts place before time, so learners often get this wrong. Also: pronouns come before nouns.
+--- de
+Reihenfolge im Mittelfeld: temporal – kausal – modal – lokal. Pronomen stehen vor Nomen.
+--- examples
+Ich gehe heute mit meiner Schwester ins Kino. | امروز با خواهرم به سینما می‌روم. | I'm going to the cinema with my sister today.
+Er fährt jeden Tag mit dem Fahrrad zur Arbeit. | او هر روز با دوچرخه سر کار می‌رود. | He cycles to work every day.
+Wir sind gestern wegen des Regens zu Hause geblieben. | دیروز به خاطر باران خانه ماندیم. | We stayed home yesterday because of the rain.
+Sie lernt abends gern im Café. | او عصرها دوست دارد در کافه درس بخواند. | She likes studying in the café in the evening.
+Ich habe ihn letzte Woche zufällig in der Stadt getroffen. | هفته‌ی پیش تصادفی در شهر دیدمش. | I happened to meet him in town last week.
