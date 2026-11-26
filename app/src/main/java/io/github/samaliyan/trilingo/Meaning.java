@@ -41,6 +41,7 @@ final class Meaning {
      * Wikipedia", "The words of this sentence"); "" for the word's own meaning. Kind: one of NOTE_*.
      */
     String note = "", noteWord = "";
+    static final String NOTE_NUMBER = "number";
     static final String NOTE_BASE = "base", NOTE_WIKIPEDIA = "wikipedia", NOTE_ENGLISH = "english", NOTE_WORDS = "words",
             NOTE_TRANSLATION = "translation";
 

@@ -84,7 +84,10 @@ final class MeaningSource {
                     }
                 }
             }
-            if (m.isEmpty()) wikipedia(m, l.source, w, net);
+            if (m.isEmpty() && Resolver.NUMBER.equals(l.service)) number(m, l);
+            // Wikipedia explains names and things (Berlin, EU, Kühlschrank), not phrases (how are you)
+            if (m.isEmpty() && !Resolver.NUMBER.equals(l.service) && (!w.contains(" ") || Character.isUpperCase(w.charAt(0))))
+                wikipedia(m, l.source, w, net);
             if (m.isEmpty() && l.source != Lang.EN) {
                 String e = englishWord(l);
                 if (e != null && !e.isEmpty() && e.split(" ").length <= 3) {
@@ -107,6 +110,22 @@ final class MeaningSource {
         }
         if (w != null) picture(m, l, net, german, r);
         return m;
+    }
+
+    /** A number without a dictionary entry (twenty-one): its value and the other languages' words. */
+    private static void number(Meaning m, Lookup l) {
+        long n = Numbers.valueOf(l.query);
+        if (n < 0) {
+            Lookup.Result en = null;
+            for (Lookup.Result x : l.results) if (x.lang == Lang.EN) en = x;
+            n = en == null ? -1 : Numbers.valueOf(en.text);
+        }
+        if (n < 0) return;
+        m.senses.add(new Meaning.Sense("number", Numbers.digits(n, l.source)
+                + (l.source == Lang.FA ? " (" + n + ")" : ""), ""));
+        m.senses.add(new Meaning.Sense("ordinal", Numbers.ordinal(n, l.source), ""));
+        m.note = Meaning.NOTE_NUMBER;
+        m.noteWord = String.valueOf(n);
     }
 
     /** The entry of a word in its own language's dictionary (may be empty). */

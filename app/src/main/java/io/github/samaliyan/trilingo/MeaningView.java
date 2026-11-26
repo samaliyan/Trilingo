@@ -108,6 +108,7 @@ final class MeaningView {
         pictureBox.removeAllViews();
         meaningBox.removeAllViews();
         if (!m.image.isEmpty()) picture(m, pictureBox);
+        else if (Resolver.NUMBER.equals(l.service)) numberPicture(l, pictureBox);
         meaningBox.addView(meaningCard(l, m));
     }
 
@@ -154,6 +155,42 @@ final class MeaningView {
             });
         }
         img.setOnClickListener(v -> zoom(url));
+    }
+
+    /** A number has no photo: the digits, big, and up to 20 dots to count. */
+    private void numberPicture(Lookup l, LinearLayout box) {
+        long n = Numbers.valueOf(l.query);
+        if (n < 0) return;
+        LinearLayout card = new LinearLayout(act);
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setGravity(Gravity.CENTER);
+        card.setBackground(ui.round(ui.surface, 18));
+        card.setPadding(ui.dp(16), ui.dp(14), ui.dp(16), ui.dp(16));
+        card.setMinimumHeight(ui.dp(170));
+        card.setContentDescription(act.getString(R.string.picture_of, Numbers.digits(n, Lang.EN)));
+        TextView big = ui.text(n < 1000 ? 64 : 40, ui.accent, Ui.MEDIUM);
+        big.setText(Numbers.digits(n, l.source == Lang.FA ? Lang.FA : Lang.EN));
+        big.setGravity(Gravity.CENTER);
+        big.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        card.addView(big);
+        if (n > 0 && n <= 20) {
+            for (int row = 0; row * 10 < n; row++) {
+                LinearLayout dots = new LinearLayout(act);
+                dots.setGravity(Gravity.CENTER);
+                for (int i = row * 10; i < Math.min(n, row * 10 + 10); i++) {
+                    View d = new View(act);
+                    d.setBackground(ui.round(ui.accent, 7));
+                    LinearLayout.LayoutParams dp = new LinearLayout.LayoutParams(ui.dp(14), ui.dp(14));
+                    dp.setMargins(ui.dp(4), ui.dp(4), ui.dp(i % 5 == 4 ? 10 : 4), ui.dp(4));
+                    dots.addView(d, dp);
+                }
+                dots.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+                card.addView(dots);
+            }
+        }
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.bottomMargin = ui.dp(12);
+        box.addView(card, lp);
     }
 
     private void zoom(String url) {
@@ -245,6 +282,7 @@ final class MeaningView {
     private String note(Meaning m) {
         switch (m.note) {
             case Meaning.NOTE_BASE: return act.getString(R.string.meaning_of_base, m.noteWord);
+            case Meaning.NOTE_NUMBER: return act.getString(R.string.meaning_number, m.noteWord);
             case Meaning.NOTE_WIKIPEDIA: return act.getString(R.string.meaning_from_wikipedia);
             case Meaning.NOTE_ENGLISH: return act.getString(R.string.meaning_of_english, m.noteWord);
             case Meaning.NOTE_WORDS: return act.getString(R.string.meaning_words);

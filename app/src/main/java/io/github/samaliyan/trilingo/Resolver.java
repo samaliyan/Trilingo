@@ -49,6 +49,26 @@ final class Resolver {
      * @param forced the chosen language (null = automatic)
      * @param spoken the language of voice search, when the text was spoken (Persian voice writes "8" for هشت)
      */
+    /** Common abbreviations: written out, they translate and have a meaning ("z.B." → "zum Beispiel"). */
+    private static final java.util.Map<String, String[]> ABBREVIATIONS = new java.util.HashMap<>();
+
+    static {
+        String[][] list = {
+                {"de", "z.b.", "zum Beispiel"}, {"de", "usw.", "und so weiter"}, {"de", "d.h.", "das heißt"},
+                {"de", "u.a.", "unter anderem"}, {"de", "bzw.", "beziehungsweise"}, {"de", "ca.", "circa"},
+                {"de", "evtl.", "eventuell"}, {"de", "ggf.", "gegebenenfalls"}, {"de", "z.t.", "zum Teil"},
+                {"de", "u.u.", "unter Umständen"}, {"de", "vgl.", "vergleiche"}, {"de", "inkl.", "inklusive"},
+                {"de", "zzgl.", "zuzüglich"}, {"de", "bzgl.", "bezüglich"}, {"de", "mfg", "mit freundlichen Grüßen"},
+                {"de", "o.ä.", "oder Ähnliches"}, {"de", "s.o.", "siehe oben"}, {"de", "s.u.", "siehe unten"},
+                {"de", "geb.", "geboren"}, {"de", "str.", "Straße"}, {"de", "nr.", "Nummer"},
+                {"en", "e.g.", "for example"}, {"en", "i.e.", "that is"}, {"en", "etc.", "et cetera"},
+                {"en", "asap", "as soon as possible"}, {"en", "fyi", "for your information"},
+                {"en", "btw", "by the way"}, {"en", "aka", "also known as"}, {"en", "approx.", "approximately"},
+                {"en", "vs.", "versus"}, {"en", "a.m.", "in the morning"}, {"en", "p.m.", "in the afternoon"},
+        };
+        for (String[] x : list) ABBREVIATIONS.put(x[1], new String[]{x[0], x[2]});
+    }
+
     Prepared prepare(String typed, Lang forced, Lang spoken) {
         Prepared p = new Prepared();
         String q = Text.clean(typed);
@@ -59,6 +79,13 @@ final class Resolver {
             p.decimal = q;
             p.source = l;
             p.text = Numbers.decimalWords(q, l);
+            return p;
+        }
+        String[] ab = ABBREVIATIONS.get(q.toLowerCase(Locale.ROOT).replace(" ", ""));
+        if (ab != null && (forced == null || forced.code.equals(ab[0]))) {
+            p.text = ab[1];
+            p.source = Lang.EN.code.equals(ab[0]) ? Lang.EN : Lang.DE;
+            p.corrected = true;
             return p;
         }
         long n = Numbers.parse(q);
@@ -162,6 +189,24 @@ final class Resolver {
      * (ging → gehen, Häuser → Haus, kleinen → klein, Lehrerin → Lehrer, Schreibtischlampe → Lampe;
      * went → go, children → child; رفتم → رفتن, کتاب‌ها → کتاب).
      */
+    private static final String[] SEPARABLE = {"zusammen", "zurück", "weiter", "heraus", "hinaus", "herum", "fest",
+            "fort", "nach", "auf", "aus", "bei", "ein", "her", "hin", "los", "mit", "vor", "weg", "dazu", "ab", "an", "zu"};
+
+    /** The infinitive of a separable verb's participle or zu-form (aufgestanden, aufzustehen → aufstehen), or null. */
+    String separable(String low) {
+        for (String p : SEPARABLE) {
+            if (!low.startsWith(p) || low.length() < p.length() + 5) continue;
+            String rest = low.substring(p.length());
+            String inner = null;
+            if (rest.startsWith("ge")) inner = GermanVerbs.lemma(rest);
+            if ((inner == null || inner.equals(rest)) && rest.startsWith("zu")) inner = rest.substring(2);
+            if (inner == null || inner.equals(rest) || !inner.endsWith("n")) continue;
+            String verb = p + inner;
+            if (de == null || de.known(verb) || deDict != null && deDict.has(verb)) return verb;
+        }
+        return null;
+    }
+
     List<String> bases(String word, Lang lang) {
         List<String> out = new ArrayList<>();
         String w = Text.clean(word);
@@ -170,8 +215,14 @@ final class Resolver {
         switch (lang) {
             case DE: {
                 Nouns.Info n = nouns == null ? null : nouns.exact(Compounds.capital(w));
+                boolean lower = Character.isLowerCase(w.charAt(0));
+                // typed in lower case, a verb form comes first (gefahren → fahren, not die Gefahr)
+                if (lower) {
+                    add(out, separable(low), w);
+                    add(out, GermanVerbs.lemma(low), w);
+                }
                 if (n != null && !n.noun.equals(w)) add(out, n.noun, w);
-                if (GermanVerbs.isKnownForm(low) || Character.isLowerCase(w.charAt(0))) add(out, GermanVerbs.lemma(low), w);
+                if (GermanVerbs.isKnownForm(low)) add(out, GermanVerbs.lemma(low), w);
                 for (String end : new String[]{"en", "em", "er", "es", "e"})
                     if (low.endsWith(end) && low.length() - end.length() >= 3) {
                         String stem = low.substring(0, low.length() - end.length());

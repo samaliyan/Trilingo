@@ -542,6 +542,38 @@ open_app
 type_text "how%sare%syou%stoday"
 wait_for "PERSIAN" "" 20
 shot 06_sentence 1.5
+# 5a. A sentence has a meaning section too: the meanings of its words
+back
+scroll_to "sentence meaning" "^MEANING IN ENGLISH$"
+wait_for "words of the sentence" "^The words of this text$" 25
+shot 06a_sentence_meaning 1
+
+# 5b. A number: words in all three languages, a meaning (no "8" → "8")
+open_app
+type_text "8"
+wait_for "number row" "^Number 8$" 10
+wait_for "eight" "(?i)^eight$" 10
+expect "acht" "(?i)^acht$"
+back
+scroll_to "number meaning" "^MEANING IN PERSIAN$"
+shot 06b_number 1
+# Persian digits from another app: ۸ → هشت
+adb shell "am start -a android.intent.action.PROCESS_TEXT -t text/plain --es android.intent.extra.PROCESS_TEXT '۸' -n $PKG/.MainActivity" > /dev/null
+sleep 2
+wait_for "eight" "(?i)^eight$" 15
+shot 06c_persian_digit 1
+
+# 5c. A German compound with a typo: corrected, German, its parts, the female form
+open_app
+type_text "marketingassitentin"
+wait_for "corrected" ".*Marketingassistentin.*" 25
+wait_for "parts" "^Word parts$" 10
+expect "female form" "^Female form of Marketingassistent$"
+expect "part Marketing" "^Marketing$"
+back
+scroll_to "compound meaning" "^MEANING IN GERMAN$"
+wait_for "a meaning, never empty" "^(Meaning of .*|From Wikipedia|Meaning of the English word .*|The words of this text|No dictionary explains this.*|\\d\\..*)$" 25
+shot 06d_compound 1
 
 # 6. Persian text from another app's text menu (PROCESS_TEXT)
 adb shell "am start -a android.intent.action.PROCESS_TEXT -t text/plain --es android.intent.extra.PROCESS_TEXT 'خانه' -n $PKG/.MainActivity" > /dev/null

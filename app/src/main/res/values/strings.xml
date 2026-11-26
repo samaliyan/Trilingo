@@ -414,6 +414,7 @@
     <string name="female_form">Female form of %1$s</string>
     <string name="number_row">Number %1$s</string>
     <string name="meaning_of_base">Meaning of %1$s</string>
+    <string name="meaning_number">The number %1$s</string>
     <string name="meaning_from_wikipedia">From Wikipedia</string>
     <string name="meaning_of_english">Meaning of the English word “%1$s”</string>
     <string name="meaning_words">The words of this text</string>

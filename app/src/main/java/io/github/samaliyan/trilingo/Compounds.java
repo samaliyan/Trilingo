@@ -151,6 +151,8 @@ final class Compounds {
 
     /** One typing mistake in one part: the other part known exactly, the misspelled one one letter away. */
     private List<Part> fuzzy(String low) {
+        // one typo in a whole known word (Schmeterling → Schmetterling) is a spelling mistake, not a compound
+        if (de.closest(low) != null) return null;
         for (int i = 3; i <= low.length() - 4; i++) {
             String head = low.substring(0, i), tail = low.substring(i);
             List<Part> front = front(head, 2);

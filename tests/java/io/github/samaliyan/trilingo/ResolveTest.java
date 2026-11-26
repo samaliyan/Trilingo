@@ -60,6 +60,7 @@ public final class ResolveTest {
         eq("zero", Numbers.words(0, Lang.EN), "0");
         eq("eighth", Numbers.ordinal(8, Lang.EN), "ordinal");
         eq(8L, Numbers.valueOf("acht"), "number word back to its value");
+        eq(8L, Numbers.parse("8."), "8. (German for 8th) is a number");
         eq(8L, Numbers.valueOf("هشت"), "Persian number word back");
         eq("drei Komma fünf", Numbers.decimalWords("3,5", Lang.DE), "decimal in German");
         eq("three point five", Numbers.decimalWords("3.5", Lang.EN), "decimal in English");
@@ -115,6 +116,7 @@ public final class ResolveTest {
         eq(null, c.split("Gesundheit"), "a known word is not changed");
         eq(null, c.split("Haus"), "a short known word");
         eq(null, c.split("xqzvbn"), "nonsense is not a compound");
+        eq(null, c.split("Schmeterling"), "one typo in a known word is not a compound (Schmetterling)");
     }
 
     static void prepare() {
@@ -127,6 +129,13 @@ public final class ResolveTest {
         eq("house", p.text, "an ordinary word is untouched");
         eq(-1L, p.number, "not a number");
         ok(r.isWord(Lang.DE, "Marketingassistentin"), "a compound is a real word for Review");
+        p = r.prepare("z.B.", null, null);
+        eq("zum Beispiel", p.text, "an abbreviation is written out");
+        eq(Lang.DE, p.source, "z.B. is German");
+        p = r.prepare("e.g.", null, null);
+        eq("for example", p.text, "e.g.");
+        p = r.prepare("Schmeterling", null, null);
+        eq("Schmeterling", p.text, "a typo in a whole word is left for the spelling suggestion");
         ok(r.isWord(Lang.DE, "Haus"), "a word is a word");
         ok(!r.isWord(Lang.DE, "xqzvbn"), "nonsense is not");
     }
@@ -135,6 +144,10 @@ public final class ResolveTest {
         ok(r.bases("Häuser", Lang.DE).contains("Haus"), "plural → singular: " + r.bases("Häuser", Lang.DE));
         ok(r.bases("ging", Lang.DE).contains("gehen"), "past → infinitive: " + r.bases("ging", Lang.DE));
         ok(r.bases("gegangen", Lang.DE).contains("gehen"), "participle → infinitive");
+        eq("fahren", r.bases("gefahren", Lang.DE).get(0), "gefahren → fahren first, not die Gefahr");
+        eq("aufstehen", r.bases("aufgestanden", Lang.DE).get(0), "separable participle");
+        eq("anfangen", r.bases("angefangen", Lang.DE).get(0), "angefangen → anfangen");
+        eq("aufstehen", r.bases("aufzustehen", Lang.DE).get(0), "zu-form");
         ok(r.bases("Marketingassistentin", Lang.DE).contains("Assistentin")
                 || r.bases("Marketingassistentin", Lang.DE).contains("Assistent"), "compound → its last part");
         ok(r.bases("went", Lang.EN).contains("go"), "went → go: " + r.bases("went", Lang.EN));
@@ -203,10 +216,17 @@ public final class ResolveTest {
         eq(Meaning.NOTE_WORDS, m.note, "a sentence shows its words");
         ok(!m.senses.isEmpty(), "with entries");
 
-        // a number
-        l = Resolver.number(8, Lang.FA, 1);
-        m = MeaningSource.load(l, fake(), r);
-        ok(!m.senses.isEmpty(), "a number has a meaning");
+        // a number: never Wikipedia (۲۱ is not the card game), its value and ordinal
+        l = Resolver.number(21, Lang.FA, 1);
+        m = MeaningSource.load(l, fake("wikipedia", "{\"type\":\"standard\",\"extract\":\"A card game.\"}"), r);
+        eq(Meaning.NOTE_NUMBER, m.note, "a number explains itself");
+        ok(!m.senses.isEmpty() && m.senses.get(0).text.contains("21"), "with its digits");
+
+        // a phrase is not looked up in Wikipedia
+        l = lookup("how are you", Lang.EN, "چطوری", "wie geht es dir");
+        m = MeaningSource.load(l, fake("wikipedia", "{\"type\":\"standard\",\"extract\":\"A health program.\"}"), r);
+        ok(!Meaning.NOTE_WIKIPEDIA.equals(m.note), "no Wikipedia article for a phrase");
+        ok(!m.senses.isEmpty(), "still a meaning");
 
         // a name: Wikipedia's first sentences
         String wiki = "{\"type\":\"standard\",\"title\":\"Berlin\",\"extract\":\"Berlin is the capital of Germany. "

@@ -18,6 +18,8 @@ final class Numbers {
     static long parse(String text) {
         if (text == null) return -1;
         String s = text.trim();
+        // "8." is the German way to write "8th": the number is the same
+        if (s.length() > 1 && s.endsWith(".") && isDigit(s.charAt(s.length() - 2))) s = s.substring(0, s.length() - 1);
         if (s.isEmpty() || s.length() > 15) return -1;
         StringBuilder d = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
