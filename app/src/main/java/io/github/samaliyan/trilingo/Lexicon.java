@@ -236,6 +236,15 @@ final class Lexicon {
         return Spelling.phrase(words(lang), t);
     }
 
+    /** The best correction of one word in English or German (or Persian for Persian letters), or null. */
+    static String closestAny(String typed) {
+        String t = Text.clean(typed);
+        if (t.isEmpty() || Character.isUpperCase(t.charAt(0)) && Text.hasLetter(t) && en != null && de != null
+                && !de.known(t) && Spelling.candidates(de, t, 1).isEmpty()) return null;   // a name
+        List<Spelling.Candidate> c = spellings(t, null, 1);
+        return c.isEmpty() ? null : c.get(0).word;
+    }
+
     /**
      * Up to {@code max} spelling suggestions for one typed word, best first: in the given language, or (null)
      * in English and German together, or Persian for Persian letters.

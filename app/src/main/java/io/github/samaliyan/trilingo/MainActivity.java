@@ -552,7 +552,9 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                 res = engine.translate(query, source, service, System.currentTimeMillis());
                 // No correction from the service for a word it does not know: the closest word of the built-in list.
                 if (!res.hasSuggestion() && echoes(res)) {
-                    String near = Lexicon.closest(query, res.source);
+                    // automatic and one word: English and German both (Termien is German, though the
+                    // service took it for English)
+                    String near = f == null && !query.contains(" ") ? Lexicon.closestAny(query) : Lexicon.closest(query, res.source);
                     if (near == null && res.source == Lang.DE && prep.split != null) near = prep.split.word;
                     if (near != null) res = res.withSuggestion(near);
                 }
