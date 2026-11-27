@@ -14,7 +14,7 @@ jobs:
         with: {distribution: temurin, java-version: 17}
       - run: |
           mkdir -p out
-          sh tools/coverage/run.sh > out/coverage.tsv 2>&1 || true
+          sh tools/coverage/tatoeba.sh > out/tatoeba.txt 2>&1 || true
       - if: always()
         run: |
           cd out && git init -q && git config user.name ci && git config user.email ci@x
