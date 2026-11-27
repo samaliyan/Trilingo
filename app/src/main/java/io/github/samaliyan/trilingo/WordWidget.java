@@ -115,7 +115,7 @@ public final class WordWidget extends AppWidgetProvider {
         v.setTextViewText(R.id.card_back, shown ? card.back : "");
         v.setViewVisibility(R.id.card_back, View.VISIBLE);
         v.setContentDescription(R.id.card_word, card.word + ", " + card.lang.label);
-        v.setOnClickPendingIntent(R.id.card_word, WidgetProvider.open(c, card.word, 300 + id));
+        v.setOnClickPendingIntent(R.id.card_word, WidgetProvider.quick(c, card.word, 300 + id));
         v.setOnClickPendingIntent(R.id.card_show, action(c, ACTION_SHOW, id));
         v.setOnClickPendingIntent(R.id.card_again, action(c, ACTION_AGAIN, id));
         v.setOnClickPendingIntent(R.id.card_good, action(c, pick.mode == WordCards.DUE ? ACTION_GOOD : ACTION_NEXT, id));

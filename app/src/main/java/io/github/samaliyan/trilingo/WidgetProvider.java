@@ -107,7 +107,7 @@ public final class WidgetProvider extends AppWidgetProvider {
                 v.setViewVisibility(ROWS[k], View.VISIBLE);
                 v.setTextViewText(WORDS[k], l.query);
                 v.setTextViewText(MEANINGS[k], l.results.get(0).text);
-                v.setOnClickPendingIntent(ROWS[k], open(c, l.query, k + 1));
+                v.setOnClickPendingIntent(ROWS[k], quick(c, l.query, k + 1));
             } else {
                 v.setViewVisibility(ROWS[k], View.GONE);
             }
@@ -136,6 +136,16 @@ public final class WidgetProvider extends AppWidgetProvider {
     }
 
     /** Opens the app with a clean field (text == null) or with a word shown. */
+    /**
+     * A word on the widget: its translation in the small window over the home screen (Open in Trilingo
+     * there shows everything about it).
+     */
+    static PendingIntent quick(Context c, String word, int requestCode) {
+        Intent it = new Intent(c, BubbleActivity.class).putExtra(BubbleActivity.EXTRA_WORD, word)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        return PendingIntent.getActivity(c, 100 + requestCode, it, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    }
+
     static PendingIntent open(Context c, String text, int requestCode) {
         Intent it = new Intent(c, MainActivity.class).setAction(MainActivity.ACTION_OPEN)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);

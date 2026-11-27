@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.11 — 2026-11-27
+
+- **Widget, fixed**: after an update the home screen kept the old widget, where every tap opened the app on the last search. The widgets are now redrawn as soon as the app is updated.
+- **Widget words open right there**: tapping a recent word (or the word on the Word card) shows its translation in the small window over the home screen, not the whole app; *Open in Trilingo* in that window shows everything about it.
+
 ## 1.10 — 2026-11-27
 
 - **Example sentences for every tense**: in Conjugation each tense (Present, Simple past, Perfect, Future, Imperative …) has an *Examples* button: real sentences that use that tense of the verb, the verb forms in bold, with translations and audio. Sentences of another tense that share a word (خواهیم رفت is future, not the past رفت) are left out.

@@ -45,6 +45,8 @@ public final class BubbleActivity extends Activity {
     private boolean readClipboard;
     /** From the widget's search bar: type a word here (what is copied is not read in). */
     static final String EXTRA_TYPE = "type";
+    /** From a word on the widget: its translation right here, over the home screen. */
+    static final String EXTRA_WORD = "word";
     private int generation;
     private final Runnable typed = () -> translate(false);
 
@@ -147,6 +149,7 @@ public final class BubbleActivity extends Activity {
         scrim.addView(card, cp);
         setContentView(scrim);
         Feel.appear(card);
+        if (saved == null) showWord(getIntent());
 
         try {
             tts = new TextToSpeech(getApplicationContext(), status -> { });
@@ -159,6 +162,15 @@ public final class BubbleActivity extends Activity {
         super.onNewIntent(intent);
         setIntent(intent);
         readClipboard = false;               // opened again from the bubble: read what is copied now
+        showWord(intent);
+    }
+
+    /** A word sent from the widget is translated at once (and what is copied is not read in). */
+    private void showWord(Intent it) {
+        String w = it == null ? null : it.getStringExtra(EXTRA_WORD);
+        if (w == null || Text.clean(w).isEmpty()) return;
+        readClipboard = true;
+        setText(Text.clean(w));
     }
 
     /** Android 10+ lets an app read the clipboard only while its window has focus. */

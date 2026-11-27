@@ -81,7 +81,7 @@
         <item quantity="other">%d words saved</item>
     </plurals>
     <string name="widget_add_home">Add widget to home screen</string>
-    <string name="widget_add_hint">A search bar on your home screen with voice, copied text and scan. Make it taller to see your recent words.</string>
+    <string name="widget_add_hint">A search bar on your home screen with voice, copied text and scan. Translations open in a small window right there. Make it taller to see your recent words.</string>
     <string name="widget_card_add">Add Word card to home screen</string>
     <string name="widget_card_add_hint">Review your saved words right on the home screen: Show, then Again or Got it.</string>
     <string name="widget_add_manual">Long-press your home screen, choose Widgets and find Trilingo.</string>

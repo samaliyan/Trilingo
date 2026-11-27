@@ -10,5 +10,8 @@ public final class BootReceiver extends BroadcastReceiver {
         String a = intent == null ? null : intent.getAction();
         if (!Intent.ACTION_BOOT_COMPLETED.equals(a) && !Intent.ACTION_MY_PACKAGE_REPLACED.equals(a)) return;
         if (new Store(c).bubble()) BubbleService.start(c);
+        // After an update the home screen still shows the widgets as the old version drew them, with the old
+        // version's taps (the whole widget opening the app): draw them anew.
+        WidgetProvider.updateAll(c);
     }
 }
