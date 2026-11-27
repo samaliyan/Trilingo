@@ -806,6 +806,17 @@ if scroll_to "Add widget to home screen" "" quiet; then
     shot 23_opened_from_widget 2.5
     expect "translate window" "^(Copy text, or type here|Open in Trilingo)$"
     back
+    # 1.11: after an update the widget is drawn anew (the old drawing opened the app wherever it was tapped)
+    adb install -r "$APK" > /dev/null && log "app updated in place"
+    sleep 4
+    adb shell input keyevent KEYCODE_HOME; sleep 2
+    if tap "Translate" "^Translate$"; then
+      shot 23b_widget_after_update 2
+      expect "translate window after update" "^(Copy text, or type here|Open in Trilingo)$"
+      back
+    else
+      fail "widget gone after the update"
+    fi
   else
     fail "widget not visible on the home screen"
   fi
