@@ -39,6 +39,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
@@ -51,6 +52,8 @@ import java.util.Set;
  */
 public final class MainActivity extends Activity implements TextToSpeech.OnInitListener, DetailSheets.Host {
     static final String ACTION_OPEN = "io.github.samaliyan.trilingo.OPEN";
+    /** From the widget's microphone: listen at once. */
+    static final String ACTION_VOICE = "io.github.samaliyan.trilingo.VOICE";
     static final String EXTRA_TEXT = "io.github.samaliyan.trilingo.TEXT";
 
     private static final long TYPE_DELAY = 400, SAVE_DELAY = 2000;
@@ -256,6 +259,10 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
             setInput(text);
             lookup(true);
             hideKeyboard();
+        } else if (it != null && ACTION_VOICE.equals(it.getAction())) {
+            wantKeyboard = false;
+            setInput("");
+            voiceSearch();
         } else if ((it != null && ACTION_OPEN.equals(it.getAction())) || wantKeyboard) {
             // From the widget or the quick-settings tile: a clean field, ready to type.
             forced = null;
@@ -549,6 +556,13 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                     if (near == null && res.source == Lang.DE && prep.split != null) near = prep.split.word;
                     if (near != null) res = res.withSuggestion(near);
                 }
+                // The service "translated" a word no list knows (hous → Haus): a very likely correction is
+                // still offered, without replacing the answer.
+                if (!res.hasSuggestion() && !echoes(res) && prep.split == null && !query.contains(" ")
+                        && !(res.source == Lang.EN && Character.isUpperCase(query.charAt(0)))) {
+                    List<Spelling.Candidate> c = Lexicon.spellings(query, f != null ? f : res.source, 1);
+                    if (!c.isEmpty() && c.get(0).cost < 0.85) res = res.withSuggestion(c.get(0).word);
+                }
                 if (!res.hasSuggestion() && umlautHint != null) res = res.withSuggestion(umlautHint);
                 // Misspelled and the "translation" only repeats it: show the corrected word's translation instead.
                 if (res.hasSuggestion() && echoes(res)) {
@@ -563,6 +577,14 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
             } catch (Engine.Failure e) {
                 fail = e;
             }
+            // Without an answer (no internet) a misspelt word is not lost: the built-in dictionary's entry
+            // for the closest word, shown as "Showing results for".
+            Lookup nearOffline = null;
+            if (res == null && instant == null && prep.number < 0 && Lexicon.resolver().offline(prep, true, 0) == null) {
+                List<Spelling.Candidate> c = Lexicon.spellings(query, f, 1);
+                if (!c.isEmpty()) nearOffline = Lexicon.dictionary(c.get(0).word, f, true, System.currentTimeMillis());
+            }
+            final Lookup near = nearOffline;
             final Lookup r = res;
             final Engine.Failure x = fail;
             final boolean fixedWord = corrected;
@@ -583,6 +605,11 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                 }
                 Lookup shownNow = r;
                 if (shownNow == null) shownNow = Lexicon.resolver().offline(prep, true, System.currentTimeMillis());
+                if (shownNow == null && near != null) {
+                    showLookup(near, f == null, true);
+                    shownFor = Text.key(q);
+                    return;
+                }
                 if (shownNow != null) {
                     showLookup(shownNow, f == null && prep.number < 0, umlautFixed || (r != null && fixedWord));
                     shownFor = Text.key(q);
@@ -725,6 +752,10 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         if (nounRow != null) content.addView(nounRow);
         if (corrected) content.addView(correctedRow(l.query));
         else if (l.hasSuggestion()) content.addView(suggestionRow(l.suggestion));
+        if (corrected || l.hasSuggestion()) {
+            View also = otherSpellings(corrected ? l.query : l.suggestion, l.source);
+            if (also != null) content.addView(also);
+        }
 
         boolean meaning = MeaningView.shows(l);
         LinearLayout picture = column(), meaningBox = column();
@@ -1132,6 +1163,61 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
 
     @Override public int service() {
         return store.service();
+    }
+
+    /**
+     * "Other spellings": the next best corrections of what was typed, under "Did you mean" or "Showing
+     * results for" — tap one to look it up.
+     */
+    private View otherSpellings(String shown, Lang lang) {
+        String typed = Text.clean(input.getText().toString());
+        if (typed.contains(" ") || typed.isEmpty()) return null;
+        // the search takes a moment on a slow phone: done in the background, the row appears when ready
+        LinearLayout holder = column();
+        int gen = generation;
+        new Thread(() -> {
+            List<String> words = new ArrayList<>();
+            for (Spelling.Candidate c : Lexicon.spellings(typed, lang, 4))
+                if (!c.word.equalsIgnoreCase(shown) && words.size() < 3) words.add(c.word);
+            runOnUiThread(() -> {
+                if (gen != generation || isDestroyed() || words.isEmpty()) return;
+                holder.addView(spellingRow(words));
+            });
+        }, "spellings").start();
+        return holder;
+    }
+
+    private View spellingRow(List<String> words) {
+        LinearLayout box = column();
+        TextView h = ui.line(12, ui.sub, Ui.MEDIUM);
+        h.setText(R.string.other_spellings);
+        box.addView(h);
+        HorizontalScrollView hs = new HorizontalScrollView(this);
+        hs.setHorizontalScrollBarEnabled(false);
+        LinearLayout row = new LinearLayout(this);
+        for (String w : words) {
+            TextView c = ui.line(15, ui.text, Ui.MEDIUM);
+            c.setText(w);
+            c.setGravity(Gravity.CENTER);
+            c.setMinHeight(ui.dp(44));
+            c.setPadding(ui.dp(16), 0, ui.dp(16), 0);
+            c.setBackground(ui.ripple(ui.outline(ui.bg, ui.line, 22), 22));
+            c.setContentDescription(getString(R.string.suggestion_desc, w));
+            c.setOnClickListener(v -> {
+                setInput(w);
+                lookup(true);
+                hideKeyboard();
+            });
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            lp.rightMargin = ui.dp(8);
+            row.addView(c, lp);
+        }
+        hs.addView(row);
+        box.addView(hs, Page.full(ui.dp(6), 0));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.bottomMargin = ui.dp(14);
+        box.setLayoutParams(lp);
+        return box;
     }
 
     /** "Showing results for Schmetterling" — the typed word was misspelled and unknown. */
@@ -1727,10 +1813,15 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
     }
 
     static void pinWidget(Context c) {
+        pinWidget(c, WidgetProvider.class);
+    }
+
+    /** Asks the launcher to place a widget of the app (the search bar, or the Word card). */
+    static void pinWidget(Context c, Class<?> widget) {
         AppWidgetManager m = AppWidgetManager.getInstance(c);
         boolean ok = false;
         try {
-            ok = m != null && m.requestPinAppWidget(new ComponentName(c, WidgetProvider.class), null, null);
+            ok = m != null && m.requestPinAppWidget(new ComponentName(c, widget), null, null);
         } catch (RuntimeException ignored) {
             ok = false;
         }

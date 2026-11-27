@@ -44,6 +44,12 @@ public final class TextWordsActivity extends Activity {
     private final Set<String> chosen = new LinkedHashSet<>();
     private List<TextWords.Item> found = new ArrayList<>();
 
+    /** Answers and saved words change what the Word card widget shows. */
+    @Override protected void onPause() {
+        super.onPause();
+        WidgetProvider.updateAll(this);
+    }
+
     @Override protected void onCreate(Bundle saved) {
         super.onCreate(saved);
         ui = Ui.of(this);

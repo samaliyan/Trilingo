@@ -17,9 +17,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Home-screen widget: a search bar that opens the app ready to type. When the widget is taller,
- * the last looked-up words are listed under it (tap one to see it again). Redrawn only when the
- * history or the widget size changes, so it uses no battery.
+ * Home-screen widget: a search bar that opens the app ready to type, and three buttons beside it — speak a
+ * word, translate what is copied (in a small window over the current app), scan text with the camera. When
+ * the widget is taller, the last looked-up words are listed under it (tap one to see it again). Redrawn
+ * only when the history or the widget size changes, so it uses no battery.
  */
 public final class WidgetProvider extends AppWidgetProvider {
     private static final int[] ROWS = {R.id.row1, R.id.row2, R.id.row3};
@@ -34,11 +35,13 @@ public final class WidgetProvider extends AppWidgetProvider {
         update(c, m, id);
     }
 
+    /** Redraws every widget of the app: the search widgets and the Word cards (saved words changed too). */
     static void updateAll(Context c) {
         AppWidgetManager m = AppWidgetManager.getInstance(c);
         if (m == null) return;
         int[] ids = m.getAppWidgetIds(new ComponentName(c, WidgetProvider.class));
         for (int id : ids) update(c, m, id);
+        WordWidget.updateAll(c);
     }
 
     /** How many recent words fit: none in a one-row widget, up to three when it is taller. */
@@ -71,6 +74,15 @@ public final class WidgetProvider extends AppWidgetProvider {
     static RemoteViews views(Context c, int rows) {
         RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.widget);
         v.setOnClickPendingIntent(R.id.bar, open(c, null, 0));
+        Intent voice = new Intent(c, MainActivity.class).setAction(MainActivity.ACTION_VOICE)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        v.setOnClickPendingIntent(R.id.btn_voice, PendingIntent.getActivity(c, 10, voice, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));
+        // the small translate window reads what is copied as soon as it opens
+        Intent paste = new Intent(c, BubbleActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        v.setOnClickPendingIntent(R.id.btn_paste, PendingIntent.getActivity(c, 11, paste, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));
+        Intent scan = new Intent(c, ScanActivity.class).putExtra(ScanActivity.EXTRA_CAMERA, true)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        v.setOnClickPendingIntent(R.id.btn_scan, PendingIntent.getActivity(c, 12, scan, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));
         List<Lookup> items = new Store(c).saveHistory() ? Store.history(c).items() : java.util.Collections.emptyList();
         int shown = Math.min(rows, items.size());
         for (int k = 0; k < ROWS.length; k++) {
@@ -99,7 +111,7 @@ public final class WidgetProvider extends AppWidgetProvider {
         v.setInt(R.id.bar, "setBackgroundResource", dark ? R.drawable.widget_field_dark : R.drawable.widget_field_light);
         v.setImageViewResource(R.id.search_icon, dark ? R.drawable.ic_search_dark : R.drawable.ic_search_light);
         v.setTextColor(R.id.hint, sub);
-        v.setTextColor(R.id.langs, accent);
+        for (int b : new int[]{R.id.btn_voice, R.id.btn_paste, R.id.btn_scan}) v.setInt(b, "setColorFilter", accent);
         for (int k = 0; k < ROWS.length; k++) {
             v.setTextColor(WORDS[k], text);
             v.setTextColor(MEANINGS[k], sub);

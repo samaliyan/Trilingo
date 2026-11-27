@@ -32,6 +32,12 @@ public final class NotebookActivity extends Activity {
     private EditText search;
     private LinearLayout body;
 
+    /** Answers and saved words change what the Word card widget shows. */
+    @Override protected void onPause() {
+        super.onPause();
+        WidgetProvider.updateAll(this);
+    }
+
     @Override protected void onCreate(Bundle saved) {
         super.onCreate(saved);
         ui = Ui.of(this);

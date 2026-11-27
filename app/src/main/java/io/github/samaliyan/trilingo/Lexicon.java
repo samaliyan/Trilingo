@@ -225,12 +225,45 @@ final class Lexicon {
         return Umlauts.fix(text, de, forced == Lang.DE ? null : en);
     }
 
-    /** The closest known word for a typo in this language, or null. */
+    /**
+     * The closest known word (or sentence with its misspelt words fixed) for a typo in this language, or
+     * null.
+     */
     static String closest(String typed, Lang lang) {
         String t = Text.clean(typed);
         // An English word written with a capital is usually a name: no guessing.
-        if (t.isEmpty() || (lang == Lang.EN && Character.isUpperCase(t.charAt(0)))) return null;
-        Words w = words(lang);
-        return w == null ? null : w.closest(typed);
+        if (t.isEmpty() || (lang == Lang.EN && Character.isUpperCase(t.charAt(0)) && !t.contains(" "))) return null;
+        return Spelling.phrase(words(lang), t);
+    }
+
+    /**
+     * Up to {@code max} spelling suggestions for one typed word, best first: in the given language, or (null)
+     * in English and German together, or Persian for Persian letters.
+     */
+    static List<Spelling.Candidate> spellings(String typed, Lang lang, int max) {
+        String t = Text.clean(typed);
+        List<Spelling.Candidate> out = new ArrayList<>();
+        if (t.isEmpty() || t.contains(" ")) return out;
+        List<Lang> langs = new ArrayList<>();
+        if (lang != null) langs.add(lang);
+        else if (Text.hasPersian(t)) langs.add(Lang.FA);
+        else {
+            langs.add(Lang.EN);
+            langs.add(Lang.DE);
+        }
+        for (Lang l : langs) {
+            Words w = words(l);
+            // known in one of the languages: no typo
+            if (w != null && w.known(t)) return new ArrayList<>();
+        }
+        for (Lang l : langs) out.addAll(Spelling.candidates(words(l), t, max));
+        out.sort((a, b) -> Double.compare(a.cost, b.cost));
+        List<Spelling.Candidate> best = new ArrayList<>();
+        for (Spelling.Candidate c : out) {
+            boolean dup = false;
+            for (Spelling.Candidate b : best) dup |= b.word.equalsIgnoreCase(c.word);
+            if (!dup && best.size() < max) best.add(c);
+        }
+        return best;
     }
 }

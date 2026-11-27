@@ -41,6 +41,9 @@ public final class ResolveTest {
         persianVerbs();
         meaningChain();
         namePicture();
+        spelling(en, de, Words.read(Lang.FA, new FileInputStream(A + "words_fa.txt")));
+        scanText();
+        wordCards();
         System.out.println(checks + " checks, " + failures + " failures");
         if (failures > 0) System.exit(1);
     }
@@ -275,6 +278,94 @@ public final class ResolveTest {
         ok(!m.senses.isEmpty(), "the meanings are kept");
         Compounds.Split s = r.compounds.split("Marketingassistent", true);
         ok(s != null && s.parts.size() == 2 && s.parts.get(1).base.equals("Assistent"), "Assistent, not Assi + Stent");
+    }
+
+    static void spelling(Words en, Words de, Words fa) {
+        String[][] cases = {
+                // two mistakes, swapped letters, doubled letters, silent letters, sound-alikes
+                {"en", "hous", "house"}, {"en", "beautifull", "beautiful"}, {"en", "definately", "definitely"},
+                {"en", "recieve", "receive"}, {"en", "tommorow", "tomorrow"}, {"en", "freind", "friend"},
+                {"en", "wich", "which"}, {"en", "wether", "whether"}, {"en", "teh", "the"}, {"en", "exersice", "exercise"},
+                {"en", "goverment", "government"}, {"en", "enviroment", "environment"}, {"en", "untill", "until"},
+                {"de", "Schmeterling", "Schmetterling"}, {"de", "Fruend", "Freund"}, {"de", "sher", "sehr"},
+                {"de", "schoen", "schön"}, {"de", "Geburstag", "Geburtstag"}, {"de", "vielleict", "vielleicht"},
+                {"de", "Kuehlschrank", "Kühlschrank"}, {"de", "Strasenbahn", "Straßenbahn"}, {"de", "Fräulien", "Fräulein"},
+                {"de", "biette", "bitte"}, {"de", "Mitwoch", "Mittwoch"}, {"de", "eigendlich", "eigentlich"},
+                {"de", "Arbiet", "Arbeit"}, {"de", "nähmlich", "nämlich"},
+                {"fa", "صلام", "سلام"}, {"fa", "سلم", "سلام"}, {"fa", "تحران", "تهران"}, {"fa", "حیلی", "خیلی"},
+                {"fa", "قذا", "غذا"}, {"fa", "خداحافز", "خداحافظ"}, {"fa", "حواپیما", "هواپیما"}, {"fa", "مهربون", "مهربان"},
+                {"fa", "آسمون", "آسمان"}, {"fa", "کامپیتر", "کامپیوتر"}, {"fa", "بزرک", "بزرگ"},
+        };
+        for (String[] c : cases) {
+            Words w = c[0].equals("en") ? en : c[0].equals("de") ? de : fa;
+            eq(c[2], Spelling.best(w, c[1]), "spelling " + c[1]);
+        }
+        ok(Spelling.suggest(de, "Haus", 3).isEmpty(), "a known word has no suggestion");
+        ok(Spelling.suggest(en, "xqzvbnwk", 3).isEmpty(), "nonsense has none");
+        ok(Spelling.suggest(de, "Termien", 3).size() >= 2, "more than one suggestion");
+        eq("how are you today", Spelling.phrase(en, "how ar you todya"), "a sentence with typos");
+        eq("ich habe einen Hund gesehen", Spelling.phrase(de, "ich habe einen Hnud gesehn"), "German sentence");
+        eq(null, Spelling.phrase(en, "how are you"), "a right sentence is left alone");
+        ok(Spelling.neighbours(Lang.DE, 'z', 'u'), "QWERTZ: z next to u");
+        ok(!Spelling.neighbours(Lang.EN, 'q', 'p'), "q is far from p");
+    }
+
+    static void wordCards() throws IOException {
+        java.io.File f = java.io.File.createTempFile("notebook", ".json");
+        f.delete();
+        Notebook nb = new Notebook(f);
+        long now = 1_000_000_000_000L;
+        List<Lookup> recent = new ArrayList<>();
+        recent.add(lookup("Haus", Lang.DE, "house", "خانه"));
+        recent.add(lookup("I have a very long sentence here", Lang.EN, "Ich habe", "من"));
+        recent.add(lookup("Baum", Lang.DE, "tree", "درخت"));
+
+        WordCards.Pick p = WordCards.pick(nb, new ArrayList<>(), now, null, false);
+        eq(WordCards.EMPTY, p.mode, "nothing saved, nothing recent: the empty card");
+        p = WordCards.pick(nb, recent, now, null, false);
+        eq(WordCards.RECENT, p.mode, "no saved words: recent words");
+        eq("Haus", p.card.word, "the newest first");
+        p = WordCards.pick(nb, recent, now, p.card.key(), true);
+        eq("Baum", p.card.word, "Next: a long sentence is skipped");
+        p = WordCards.pick(nb, recent, now, p.card.key(), true);
+        eq("Haus", p.card.word, "and round again");
+
+        nb.save(Lang.DE, "Tisch", "table", "", now - 10);
+        nb.save(Lang.DE, "Stuhl", "chair", "", now - 5);
+        p = WordCards.pick(nb, recent, now, null, false);
+        eq(WordCards.DUE, p.mode, "a new saved word is due");
+        eq(2, p.due, "two due");
+        String first = p.card.word;
+        nb.answer(p.card, Notebook.GOOD, now);
+        p = WordCards.pick(nb, recent, now, null, true);
+        eq(1, p.due, "one left after Got it");
+        ok(!p.card.word.equals(first), "the next word comes");
+        nb.answer(p.card, Notebook.GOOD, now);
+        p = WordCards.pick(nb, recent, now, null, false);
+        eq(WordCards.PRACTICE, p.mode, "all done: practice the saved words");
+        String a = p.card.word;
+        p = WordCards.pick(nb, recent, now, p.card.key(), true);
+        ok(!p.card.word.equals(a), "Next word goes on");
+        p = WordCards.pick(nb, recent, now + 3 * Notebook.DAY, null, false);
+        eq(WordCards.DUE, p.mode, "due again days later");
+        f.delete();
+    }
+
+    static void scanText() {
+        List<ScanText.Item> w = new ArrayList<>();
+        w.add(new ScanText.Item("Notausgang", 10, 10, 200, 40, 0));
+        w.add(new ScanText.Item("Bitte", 10, 60, 80, 90, 1));
+        w.add(new ScanText.Item("freihalten", 90, 60, 220, 90, 1));
+        w.add(new ScanText.Item("Exit", 10, 200, 60, 230, 2));
+        eq("Notausgang\nBitte freihalten", ScanText.textIn(w, 0, 0, 300, 100), "an area: its lines in reading order");
+        eq("Bitte freihalten", ScanText.textIn(w, 300, 100, 0, 50), "dragged from bottom right to top left");
+        eq("", ScanText.textIn(w, 400, 400, 500, 500), "an empty area");
+        eq("freihalten", ScanText.at(w, 150, 75, 30).text, "a tap on a word");
+        eq("Exit", ScanText.at(w, 70, 215, 40).text, "a tap next to a word");
+        eq(null, ScanText.at(w, 600, 600, 30), "a tap far from every word");
+        ok(ScanText.aboveLevel("B2", "A2"), "B2 is above A2");
+        ok(!ScanText.aboveLevel("A1", "A2"), "A1 is not");
+        ok(!ScanText.aboveLevel(null, "A2"), "an unknown word is not marked");
     }
 
     static String jsonString(String s) {

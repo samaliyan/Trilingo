@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.9 — 2026-11-27
+
+- **Did you mean, much better**: up to two or three typing mistakes are understood, not one. Typical mistakes count less: a neighbouring key, a missing or doubled letter, swapped letters, letters that sound the same (ph/f, ä/e, schoen → schön; in Persian س/ص/ث, ز/ذ/ض/ظ, ت/ط, ه/ح, ق/غ, spoken آسمون → آسمان), a left-out vowel. Among close words the more common one wins. *Other spellings* shows the next best ones; a sentence gets each misspelt word fixed (how ar you todya → how are you today). Also offered when the service translated a misspelt word anyway, and without internet (the built-in dictionary's entry for the corrected word).
+- **Widget**: beside the search bar, a microphone (speak a word), *Translate copied text* (in a small window over any app) and *Scan text* (opens the camera).
+- **New widget: Word card** — review your saved words on the home screen: Show, then Again or Got it, exactly as in Review. When nothing is due, it goes through your saved words; with none saved, your recent words. Settings → Add Word card to home screen.
+- **Scan text, much more**: drag over the photo to choose some lines (shown, translated, copied or read aloud); the whole text under the photo — correct a misread word, translate the whole text, copy it, hear it; a tapped word can be heard and saved with the star; words above your level are outlined in orange, saved words in green; *Turn photo* for a sideways picture.
+
 ## 1.8 — 2026-11-26
 
 - **A meaning for every search**: when a word has no dictionary entry of its own, the meaning section shows the closest help instead of staying empty — the meaning of its dictionary form (ging → gehen, Häuser → Haus, aufgestanden → aufstehen, رفتم → رفتن), the Wikipedia summary for names (Berlin, EU), or for a sentence the meanings of its words. Always in the word’s own language: never the meaning of a translation. A line above it says what is shown.

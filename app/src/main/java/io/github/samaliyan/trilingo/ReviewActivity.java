@@ -32,6 +32,12 @@ public final class ReviewActivity extends Activity implements TextToSpeech.OnIni
     private TextToSpeech tts;
     private boolean ttsReady;
 
+    /** Answers and saved words change what the Word card widget shows. */
+    @Override protected void onPause() {
+        super.onPause();
+        WidgetProvider.updateAll(this);
+    }
+
     @Override protected void onCreate(Bundle saved) {
         super.onCreate(saved);
         ui = Ui.of(this);

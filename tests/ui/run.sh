@@ -176,6 +176,17 @@ wait_for "Showing results for" "" 25
 shot 02c_corrected_german 1
 expect "Schmetterling" "^Schmetterling$"
 expect "butterfly" "(?i)butterfly"
+# 1.9: two mistakes and sound-alike letters are understood; more spellings to choose from
+clear_field
+type_text "Kuehlschrank"
+wait_for "two mistakes" "^(Did you mean|Showing results for)$" 25
+expect "Kühlschrank" "^Kühlschrank$"
+shot 02c2_two_mistakes 1
+clear_field
+type_text "Termien"
+wait_for "Termin" "^(Did you mean|Showing results for)$" 25
+wait_for "other spellings" "^Other spellings$" 10
+shot 02c3_other_spellings 1
 
 # 3. German word → English + Persian
 clear_field
@@ -445,9 +456,10 @@ sleep 3
 MID=$(adb shell content query --uri content://media/external/images/media --projection _id:_display_name 2>/dev/null | grep scan_sample | head -1 | sed -n 's/.*_id=\([0-9]*\).*/\1/p')
 if [ -n "$MID" ]; then
   adb shell am start -a android.intent.action.SEND -t image/png -d "content://media/external/images/media/$MID" --grant-read-uri-permission -n "$PKG/.ScanActivity" > /dev/null
-  wait_for "scan result" "^(Tap a word to translate it\.|No text found in this picture\.|Could not read.*)$" 30
+  wait_for "scan result" "^(Tap a word to translate it\..*|No text found in this picture\.|Could not read.*)$" 30
   shot 03z12_scan 1
-  expect "Tap a word to translate it."
+  expect "Tap a word to translate it." "^Tap a word to translate it\. Drag over the photo.*$"
+  expect "turn photo" "^Turn photo$"
   P=$(nfind "photo" "^Photo with \d+ words.*")
   if [ -n "$P" ]; then
     set -- $P
@@ -456,6 +468,12 @@ if [ -n "$MID" ]; then
     wait_for "translation" "(?i).*(station|ایستگاه).*" 25
     shot 03z13_scan_word 1
   fi
+  # 1.9: the whole text, editable, translated as a whole
+  scroll_to "the text" "^The text · German$"
+  scroll_to "translate the text" "^Translate the text$"
+  tap "Translate the text" "^Translate the text$"
+  wait_for "text translated" "(?i)^ENGLISH$" 25
+  shot 03z13b_scan_text 1
   back
 else
   log "scan test skipped: the picture could not be found in the media store"
