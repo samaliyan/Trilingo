@@ -560,7 +560,8 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                 // still offered, without replacing the answer.
                 if (!res.hasSuggestion() && !echoes(res) && prep.split == null && !query.contains(" ")
                         && !(res.source == Lang.EN && Character.isUpperCase(query.charAt(0)))) {
-                    List<Spelling.Candidate> c = Lexicon.spellings(query, f != null ? f : res.source, 1);
+                    // automatic: English and German both (the service may take a German typo for English)
+                    List<Spelling.Candidate> c = Lexicon.spellings(query, f, 1);
                     if (!c.isEmpty() && c.get(0).cost < 0.85) res = res.withSuggestion(c.get(0).word);
                 }
                 if (!res.hasSuggestion() && umlautHint != null) res = res.withSuggestion(umlautHint);
@@ -753,7 +754,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         if (corrected) content.addView(correctedRow(l.query));
         else if (l.hasSuggestion()) content.addView(suggestionRow(l.suggestion));
         if (corrected || l.hasSuggestion()) {
-            View also = otherSpellings(corrected ? l.query : l.suggestion, l.source);
+            View also = otherSpellings(corrected ? l.query : l.suggestion);
             if (also != null) content.addView(also);
         }
 
@@ -1169,7 +1170,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
      * "Other spellings": the next best corrections of what was typed, under "Did you mean" or "Showing
      * results for" — tap one to look it up.
      */
-    private View otherSpellings(String shown, Lang lang) {
+    private View otherSpellings(String shown) {
         String typed = Text.clean(input.getText().toString());
         if (typed.contains(" ") || typed.isEmpty()) return null;
         // the search takes a moment on a slow phone: done in the background, the row appears when ready
@@ -1177,8 +1178,12 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         int gen = generation;
         new Thread(() -> {
             List<String> words = new ArrayList<>();
-            for (Spelling.Candidate c : Lexicon.spellings(typed, lang, 4))
-                if (!c.word.equalsIgnoreCase(shown) && words.size() < 3) words.add(c.word);
+            for (Spelling.Candidate c : Lexicon.spellings(typed, forced, 6)) {
+                // not the word shown, nor just a form of it (Kühlschrank → Kühlschränke)
+                String k = c.word.toLowerCase(Locale.ROOT), sh = shown.toLowerCase(Locale.ROOT);
+                if (k.equals(sh) || sh.length() >= 4 && (k.startsWith(sh) || Words.fold(Lang.DE, k).startsWith(Words.fold(Lang.DE, sh)))) continue;
+                if (words.size() < 3) words.add(c.word);
+            }
             runOnUiThread(() -> {
                 if (gen != generation || isDestroyed() || words.isEmpty()) return;
                 holder.addView(spellingRow(words));
