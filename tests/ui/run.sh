@@ -844,6 +844,8 @@ if scroll_to "Add widget to home screen" "" quiet; then
     adb install -r "$APK" > /dev/null && log "app updated in place"
     sleep 4
     adb shell input keyevent KEYCODE_HOME; sleep 2
+    # the widget may be on the second page of the home screen (as when it was added)
+    if [ -z "$(nfind "Translate" "^Translate$")" ]; then adb shell input swipe 900 1200 150 1200 300; sleep 2; fi
     shot 23a_home_after_update 1
     wait_for "widget after update" "^Translate$" 20
     if tap "Translate" "^Translate$"; then
