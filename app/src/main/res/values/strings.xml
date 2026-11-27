@@ -438,7 +438,7 @@
     <string name="scan_chosen_text">Chosen lines</string>
     <string name="widget_voice">Speak a word</string>
     <string name="widget_daily">%1$s · %2$s</string>
-    <string name="widget_daily_desc">Word of the day: %1$s, %2$s. Tap to open it</string>
+    <string name="widget_daily_desc">Word of the day: %1$s, %2$s</string>
     <string name="widget_paste">Translate copied text</string>
     <string name="widget_scan">Scan text</string>
     <string name="widget_card_name">Word card</string>

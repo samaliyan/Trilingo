@@ -35,7 +35,7 @@
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_search" />
 
-            <!-- "Translate a word", and under it the word of the day with its translation (tap: open it) -->
+            <!-- "Translate", and under it the word of the day with its translation -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

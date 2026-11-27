@@ -4,7 +4,7 @@
 
 - **Example sentences for every tense**: in Conjugation each tense (Present, Simple past, Perfect, Future, Imperative …) has an *Examples* button: real sentences that use that tense of the verb, the verb forms in bold, with translations and audio. Sentences of another tense that share a word (خواهیم رفت is future, not the past رفت) are left out.
 - **The keyboard stays closed**: closed with Back right after the app opens, it no longer comes back up (it used to, twice).
-- **Widget**: the search bar now opens a small translate window right on the home screen (type, see the translation, without leaving it); under it, the *word of the day* — one of your saved words with its translation, a new one each day (tap it to open it).
+- **Widget**: the search bar now opens a small translate window right on the home screen (type, see the translation, without leaving it); under it, the *word of the day* — one of your saved words with its translation, a new one each day.
 
 ## 1.9 — 2026-11-27
 

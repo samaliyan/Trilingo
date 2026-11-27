@@ -78,7 +78,7 @@ public final class WidgetProvider extends AppWidgetProvider {
         Intent type = new Intent(c, BubbleActivity.class).putExtra(BubbleActivity.EXTRA_TYPE, true)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         v.setOnClickPendingIntent(R.id.bar, PendingIntent.getActivity(c, 13, type, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));
-        // the word of the day under it: one of your saved words with its translation; tap to open it
+        // the word of the day under it: one of your saved words with its translation
         Notebook.Card day = WordCards.ofTheDay(Store.notebook(c),
                 new Store(c).saveHistory() ? Store.history(c).items() : null, System.currentTimeMillis());
         if (day != null) {
@@ -86,7 +86,7 @@ public final class WidgetProvider extends AppWidgetProvider {
             v.setTextViewText(R.id.daily, c.getString(R.string.widget_daily, day.word, back));
             v.setContentDescription(R.id.daily, c.getString(R.string.widget_daily_desc, day.word, back));
             v.setViewVisibility(R.id.daily, View.VISIBLE);
-            v.setOnClickPendingIntent(R.id.daily, open(c, day.word, 14));
+            // (not a tap target of its own: on some launchers it took the taps meant for the search bar)
         } else {
             v.setViewVisibility(R.id.daily, View.GONE);
         }
