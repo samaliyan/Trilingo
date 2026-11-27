@@ -241,9 +241,9 @@ tap "English: go"
 expect "went" "^went$"
 # 1.10: example sentences of one tense (the first tense card's Examples button)
 tap "tense examples" "^Example sentences in the .* of go$"
-wait_for "tense examples" "^(Sentences from Tatoeba.*|No sentences found with this tense yet\.)$" 30
+wait_for "tense examples" "^(Listen in English|No sentences found with this tense yet\.)$" 30
 shot 03h2_tense_examples 1
-expect "tense sentences" "^Sentences from Tatoeba.*$"
+expect "tense sentences" "^Listen in English$"
 back
 back
 scroll_to "Examples"; tap "Examples"
@@ -797,13 +797,15 @@ if scroll_to "Add widget to home screen" "" quiet; then
   sleep 2
   adb shell input keyevent KEYCODE_HOME
   shot 22_home_screen_widget 3
-  if [ -z "$(nfind "Translate a word")" ]; then
+  if [ -z "$(nfind "Translate" "^Translate$")" ]; then
     adb shell input swipe 900 1200 150 1200 300
     shot 22b_home_screen_widget_page2 2
   fi
-  if tap "Translate a word"; then
+  if tap "Translate" "^Translate$"; then
+    # 1.10: a small translate window right on the home screen
     shot 23_opened_from_widget 2.5
-    expect "Type a word"
+    expect "translate window" "^(Copy text, or type here|Open in Trilingo)$"
+    back
   else
     fail "widget not visible on the home screen"
   fi

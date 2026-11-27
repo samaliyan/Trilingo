@@ -25,8 +25,8 @@
             android:background="@drawable/widget_field"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp">
+            android:paddingStart="12dp"
+            android:paddingEnd="10dp">
 
             <ImageView
                 android:id="@+id/search_icon"
@@ -68,27 +68,27 @@
 
         <ImageView
             android:id="@+id/btn_voice"
-            android:layout_width="40dp"
+            android:layout_width="38dp"
             android:layout_height="48dp"
             android:layout_marginStart="2dp"
             android:contentDescription="@string/widget_voice"
-            android:padding="9dp"
+            android:padding="8dp"
             android:src="@drawable/ic_w_mic" />
 
         <ImageView
             android:id="@+id/btn_paste"
-            android:layout_width="40dp"
+            android:layout_width="38dp"
             android:layout_height="48dp"
             android:contentDescription="@string/widget_paste"
-            android:padding="9dp"
+            android:padding="8dp"
             android:src="@drawable/ic_w_paste" />
 
         <ImageView
             android:id="@+id/btn_scan"
-            android:layout_width="40dp"
+            android:layout_width="38dp"
             android:layout_height="48dp"
             android:contentDescription="@string/widget_scan"
-            android:padding="9dp"
+            android:padding="8dp"
             android:src="@drawable/ic_w_camera" />
     </LinearLayout>
 

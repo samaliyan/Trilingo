@@ -111,7 +111,7 @@
     <!-- Widget -->
     <string name="widget_name">Translate</string>
     <string name="widget_description">Search bar with voice, copied text and scan, and your recent words</string>
-    <string name="widget_hint">Translate a word</string>
+    <string name="widget_hint">Translate</string>
     <string name="grammar">Grammar</string>
     <string name="grammar_open">Grammar lessons</string>
     <string name="grammar_search_hint">Search a topic or a word</string>
@@ -437,7 +437,8 @@
     <string name="scan_translate_text">Translate the text</string>
     <string name="scan_chosen_text">Chosen lines</string>
     <string name="widget_voice">Speak a word</string>
-    <string name="widget_daily">Word of the day: %1$s · %2$s</string>
+    <string name="widget_daily">%1$s · %2$s</string>
+    <string name="widget_daily_desc">Word of the day: %1$s, %2$s. Tap to open it</string>
     <string name="widget_paste">Translate copied text</string>
     <string name="widget_scan">Scan text</string>
     <string name="widget_card_name">Word card</string>

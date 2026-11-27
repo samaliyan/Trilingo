@@ -699,9 +699,16 @@ final class DetailSheets {
                 }
                 // only sentences that really show this tense
                 List<String[]> others = new ArrayList<>();
-                for (Conjugation.Tense o : c.tenses) if (o != t) others.add(o.forms);
+                String[] orders = null;
+                for (Conjugation.Tense o : c.tenses) {
+                    if (o != t) others.add(o.forms);
+                    if (o.name.toLowerCase(java.util.Locale.ROOT).startsWith("imperative")) orders = o.forms;
+                }
                 boolean imperative = t.name.toLowerCase(java.util.Locale.ROOT).startsWith("imperative");
-                all.removeIf(x -> !Examples.showsTense(x.example.text, t.forms, others, imperative));
+                // English lists no imperative: it is the plain verb ("Go there alone.")
+                if (orders == null && c.lang == Lang.EN) orders = new String[]{c.verb.replaceFirst("^to ", "")};
+                final String[] ord = orders;
+                all.removeIf(x -> !Examples.showsTense(x.example.text, t.forms, others, imperative, ord));
                 if (Examples.select(all, c.lang, null, 4).size() >= 4) break;
             }
             final List<Examples.Example> res = ok > 0 ? fillMissing(Examples.select(all, c.lang, null, 4), c.lang) : null;

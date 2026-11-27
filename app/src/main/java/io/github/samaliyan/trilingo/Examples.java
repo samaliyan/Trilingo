@@ -125,6 +125,22 @@ final class Examples {
      * for the imperative not a question and the verb among the first words ("Geh nach Hause!").
      */
     static boolean showsTense(String sentence, String[] forms, List<String[]> otherTenses, boolean imperative) {
+        return showsTense(sentence, forms, otherTenses, imperative, null);
+    }
+
+    /**
+     * As above; {@code imperativeForms} (when the verb has them): a sentence that starts with one is an
+     * order ("Go there alone."), not an example of the present.
+     */
+    static boolean showsTense(String sentence, String[] forms, List<String[]> otherTenses, boolean imperative,
+                              String[] imperativeForms) {
+        if (!imperative && imperativeForms != null && !sentence.trim().endsWith("?")) {
+            String[] first = Text.unifyPersian(sentence.toLowerCase(Locale.ROOT)).trim().split("[^\\p{L}\\p{M}'\u200c]+");
+            String head = first.length > 0 && first[0].isEmpty() && first.length > 1 ? first[1] : first.length > 0 ? first[0] : "";
+            for (String w : tenseWords(imperativeForms)) {
+                if (Text.unifyPersian(w.toLowerCase(Locale.ROOT)).equals(head)) return false;
+            }
+        }
         Set<String> ws = new HashSet<>();
         String low = Text.unifyPersian(sentence.toLowerCase(Locale.ROOT));
         for (String w : low.split("[^\\p{L}\\p{M}'\u200c]+")) if (!w.isEmpty()) ws.add(w);

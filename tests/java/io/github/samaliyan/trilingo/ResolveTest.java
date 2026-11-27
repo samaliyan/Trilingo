@@ -389,6 +389,17 @@ public final class ResolveTest {
         ok(!Examples.showsTense("کی خواهید رفت؟", past, fa, false), "خواهید رفت is future, not past");
         ok(Examples.showsTense("دیروز کجا رفت؟", past, fa, false), "a past sentence");
         ok(Examples.tenseQuery(future).startsWith("=gehen ("), "future");
+        Conjugation go = Conjugation.of(Lang.EN, "go");
+        String[] goPresent = null, goImp = null;
+        List<String[]> goOthers = new ArrayList<>();
+        for (Conjugation.Tense t : go.tenses) {
+            if (t.name.equals("Present")) goPresent = t.forms;
+            else goOthers.add(t.forms);
+            if (t.name.startsWith("Imperative")) goImp = t.forms;
+        }
+        if (goImp == null) goImp = new String[]{"go"};
+        ok(!Examples.showsTense("Go there alone.", goPresent, goOthers, false, goImp), "an order is not the present");
+        ok(Examples.showsTense("We all go to school.", goPresent, goOthers, false, goImp), "the present");
     }
 
     static void scanText() {

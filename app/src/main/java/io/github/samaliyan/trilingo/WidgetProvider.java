@@ -84,6 +84,7 @@ public final class WidgetProvider extends AppWidgetProvider {
         if (day != null) {
             String back = day.back.split("\n")[0];
             v.setTextViewText(R.id.daily, c.getString(R.string.widget_daily, day.word, back));
+            v.setContentDescription(R.id.daily, c.getString(R.string.widget_daily_desc, day.word, back));
             v.setViewVisibility(R.id.daily, View.VISIBLE);
             v.setOnClickPendingIntent(R.id.daily, open(c, day.word, 14));
         } else {
