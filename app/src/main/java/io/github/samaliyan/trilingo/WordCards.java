@@ -38,23 +38,43 @@ final class WordCards {
         List<Notebook.Card> saved = new ArrayList<>();
         for (Notebook.Card c : nb.saved(null)) if (!c.back.isEmpty()) saved.add(c);
         if (!saved.isEmpty()) return new Pick(rotate(saved, current, next), PRACTICE, 0);
-        List<Notebook.Card> rec = new ArrayList<>();
-        if (recent != null) {
-            for (Lookup l : recent) {
-                String w = Text.clean(l.query);
-                String back = Notebook.summary(l);
-                if (w.isEmpty() || w.split(" ").length > 3 || back.isEmpty()) continue;
-                Notebook.Card c = new Notebook.Card();
-                c.lang = l.source;
-                c.word = w;
-                c.back = back;
-                c.folder = "";
-                rec.add(c);
-                if (rec.size() >= 30) break;
-            }
-        }
+        List<Notebook.Card> rec = recentCards(recent);
         if (!rec.isEmpty()) return new Pick(rotate(rec, current, next), RECENT, 0);
         return new Pick(null, EMPTY, 0);
+    }
+
+    /**
+     * The word of the day for the search widget: one of the saved words (or, with none saved, of the recent
+     * ones), a different one each day; null when there are none.
+     */
+    static Notebook.Card ofTheDay(Notebook nb, List<Lookup> recent, long now) {
+        List<Notebook.Card> list = new ArrayList<>();
+        for (Notebook.Card c : nb.saved(null)) if (!c.back.isEmpty()) list.add(c);
+        if (list.isEmpty()) list.addAll(recentCards(recent));
+        if (list.isEmpty()) return null;
+        // the saved list is newest first: sort by word so that the order does not change with each save
+        list.sort((a, b) -> a.word.compareToIgnoreCase(b.word));
+        long day = Math.floorDiv(now + 3 * 3_600_000L, Notebook.DAY);
+        return list.get((int) Math.floorMod(day * 7919L, (long) list.size()));
+    }
+
+    /** Cards for recent lookups of a word or short phrase with a translation, newest first (at most 30). */
+    private static List<Notebook.Card> recentCards(List<Lookup> recent) {
+        List<Notebook.Card> rec = new ArrayList<>();
+        if (recent == null) return rec;
+        for (Lookup l : recent) {
+            String w = Text.clean(l.query);
+            String back = Notebook.summary(l);
+            if (w.isEmpty() || w.split(" ").length > 3 || back.isEmpty()) continue;
+            Notebook.Card c = new Notebook.Card();
+            c.lang = l.source;
+            c.word = w;
+            c.back = back;
+            c.folder = "";
+            rec.add(c);
+            if (rec.size() >= 30) break;
+        }
+        return rec;
     }
 
     /** The current card again, or (next) the one after it; the first when the current one is gone. */

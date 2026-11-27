@@ -71,6 +71,107 @@ final class Examples {
                 + "&showtrans=matching&word_count=3-12&sort=relevance&limit=40&is_unapproved=no&is_orphan=no" + filter;
     }
 
+    /**
+     * Tatoeba search for sentences with one tense of a verb: any of its forms ("=ging | =gingst | …"); for a
+     * tense of two words the fixed word and any of the changing ones ("=gegangen (=bin | =bist | =ist …)").
+     */
+    static String tenseQuery(String[] forms) {
+        List<String[]> all = new ArrayList<>();
+        for (String f : forms) {
+            String c = Text.clean(f.replaceAll("\\(.*?\\)", " ").replaceAll("[^\\p{L}\\p{M}'\u200c ]", " "));
+            if (!c.isEmpty()) all.add(c.split(" "));
+        }
+        if (all.isEmpty()) return "";
+        boolean sameLength = true;
+        for (String[] t : all) sameLength &= t.length == all.get(0).length;
+        java.util.LinkedHashSet<String> fixed = new java.util.LinkedHashSet<>(), varying = new java.util.LinkedHashSet<>();
+        if (sameLength && all.get(0).length > 1) {
+            // the words every form has (the participle, "werde … gehen") and the others (the auxiliary)
+            for (String w : all.get(0)) {
+                boolean everywhere = true;
+                for (String[] t : all) everywhere &= java.util.Arrays.asList(t).contains(w);
+                if (everywhere) fixed.add(w);
+            }
+            for (String[] t : all) for (String w : t) if (!fixed.contains(w)) varying.add(w);
+        }
+        if (!sameLength || all.get(0).length > 1 && (fixed.isEmpty() || varying.size() > 8)) {
+            // forms of different shape (geh / gehen Sie, رفته‌ام / رفته است): any of the forms, each whole
+            java.util.LinkedHashSet<String> any = new java.util.LinkedHashSet<>();
+            for (String[] t : all) {
+                if (t.length == 1) any.add("=" + t[0]);
+                else {
+                    StringBuilder b = new StringBuilder("(");
+                    for (String w : t) b.append(b.length() > 1 ? " " : "").append('=').append(w);
+                    any.add(b.append(')').toString());
+                }
+            }
+            return String.join(" | ", any);
+        }
+        if (all.get(0).length == 1) for (String[] t : all) varying.add(t[0]);
+        StringBuilder q = new StringBuilder();
+        for (String w : fixed) q.append(q.length() > 0 ? " " : "").append('=').append(w);
+        if (!varying.isEmpty()) {
+            StringBuilder or = new StringBuilder();
+            for (String w : varying) or.append(or.length() > 0 ? " | " : "").append('=').append(w);
+            if (q.length() > 0) q.append(" (").append(or).append(')');
+            else q.append(or);
+        }
+        return q.toString();
+    }
+
+    /**
+     * Whether a sentence found for a tense really shows it: not a form of a longer tense that contains the
+     * same word ("خواهیم رفت" is future, not the past رفت; "… gehen werde" is future, not the present), and
+     * for the imperative not a question and the verb among the first words ("Geh nach Hause!").
+     */
+    static boolean showsTense(String sentence, String[] forms, List<String[]> otherTenses, boolean imperative) {
+        Set<String> ws = new HashSet<>();
+        String low = Text.unifyPersian(sentence.toLowerCase(Locale.ROOT));
+        for (String w : low.split("[^\\p{L}\\p{M}'\u200c]+")) if (!w.isEmpty()) ws.add(w);
+        Set<String> mine = new HashSet<>();
+        for (String w : tenseWords(forms)) mine.add(Text.unifyPersian(w.toLowerCase(Locale.ROOT)));
+        for (String[] other : otherTenses) {
+            for (String f : other) {
+                List<String> tw = tenseWords(new String[]{f});
+                if (tw.size() < 2) continue;
+                boolean all = true, longer = false;
+                for (String w : tw) {
+                    String x = Text.unifyPersian(w.toLowerCase(Locale.ROOT));
+                    all &= ws.contains(x);
+                    longer |= !mine.contains(x);
+                }
+                if (all && longer) return false;
+            }
+        }
+        if (imperative) {
+            if (sentence.trim().endsWith("?")) return false;
+            String[] first = low.trim().split("[^\\p{L}\\p{M}'\u200c]+");
+            boolean early = false;
+            for (int i = 0; i < Math.min(3, first.length); i++) early |= mine.contains(first[i]);
+            return early;
+        }
+        return true;
+    }
+
+    /** The words of a tense's forms, to make them bold in the sentences. */
+    static List<String> tenseWords(String[] forms) {
+        List<String> out = new ArrayList<>();
+        for (String f : forms) {
+            String c = Text.clean(f.replaceAll("\\(.*?\\)", " ").replaceAll("[^\\p{L}\\p{M}'\u200c ]", " "));
+            for (String w : c.split(" ")) if (!w.isEmpty() && !out.contains(w)) out.add(w);
+        }
+        return out;
+    }
+
+    /** As {@link #url}, for a ready search ({@link #tenseQuery}). */
+    static String queryUrl(String query, Lang src, String filter) {
+        Lang[] t = src.targets();
+        String q = src == Lang.FA ? Text.unifyPersian(query) : query;
+        return "https://api.tatoeba.org/v1/sentences?lang=" + code(src) + "&q=" + Services.enc(q)
+                + "&trans%3Alang=" + code(t[0]) + "%2C" + code(t[1])
+                + "&showtrans=matching&word_count=3-14&sort=relevance&limit=40&is_unapproved=no&is_orphan=no" + filter;
+    }
+
     /** A sentence with its translations and how good an example it is. */
     static final class Candidate {
         final Example example;

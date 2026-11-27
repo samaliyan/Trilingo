@@ -81,6 +81,14 @@ sleep 2.5
 shot 01_first_start
 KB=$(adb shell dumpsys input_method | grep -c "mInputShown=true")
 [ "$KB" -gt 0 ] && log "ok: keyboard open on first start" || fail "keyboard not open on first start"
+# 1.10: closed with Back, the keyboard stays closed (it used to come back up twice)
+if [ "$KB" -gt 0 ]; then
+  back
+  sleep 3.5
+  KB=$(adb shell dumpsys input_method | grep -c "mInputShown=true")
+  [ "$KB" -eq 0 ] && log "ok: keyboard stays closed" || fail "keyboard came back after Back"
+  tap "search field" "^Type a word$" > /dev/null || true
+fi
 expect "English · German · Persian"
 expect "Type a word"
 
@@ -231,6 +239,12 @@ shot 03h_conjugation_from_persian 1
 expect "می‌روم" "^می.روم$"
 tap "English: go"
 expect "went" "^went$"
+# 1.10: example sentences of one tense (the first tense card's Examples button)
+tap "tense examples" "^Example sentences in the .* of go$"
+wait_for "tense examples" "^(Sentences from Tatoeba.*|No sentences found with this tense yet\.)$" 30
+shot 03h2_tense_examples 1
+expect "tense sentences" "^Sentences from Tatoeba.*$"
+back
 back
 scroll_to "Examples"; tap "Examples"
 wait_for "examples result" "^(Sentences from Tatoeba|No examples found)" 25

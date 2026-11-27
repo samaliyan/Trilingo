@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.10 — 2026-11-27
+
+- **Example sentences for every tense**: in Conjugation each tense (Present, Simple past, Perfect, Future, Imperative …) has an *Examples* button: real sentences that use that tense of the verb, the verb forms in bold, with translations and audio. Sentences of another tense that share a word (خواهیم رفت is future, not the past رفت) are left out.
+- **The keyboard stays closed**: closed with Back right after the app opens, it no longer comes back up (it used to, twice).
+- **Widget**: the search bar now opens a small translate window right on the home screen (type, see the translation, without leaving it); under it, the *word of the day* — one of your saved words with its translation, a new one each day (tap it to open it).
+
 ## 1.9 — 2026-11-27
 
 - **Did you mean, much better**: up to two or three typing mistakes are understood, not one. Typical mistakes count less: a neighbouring key, a missing or doubled letter, swapped letters, letters that sound the same (ph/f, ä/e, schoen → schön; in Persian س/ص/ث, ز/ذ/ض/ظ, ت/ط, ه/ح, ق/غ, spoken آسمون → آسمان), a left-out vowel. Among close words the more common one wins. *Other spellings* shows the next best ones; a sentence gets each misspelt word fixed (how ar you todya → how are you today). Also offered when the service translated a misspelt word anyway, and without internet (the built-in dictionary's entry for the corrected word).

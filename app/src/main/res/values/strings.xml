@@ -437,6 +437,7 @@
     <string name="scan_translate_text">Translate the text</string>
     <string name="scan_chosen_text">Chosen lines</string>
     <string name="widget_voice">Speak a word</string>
+    <string name="widget_daily">Word of the day: %1$s · %2$s</string>
     <string name="widget_paste">Translate copied text</string>
     <string name="widget_scan">Scan text</string>
     <string name="widget_card_name">Word card</string>
@@ -452,4 +453,7 @@
     <string name="widget_card_open">Open Trilingo</string>
     <string name="widget_card_preview_title">Review · 5 due</string>
     <string name="widget_card_preview_word">der Schmetterling</string>
+    <string name="tense_examples">Examples</string>
+    <string name="tense_examples_desc">Example sentences in the %1$s of %2$s</string>
+    <string name="tense_examples_none">No sentences found with this tense yet.</string>
 </resources>

@@ -44,6 +44,7 @@ public final class ResolveTest {
         spelling(en, de, Words.read(Lang.FA, new FileInputStream(A + "words_fa.txt")));
         scanText();
         wordCards();
+        tenseExamples();
         System.out.println(checks + " checks, " + failures + " failures");
         if (failures > 0) System.exit(1);
     }
@@ -320,6 +321,8 @@ public final class ResolveTest {
         recent.add(lookup("I have a very long sentence here", Lang.EN, "Ich habe", "من"));
         recent.add(lookup("Baum", Lang.DE, "tree", "درخت"));
 
+        eq(null, WordCards.ofTheDay(nb, new ArrayList<>(), now), "no word of the day without words");
+        ok(WordCards.ofTheDay(nb, recent, now) != null, "a recent word as the word of the day");
         WordCards.Pick p = WordCards.pick(nb, new ArrayList<>(), now, null, false);
         eq(WordCards.EMPTY, p.mode, "nothing saved, nothing recent: the empty card");
         p = WordCards.pick(nb, recent, now, null, false);
@@ -348,7 +351,44 @@ public final class ResolveTest {
         ok(!p.card.word.equals(a), "Next word goes on");
         p = WordCards.pick(nb, recent, now + 3 * Notebook.DAY, null, false);
         eq(WordCards.DUE, p.mode, "due again days later");
+        eq(WordCards.ofTheDay(nb, recent, now).word, WordCards.ofTheDay(nb, recent, now + 3600_000L).word, "the same word all day");
+        ok(!WordCards.ofTheDay(nb, recent, now).word.equals(WordCards.ofTheDay(nb, recent, now + Notebook.DAY).word),
+                "another word the next day");
         f.delete();
+    }
+
+    static void tenseExamples() {
+        Conjugation g = Conjugation.of(Lang.DE, "gehen");
+        String[] present = null, perfect = null, future = null, imperative = null;
+        List<String[]> all = new ArrayList<>();
+        for (Conjugation.Tense t : g.tenses) {
+            all.add(t.forms);
+            if (t.name.equals("Present")) present = t.forms;
+            if (t.name.equals("Perfect")) perfect = t.forms;
+            if (t.name.equals("Future")) future = t.forms;
+            if (t.name.startsWith("Imperative")) imperative = t.forms;
+        }
+        eq("=gehe | =gehst | =geht | =gehen", Examples.tenseQuery(present), "present: any form");
+        eq("=gegangen (=bin | =bist | =ist | =sind | =seid)", Examples.tenseQuery(perfect), "perfect: participle and an auxiliary");
+        eq("=geh | =geht | (=gehen =Sie)", Examples.tenseQuery(imperative), "imperative: forms of different shape");
+        List<String[]> others = new ArrayList<>(all);
+        others.remove(present);
+        ok(!Examples.showsTense("Ich weiß, dass ich gehen werde.", present, others, false), "future is not present");
+        ok(Examples.showsTense("Wir gehen jetzt nach Hause.", present, others, false), "a present sentence");
+        others = new ArrayList<>(all);
+        others.remove(imperative);
+        ok(Examples.showsTense("Geh nach Hause!", imperative, others, true), "an order");
+        ok(!Examples.showsTense("Wohin gehen Sie?", imperative, others, true), "a question is no order");
+        Conjugation r = Conjugation.of(Lang.FA, "رفتن");
+        String[] past = null;
+        List<String[]> fa = new ArrayList<>();
+        for (Conjugation.Tense t : r.tenses) {
+            if (t.name.equals("Simple past")) past = t.forms;
+            else fa.add(t.forms);
+        }
+        ok(!Examples.showsTense("کی خواهید رفت؟", past, fa, false), "خواهید رفت is future, not past");
+        ok(Examples.showsTense("دیروز کجا رفت؟", past, fa, false), "a past sentence");
+        ok(Examples.tenseQuery(future).startsWith("=gehen ("), "future");
     }
 
     static void scanText() {

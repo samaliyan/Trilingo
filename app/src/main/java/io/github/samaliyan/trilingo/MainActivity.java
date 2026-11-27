@@ -1890,35 +1890,49 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         else wantKeyboard = true;
     }
 
+    /** Which request to open the keyboard is the current one; an older one's retries stop. */
+    private int keyboardRequest;
+    /** The keyboard of the current request came up: no more retries (the user may close it again). */
+    private boolean keyboardCameUp;
+
     private void openKeyboardNow() {
         input.requestFocus();
-        // Right after the app starts the keyboard service may not be connected yet: ask again a little later.
-        input.post(this::askKeyboard);
-        input.postDelayed(() -> {
-            if (!keyboardVisible()) askKeyboard();
-        }, 450);
-        // a slow first start (cold process) can take longer: keep asking for a few seconds until it is up
-        for (int ms : new int[]{1200, 2000, 3000}) {
-            input.postDelayed(() -> {
-                if (!keyboardVisible()) askKeyboard();
-            }, ms);
-        }
+        int req = ++keyboardRequest;
+        keyboardCameUp = false;
+        // Right after the app starts the keyboard service may not be connected yet: ask again a little
+        // later, for a few seconds on a slow first start — but only until it has come up once. Once it was
+        // up, closing it (the Back or hide-keyboard button) is the user's choice and it stays closed.
+        input.post(() -> askKeyboard(req));
+        for (int ms : new int[]{450, 1200, 2000, 3000}) input.postDelayed(() -> askKeyboard(req), ms);
     }
 
-    private void askKeyboard() {
-        if (isFinishing() || !input.hasFocus()) return;
+    private void askKeyboard(int req) {
+        if (isFinishing() || !input.hasFocus() || req != keyboardRequest) return;
+        if (keyboardVisible()) keyboardCameUp = true;
+        if (keyboardCameUp) return;
         if (Build.VERSION.SDK_INT >= 30) {
             WindowInsetsController c = getWindow().getInsetsController();
             if (c != null) c.show(WindowInsets.Type.ime());
         }
         InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (im != null) im.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT);
+        // seen up a moment later: the later retries are not needed
+        input.postDelayed(() -> {
+            if (req == keyboardRequest && keyboardVisible()) keyboardCameUp = true;
+        }, 300);
     }
 
     private boolean keyboardVisible() {
-        if (Build.VERSION.SDK_INT < 30) return false;      // unknown: asking again does no harm
-        WindowInsets wi = input.getRootWindowInsets();
-        return wi != null && wi.isVisible(WindowInsets.Type.ime());
+        if (Build.VERSION.SDK_INT >= 30) {
+            WindowInsets wi = input.getRootWindowInsets();
+            return wi != null && wi.isVisible(WindowInsets.Type.ime());
+        }
+        // Android 8–10: the keyboard is up when it covers a good part of the window
+        View root = getWindow().getDecorView();
+        android.graphics.Rect r = new android.graphics.Rect();
+        root.getWindowVisibleDisplayFrame(r);
+        int h = root.getRootView().getHeight();
+        return h > 0 && h - r.bottom > h / 5;
     }
 
     private void hideKeyboard() {

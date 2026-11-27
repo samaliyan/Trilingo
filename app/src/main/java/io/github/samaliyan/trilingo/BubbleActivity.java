@@ -43,6 +43,8 @@ public final class BubbleActivity extends Activity {
     private ProgressBar busy;
     private LinearLayout results;
     private boolean readClipboard;
+    /** From the widget's search bar: type a word here (what is copied is not read in). */
+    static final String EXTRA_TYPE = "type";
     private int generation;
     private final Runnable typed = () -> translate(false);
 
@@ -155,6 +157,7 @@ public final class BubbleActivity extends Activity {
 
     @Override protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        setIntent(intent);
         readClipboard = false;               // opened again from the bubble: read what is copied now
     }
 
@@ -163,9 +166,11 @@ public final class BubbleActivity extends Activity {
         super.onWindowFocusChanged(hasFocus);
         if (!hasFocus || readClipboard) return;
         readClipboard = true;
-        String t = clipboard();
+        boolean typing = getIntent() != null && getIntent().getBooleanExtra(EXTRA_TYPE, false);
+        String t = typing ? "" : clipboard();
         if (!t.isEmpty() && !t.equals(Text.clean(input.getText().toString()))) setText(t);
-        else if (t.isEmpty() && input.getText().length() == 0) {
+        else if (t.isEmpty() && (typing || input.getText().length() == 0)) {
+            if (typing) input.selectAll();
             input.requestFocus();
             android.view.inputmethod.InputMethodManager im = (android.view.inputmethod.InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
             if (im != null) im.showSoftInput(input, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT);

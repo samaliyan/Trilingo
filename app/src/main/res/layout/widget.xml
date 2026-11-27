@@ -35,17 +35,34 @@
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_search" />
 
-            <TextView
-                android:id="@+id/hint"
+            <!-- "Translate a word", and under it the word of the day with its translation (tap: open it) -->
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="@string/widget_hint"
-                android:textColor="@color/widget_sub"
-                android:textSize="16sp" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/hint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/widget_hint"
+                    android:textColor="@color/widget_sub"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/daily"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/widget_accent"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+            </LinearLayout>
 
         </LinearLayout>
 

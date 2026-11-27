@@ -230,6 +230,15 @@ final class DetailSheets {
             sheet.message(act.getString(R.string.examples_none), act.getString(R.string.examples_none_hint), null, null);
             return;
         }
+        renderExamples(sheet, java.util.Collections.singletonList(word), src, list, R.string.examples_none);
+    }
+
+    /** Sentences with their translations; the given words in bold. */
+    private void renderExamples(Sheet sheet, List<String> words, Lang src, List<Examples.Example> list, int none) {
+        if (list.isEmpty()) {
+            sheet.message(act.getString(none), null, null, null);
+            return;
+        }
         sheet.body.removeAllViews();
         for (Examples.Example e : list) {
             LinearLayout card = new LinearLayout(act);
@@ -240,7 +249,7 @@ final class DetailSheets {
             LinearLayout row = new LinearLayout(act);
             row.setGravity(Gravity.TOP);
             TextView s = ui.text(17, ui.text, Ui.REGULAR);
-            s.setText(highlight(e.text, word));
+            s.setText(highlight(e.text, words));
             s.setLineSpacing(0, 1.2f);
             s.setTextIsSelectable(true);
             Ui.bidi(s);
@@ -286,9 +295,9 @@ final class DetailSheets {
         sheet.body.addView(src2, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }
 
-    private CharSequence highlight(String text, String word) {
+    private CharSequence highlight(String text, List<String> words) {
         SpannableString sp = new SpannableString(text);
-        for (int[] r : Examples.find(text, word)) {
+        for (String word : words) for (int[] r : Examples.find(text, word)) {
             if (r[1] > text.length()) continue;
             sp.setSpan(new StyleSpan(Typeface.BOLD), r[0], r[1], Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             sp.setSpan(new ForegroundColorSpan(ui.accent), r[0], r[1], Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -646,9 +655,70 @@ final class DetailSheets {
                 }
                 card.addView(row);
             }
+            // sentences that use this tense, from real texts
+            if (!Examples.tenseQuery(t.forms).isEmpty()) {
+                TextView ex = ui.pill(act.getString(R.string.tense_examples), false);
+                ex.setContentDescription(act.getString(R.string.tense_examples_desc, t.name, c.verb));
+                ex.setOnClickListener(v -> showTenseExamples(c, t));
+                LinearLayout.LayoutParams ep = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ui.dp(40));
+                ep.topMargin = ui.dp(8);
+                ep.gravity = rtl ? Gravity.START : Gravity.END;
+                card.addView(ex, ep);
+            }
             LinearLayout.LayoutParams cp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             cp.bottomMargin = ui.dp(12);
             sheet.body.addView(card, cp);
         }
+    }
+
+    /** Example sentences of one tense ("Perfect · gehen"): sentences with any of its forms, the forms in bold. */
+    private void showTenseExamples(Conjugation c, Conjugation.Tense t) {
+        Sheet sheet = new Sheet(act, ui, t.name, c.verb);
+        sheet.show();
+        String query = Examples.tenseQuery(t.forms);
+        List<String> bold = Examples.tenseWords(t.forms);
+        String key = "tense|" + c.lang.code + "|" + query;
+        sheet.token = key;
+        List<Examples.Example> cached = cache.get(key);
+        if (cached != null) {
+            renderExamples(sheet, bold, c.lang, cached, R.string.tense_examples_none);
+            return;
+        }
+        sheet.loading(act.getString(R.string.examples_loading));
+        new Thread(() -> {
+            List<Examples.Candidate> all = new ArrayList<>();
+            int ok = 0;
+            IOException last = null;
+            for (String f : Examples.FILTERS) {
+                try {
+                    all.addAll(Examples.parse(Engine.NET.get(Examples.queryUrl(query, c.lang, f), Engine.TIMEOUT), c.lang));
+                    ok++;
+                } catch (IOException e) {
+                    last = e;
+                    if (e instanceof java.net.UnknownHostException) break;
+                }
+                // only sentences that really show this tense
+                List<String[]> others = new ArrayList<>();
+                for (Conjugation.Tense o : c.tenses) if (o != t) others.add(o.forms);
+                boolean imperative = t.name.toLowerCase(java.util.Locale.ROOT).startsWith("imperative");
+                all.removeIf(x -> !Examples.showsTense(x.example.text, t.forms, others, imperative));
+                if (Examples.select(all, c.lang, null, 4).size() >= 4) break;
+            }
+            final List<Examples.Example> res = ok > 0 ? fillMissing(Examples.select(all, c.lang, null, 4), c.lang) : null;
+            final boolean off = last instanceof java.net.UnknownHostException || last instanceof java.net.ConnectException;
+            act.runOnUiThread(() -> {
+                if (act.isFinishing() || act.isDestroyed() || !sheet.isShowing() || !key.equals(sheet.token)) return;
+                if (res == null) {
+                    sheet.message(act.getString(off ? R.string.error_offline : R.string.examples_failed), null,
+                            act.getString(R.string.retry), v -> {
+                                sheet.dismiss();
+                                showTenseExamples(c, t);
+                            });
+                    return;
+                }
+                cache.put(key, res);
+                renderExamples(sheet, bold, c.lang, res, R.string.tense_examples_none);
+            });
+        }, "tense-examples").start();
     }
 }
