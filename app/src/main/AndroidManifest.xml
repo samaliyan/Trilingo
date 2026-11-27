@@ -102,6 +102,8 @@
             android:theme="@style/BubbleTheme" />
         <activity android:name=".ReviewActivity" android:exported="false" />
         <activity android:name=".PracticeActivity" android:exported="false" />
+        <activity android:name=".WordPracticeActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ProgressActivity" android:exported="false" />
         <activity
             android:name=".CheckActivity"
             android:exported="false"

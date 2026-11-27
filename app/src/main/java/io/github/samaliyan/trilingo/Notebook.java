@@ -50,6 +50,8 @@ final class Notebook {
     private final File file;
     private final List<String> folders = new ArrayList<>();
     private final Map<String, Card> cards = new LinkedHashMap<>();
+    /** What was done each day (streak, weekly chart). */
+    final Progress progress = new Progress();
 
     Notebook(File file) {
         this.file = file;
@@ -98,6 +100,8 @@ final class Notebook {
 
     /** Saves (or updates) a word with its translation summary in a folder ("" = no folder). */
     Card save(Lang l, String word, String back, String folder, long now) {
+        Card before = get(l, word);
+        if (before == null || !before.saved) progress.add(now, Progress.SAVED, 1);
         Card c = cardFor(l, word, back, now);
         c.word = Text.clean(word);                     // the spelling chosen now ("Tisch", not an earlier "tisch")
         c.saved = true;
@@ -377,8 +381,25 @@ final class Notebook {
     }
 
     void answer(Card c, int answer, long now) {
+        double was = c.interval;
         grade(c, answer, now);
+        progress.add(now, Progress.REVIEWS, 1);
+        if (answer != AGAIN) progress.add(now, Progress.REVIEWS_RIGHT, 1);
+        if (was < 21 && c.interval >= 21) progress.add(now, Progress.LEARNED, 1);
         if (!cards.containsKey(c.key())) cards.put(c.key(), c);       // a recent word's first review
+        save();
+    }
+
+    /** A practice answer (type the word, der/die/das, verb forms), for the progress page. */
+    void practiced(boolean right, long now) {
+        progress.add(now, Progress.PRACTICE, 1);
+        if (right) progress.add(now, Progress.PRACTICE_RIGHT, 1);
+        save();
+    }
+
+    /** A word said well in "Say it". */
+    void spoke(long now) {
+        progress.add(now, Progress.SPOKEN, 1);
         save();
     }
 
@@ -435,6 +456,7 @@ final class Notebook {
             if (m == null) return;
             List<Object> fs = Json.arr(m, "folders");
             if (fs != null) for (Object o : fs) if (o instanceof String) folders.add((String) o);
+            progress.read(Json.obj(m.get("log")));
             List<Object> cs = Json.arr(m, "cards");
             if (cs == null) return;
             for (Object o : cs) {
@@ -495,7 +517,7 @@ final class Notebook {
                     .append(",\"i\":").append(String.format(Locale.ROOT, "%.3f", c.interval)).append(",\"r\":").append(c.reps)
                     .append(",\"x\":").append(c.lapses).append('}');
         }
-        b.append("]}");
+        b.append("],\"log\":").append(progress.toJson(System.currentTimeMillis())).append('}');
         return b.toString();
     }
 }

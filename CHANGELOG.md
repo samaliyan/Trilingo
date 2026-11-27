@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.12 — 2026-11-28
+
+- **Practice words** (new, on the home screen): active practice with your own words, ten questions at a time — *Write the word* (the translation is shown, you write the word; one small typing mistake is shown but counts), *der · die · das*, *Verb forms* (ich ___ · gehen · Perfect → bin gegangen), and *Say it*: say the word aloud and the phone tells you whether it understood it (what it heard is shown; listen and try again). With few saved words, common words of your level fill in.
+- **Progress** (new): your streak (days in a row with some learning) with the last seven days, the best streak, this week's answers, right answers in percent, words saved and learned, and charts of the last eight weeks: words learned and answers given. Reviews, practice and saved words all count.
+- **Widget**: the clipboard button did the same as the search bar (both opened the translate window, which already has Paste). It is now *Review saved words*.
+
 ## 1.11 — 2026-11-27
 
 - **Widget, fixed**: after an update the home screen kept the old widget, where every tap opened the app on the last search. The widgets are now redrawn as soon as the app is updated.

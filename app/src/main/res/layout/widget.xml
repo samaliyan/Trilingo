@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:padding="6dp">
 
-    <!-- Search bar, then voice, translate what is copied, and scan. -->
+    <!-- Search bar (a small translate window, with Paste), then voice, review and scan. -->
     <LinearLayout
         android:id="@+id/top"
         android:layout_width="match_parent"
@@ -76,12 +76,12 @@
             android:src="@drawable/ic_w_mic" />
 
         <ImageView
-            android:id="@+id/btn_paste"
+            android:id="@+id/btn_review"
             android:layout_width="38dp"
             android:layout_height="48dp"
-            android:contentDescription="@string/widget_paste"
+            android:contentDescription="@string/widget_review"
             android:padding="8dp"
-            android:src="@drawable/ic_w_paste" />
+            android:src="@drawable/ic_w_cards" />
 
         <ImageView
             android:id="@+id/btn_scan"

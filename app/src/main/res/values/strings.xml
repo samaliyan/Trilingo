@@ -81,7 +81,7 @@
         <item quantity="other">%d words saved</item>
     </plurals>
     <string name="widget_add_home">Add widget to home screen</string>
-    <string name="widget_add_hint">A search bar on your home screen with voice, copied text and scan. Translations open in a small window right there. Make it taller to see your recent words.</string>
+    <string name="widget_add_hint">A search bar on your home screen with voice, review and scan. Translations open in a small window right there. Make it taller to see your recent words.</string>
     <string name="widget_card_add">Add Word card to home screen</string>
     <string name="widget_card_add_hint">Review your saved words right on the home screen: Show, then Again or Got it.</string>
     <string name="widget_add_manual">Long-press your home screen, choose Widgets and find Trilingo.</string>
@@ -439,7 +439,7 @@
     <string name="widget_voice">Speak a word</string>
     <string name="widget_daily">%1$s · %2$s</string>
     <string name="widget_daily_desc">Word of the day: %1$s, %2$s</string>
-    <string name="widget_paste">Translate copied text</string>
+    <string name="widget_review">Review saved words</string>
     <string name="widget_scan">Scan text</string>
     <string name="widget_card_name">Word card</string>
     <string name="widget_card_description">Review your saved words on the home screen</string>
@@ -457,4 +457,62 @@
     <string name="tense_examples">Examples</string>
     <string name="tense_examples_desc">Example sentences in the %1$s of %2$s</string>
     <string name="tense_examples_none">No sentences found with this tense yet.</string>
+
+    <!-- 1.12: practice words, say it, progress -->
+    <string name="practice_words">Practice words</string>
+    <string name="practice_from_saved">Ten questions with your %1$d saved words.</string>
+    <string name="practice_from_level">Ten questions with your saved words and common words of your level. Save more words to practise your own.</string>
+    <string name="practice_write">Write the word</string>
+    <string name="practice_write_note">See the translation, write the word.</string>
+    <string name="practice_article">der · die · das</string>
+    <string name="practice_article_note">Choose the article of a German noun.</string>
+    <string name="practice_verbs">Verb forms</string>
+    <string name="practice_verbs_note">Write the right form: ich ___ (gehen · Perfect).</string>
+    <string name="practice_say">Say it</string>
+    <string name="practice_say_note">Say the word aloud; the phone tells you if it understood.</string>
+    <string name="practice_no_words">Save some English or German words first.</string>
+    <string name="practice_no_nouns">Save some German nouns first (for example “der Tisch”).</string>
+    <string name="practice_no_verbs">Save some verbs first (for example “gehen” or “go”).</string>
+    <string name="practice_count">%1$d / %2$d</string>
+    <string name="practice_write_task">Write it in %1$s</string>
+    <string name="practice_article_task">Which article?</string>
+    <string name="practice_verb_task">Write the right form</string>
+    <string name="practice_say_task">Say it aloud</string>
+    <string name="practice_type_word">The %1$s word</string>
+    <string name="practice_type_form">The verb form</string>
+    <string name="practice_answer">Your answer</string>
+    <string name="practice_say_now">Speak</string>
+    <string name="practice_say_prompt">Say: %1$s</string>
+    <string name="practice_skip">Skip</string>
+    <string name="practice_right">Right: %1$s</string>
+    <string name="practice_almost">Almost. Written: %1$s</string>
+    <string name="practice_wrong">The answer: %1$s</string>
+    <string name="practice_say_almost">Almost. Heard “%1$s” for “%2$s”</string>
+    <string name="practice_say_wrong">Heard “%1$s”. The word: %2$s</string>
+    <string name="practice_say_try">Heard “%1$s”. Listen and try again.</string>
+    <string name="practice_finish">See the result</string>
+    <string name="practice_score">%1$d of %2$d right</string>
+    <string name="practice_again">Ten more</string>
+    <string name="practice_other">Other practice</string>
+    <plurals name="streak_days">
+        <item quantity="one">%d day in a row</item>
+        <item quantity="other">%d days in a row</item>
+    </plurals>
+    <plurals name="streak_label">
+        <item quantity="one">day in a row</item>
+        <item quantity="other">days in a row</item>
+    </plurals>
+    <string name="progress">Progress</string>
+    <string name="progress_best">Best: %1$d</string>
+    <string name="progress_this_week">This week</string>
+    <string name="progress_answers">answers</string>
+    <string name="progress_right">right</string>
+    <string name="progress_saved">words saved</string>
+    <string name="progress_learned_week">words learned</string>
+    <string name="progress_total">Learned so far: %1$d words (not asked again for 3 weeks or more). Saved: %2$d.</string>
+    <string name="progress_chart_learned">Words learned per week</string>
+    <string name="progress_chart_answers">Answers per week (review and practice)</string>
+    <string name="progress_8_weeks_ago">8 weeks ago</string>
+    <string name="progress_weeks_oldest_first">week by week, oldest first</string>
+    <string name="progress_empty">Review or practise a few words: your days and weeks show up here.</string>
 </resources>

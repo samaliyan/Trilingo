@@ -15,7 +15,7 @@ import android.graphics.drawable.Drawable;
 final class Icons {
     private Icons() { }
 
-    enum Kind { BACK, CLOSE, SETTINGS, COPY, SPEAK, PASTE, SEARCH, SHARE, EXAMPLES, TABLE, FAMILY, BOOK, CHEVRON, MIC, PLAY, STAR, STAR_ON, CAMERA, CHECK, CARDS, FOLDER, PLUS, PEN, EAR, LIST, SORT, BUBBLE }
+    enum Kind { BACK, CLOSE, SETTINGS, COPY, SPEAK, PASTE, SEARCH, SHARE, EXAMPLES, TABLE, FAMILY, BOOK, CHEVRON, MIC, PLAY, STAR, STAR_ON, CAMERA, CHECK, CARDS, FOLDER, PLUS, PEN, EAR, LIST, SORT, BUBBLE, CHART }
 
     static Drawable of(Kind kind, int color) {
         return new IconDrawable(kind, color);
@@ -226,6 +226,16 @@ final class Icons {
                     line(c, 4, 19.5f, 9, 19.5f);
                     c.drawCircle(16.5f, 16.5f, 3, stroke);
                     line(c, 18.7f, 18.7f, 21, 21);
+                    break;
+                case CHART:
+                    // three bars rising: progress
+                    line(c, 4, 20, 20, 20);
+                    r.set(5.5f, 13, 9, 20);
+                    c.drawRoundRect(r, 1, 1, stroke);
+                    r.set(10.25f, 9, 13.75f, 20);
+                    c.drawRoundRect(r, 1, 1, stroke);
+                    r.set(15, 4.5f, 18.5f, 20);
+                    c.drawRoundRect(r, 1, 1, stroke);
                     break;
                 case SORT:
                     line(c, 4, 7, 20, 7);

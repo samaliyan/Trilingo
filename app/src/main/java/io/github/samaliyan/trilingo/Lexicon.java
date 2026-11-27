@@ -236,6 +236,16 @@ final class Lexicon {
         return Spelling.phrase(words(lang), t);
     }
 
+    /** Whether the built-in dictionary lists the word first as a verb (go: yes; house: no). */
+    static boolean mainlyVerb(Lang l, String word) {
+        Dict d = dict(l);
+        Dict.Entry e = d == null ? null : d.find(word);
+        if (e == null) return l == Lang.DE && word.endsWith("n");
+        for (List<Lookup.Sense> senses : e.targets.values())
+            if (!senses.isEmpty()) return "verb".equalsIgnoreCase(senses.get(0).pos);
+        return false;
+    }
+
     /** The best correction of one word in English or German (or Persian for Persian letters), or null. */
     static String closestAny(String typed) {
         Spelling.Candidate c = bestAny(typed);

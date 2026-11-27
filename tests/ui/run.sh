@@ -517,6 +517,40 @@ else
 fi
 back
 
+# 3z15b. Practice words (1.12): der · die · das, one answer, then Progress
+open_app
+back
+scroll_to "Practice words" "^Practice words$"
+tap "Practice words" "^Practice words$"
+wait_for "practice menu" "^Write the word$" 15
+shot 03z15b_practice_menu 1
+tap "der die das" "^der · die · das$"
+wait_for "article question" "^Which article\?$" 10
+tap "der" "^der$"
+wait_for "article feedback" "^(Right: .*|The answer: .*)$" 5
+shot 03z15c_practice_article 1
+tap "Next" "^Next$"
+expect "second question" "^2 / [0-9]+$"
+back
+wait_for "practice menu again" "^Write the word$" 5
+tap "write the word" "^Write the word$"
+wait_for "write question" "^Write it in (German|English)$" 10
+type_text "xyz"
+tap "Check" "^Check$"
+wait_for "write feedback" "^The answer: .*$" 5
+shot 03z15d_practice_write 1
+back
+back
+open_app
+back
+scroll_to "Progress" "^Progress$"
+tap "Progress" "^Progress$"
+wait_for "streak" "^days? in a row$" 10
+expect "answers this week" "^answers$"
+expect "chart" "^Words learned per week$"
+shot 03z15e_progress 1
+back
+
 # 3z16. Words from a text (shared text → the new words at your level → save them)
 adb shell "am start -a android.intent.action.SEND -t text/plain --es android.intent.extra.TEXT 'Die Verwaltung hat die Genehmigung verweigert, obwohl die Anwohner sich beschwert hatten.' -n $PKG/.TextWordsActivity" > /dev/null
 sleep 3
@@ -810,6 +844,8 @@ if scroll_to "Add widget to home screen" "" quiet; then
     adb install -r "$APK" > /dev/null && log "app updated in place"
     sleep 4
     adb shell input keyevent KEYCODE_HOME; sleep 2
+    shot 23a_home_after_update 1
+    wait_for "widget after update" "^Translate$" 20
     if tap "Translate" "^Translate$"; then
       shot 23b_widget_after_update 2
       expect "translate window after update" "^(Copy text, or type here|Open in Trilingo)$"

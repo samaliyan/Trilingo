@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * Home-screen widget: a search bar that opens a small translate window right on the home screen (with the
  * word of the day under its hint), and three buttons beside it — speak a
- * word, translate what is copied (in a small window over the current app), scan text with the camera. When
+ * word, review the saved words, scan text with the camera. When
  * the widget is taller, the last looked-up words are listed under it (tap one to see it again). Redrawn
  * only when the history or the widget size changes, so it uses no battery.
  */
@@ -93,9 +93,9 @@ public final class WidgetProvider extends AppWidgetProvider {
         Intent voice = new Intent(c, MainActivity.class).setAction(MainActivity.ACTION_VOICE)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         v.setOnClickPendingIntent(R.id.btn_voice, PendingIntent.getActivity(c, 10, voice, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));
-        // the small translate window reads what is copied as soon as it opens
-        Intent paste = new Intent(c, BubbleActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        v.setOnClickPendingIntent(R.id.btn_paste, PendingIntent.getActivity(c, 11, paste, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));
+        // review the saved words (the translate window of the search bar already has Paste)
+        Intent review = new Intent(c, ReviewActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        v.setOnClickPendingIntent(R.id.btn_review, PendingIntent.getActivity(c, 11, review, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));
         Intent scan = new Intent(c, ScanActivity.class).putExtra(ScanActivity.EXTRA_CAMERA, true)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         v.setOnClickPendingIntent(R.id.btn_scan, PendingIntent.getActivity(c, 12, scan, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));
@@ -128,7 +128,7 @@ public final class WidgetProvider extends AppWidgetProvider {
         v.setImageViewResource(R.id.search_icon, dark ? R.drawable.ic_search_dark : R.drawable.ic_search_light);
         v.setTextColor(R.id.hint, sub);
         v.setTextColor(R.id.daily, accent);
-        for (int b : new int[]{R.id.btn_voice, R.id.btn_paste, R.id.btn_scan}) v.setInt(b, "setColorFilter", accent);
+        for (int b : new int[]{R.id.btn_voice, R.id.btn_review, R.id.btn_scan}) v.setInt(b, "setColorFilter", accent);
         for (int k = 0; k < ROWS.length; k++) {
             v.setTextColor(WORDS[k], text);
             v.setTextColor(MEANINGS[k], sub);

@@ -930,12 +930,13 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         List<Lookup> recent = store.reviewRecent() ? Notebook.reviewable(history.items(), Lexicon.resolver()::isWord) : null;
         int due = nb.due(null, recent, System.currentTimeMillis(), 99).size();
         String[] labels = {due > 0 ? getString(R.string.review_n, due) : getString(R.string.review), getString(R.string.saved_words),
+                getString(R.string.practice_words), getString(R.string.progress),
                 getString(R.string.listen_write), getString(R.string.text_words),
                 getString(R.string.scan_text), getString(R.string.check_sentence)};
-        Icons.Kind[] icons = {Icons.Kind.CARDS, Icons.Kind.STAR, Icons.Kind.EAR, Icons.Kind.LIST,
+        Icons.Kind[] icons = {Icons.Kind.CARDS, Icons.Kind.STAR, Icons.Kind.PEN, Icons.Kind.CHART, Icons.Kind.EAR, Icons.Kind.LIST,
                 Icons.Kind.CAMERA, Icons.Kind.CHECK};
-        Class<?>[] screens = {ReviewActivity.class, NotebookActivity.class, DictationActivity.class, TextWordsActivity.class,
-                ScanActivity.class, CheckActivity.class};
+        Class<?>[] screens = {ReviewActivity.class, NotebookActivity.class, WordPracticeActivity.class, ProgressActivity.class,
+                DictationActivity.class, TextWordsActivity.class, ScanActivity.class, CheckActivity.class};
         int perRow = ui.wide() ? 3 : 2;
         LinearLayout box = column();
         box.setPadding(0, ui.dp(4), 0, ui.dp(8));

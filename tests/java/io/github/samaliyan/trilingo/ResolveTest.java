@@ -45,6 +45,8 @@ public final class ResolveTest {
         scanText();
         wordCards();
         tenseExamples();
+        quiz(nouns);
+        progress();
         System.out.println(checks + " checks, " + failures + " failures");
         if (failures > 0) System.exit(1);
     }
@@ -400,6 +402,79 @@ public final class ResolveTest {
         if (goImp == null) goImp = new String[]{"go"};
         ok(!Examples.showsTense("Go there alone.", goPresent, goOthers, false, goImp), "an order is not the present");
         ok(Examples.showsTense("We all go to school.", goPresent, goOthers, false, goImp), "the present");
+    }
+
+    static void quiz(Nouns nouns) {
+        List<WordQuiz.Item> items = new ArrayList<>();
+        items.add(new WordQuiz.Item(Lang.DE, "Tisch", "table\nمیز"));
+        items.add(new WordQuiz.Item(Lang.DE, "gehen", "go\nرفتن"));
+        items.add(new WordQuiz.Item(Lang.EN, "house", "Haus\nخانه"));
+        items.add(new WordQuiz.Item(Lang.FA, "کتاب", "book\nBuch"));
+        WordQuiz q = new WordQuiz(nouns, new java.util.Random(1), (l, w) -> !w.equals("house"));
+
+        List<WordQuiz.Question> write = q.make(WordQuiz.WRITE, items, 10);
+        eq(3, write.size(), "write: the English and German words, not the Persian one");
+        WordQuiz.Question tisch = null;
+        for (WordQuiz.Question x : write) if (x.word.equals("Tisch")) tisch = x;
+        eq("میز", tisch.prompt, "the Persian translation is shown");
+        eq("der Tisch", tisch.answer, "a noun's answer with its article");
+        eq(WordQuiz.RIGHT, WordQuiz.check(tisch, "tisch"), "case does not count");
+        eq(WordQuiz.RIGHT, WordQuiz.check(tisch, "der Tisch"), "with the article");
+        eq(WordQuiz.ALMOST, WordQuiz.check(tisch, "Tich"), "one letter off: almost");
+        eq(WordQuiz.WRONG, WordQuiz.check(tisch, "Stuhl"), "another word");
+        eq(WordQuiz.WRONG, WordQuiz.check(tisch, ""), "nothing typed");
+
+        List<WordQuiz.Question> art = q.make(WordQuiz.ARTICLE, items, 10);
+        eq(1, art.size(), "der/die/das only for German nouns");
+        eq(WordQuiz.RIGHT, WordQuiz.check(art.get(0), "der"), "der Tisch");
+        eq(WordQuiz.WRONG, WordQuiz.check(art.get(0), "die"), "not die");
+
+        List<WordQuiz.Question> verb = q.make(WordQuiz.VERB, items, 10);
+        eq(1, verb.size(), "verb forms only for verbs");
+        WordQuiz.Question v = verb.get(0);
+        eq(WordQuiz.RIGHT, WordQuiz.check(v, v.answer), "its own form is right: " + v.prompt + " " + v.hint + " = " + v.answer);
+        ok(v.hint.startsWith("gehen · "), "the verb and the tense are shown");
+
+        WordQuiz.Question perfect = new WordQuiz.Question(WordQuiz.VERB, Lang.DE, "ich ___", "gehen · Perfect", "bin gegangen",
+                java.util.Collections.singletonList("bin gegangen"), java.util.Collections.emptyList(), "gehen");
+        eq(WordQuiz.RIGHT, WordQuiz.check(perfect, "Bin  gegangen."), "spaces and a full stop do not count");
+        eq(WordQuiz.ALMOST, WordQuiz.check(perfect, "bin gegagen"), "one letter missing");
+        WordQuiz.Question uml = new WordQuiz.Question(WordQuiz.WRITE, Lang.DE, "", "", "schön",
+                java.util.Collections.singletonList("schön"), java.util.Collections.emptyList(), "schön");
+        eq(WordQuiz.RIGHT, WordQuiz.check(uml, "schoen"), "oe for ö");
+
+        List<WordQuiz.Question> say = q.make(WordQuiz.SAY, items, 10);
+        WordQuiz.Question sayTisch = null;
+        for (WordQuiz.Question x : say) if (x.word.equals("Tisch")) sayTisch = x;
+        eq(WordQuiz.RIGHT, WordQuiz.heard(sayTisch, java.util.Arrays.asList("Fisch", "Tisch")), "one of the guesses is the word");
+        eq(WordQuiz.RIGHT, WordQuiz.heard(sayTisch, java.util.Arrays.asList("das ist ein Tisch")), "the word inside a sentence");
+        eq(WordQuiz.ALMOST, WordQuiz.heard(sayTisch, java.util.Arrays.asList("Tasch")), "a sound off");
+        eq(WordQuiz.WRONG, WordQuiz.heard(sayTisch, java.util.Arrays.asList("Kühlschrank")), "another word");
+        eq(WordQuiz.WRONG, WordQuiz.heard(sayTisch, new ArrayList<>()), "nothing heard");
+    }
+
+    static void progress() {
+        Progress p = new Progress();
+        long day = Progress.DAY, now = 1_800_000_000_000L;
+        eq(0, p.streak(now), "no streak yet");
+        eq(-1, p.accuracy(now), "no accuracy yet");
+        p.add(now - 3 * day, Progress.REVIEWS, 4);
+        p.add(now - 2 * day, Progress.SAVED, 1);
+        p.add(now - day, Progress.PRACTICE, 5);
+        p.add(now - day, Progress.PRACTICE_RIGHT, 4);
+        eq(3, p.streak(now), "three days in a row up to yesterday (today not started)");
+        p.add(now, Progress.REVIEWS, 2);
+        p.add(now, Progress.REVIEWS_RIGHT, 2);
+        eq(4, p.streak(now), "four with today");
+        eq(0, p.streak(now + 2 * day), "a missed day ends it");
+        eq(4, p.bestStreak(), "the best streak stays");
+        p.add(now - 20 * day, Progress.LEARNED, 3);
+        p.add(now, Progress.LEARNED, 2);
+        eq(java.util.Arrays.asList(0, 3, 0, 2), p.weeks(now, Progress.LEARNED, 4), "learned per week, oldest first");
+        eq(55, p.accuracy(now), "6 of 11 right (4 reviews unanswered right)");
+        Progress back = new Progress();
+        back.read(Json.obj(Json.parse(p.toJson(now))));
+        eq(p.toJson(now), back.toJson(now), "saved and read back the same");
     }
 
     static void scanText() {

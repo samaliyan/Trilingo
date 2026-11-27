@@ -46,7 +46,7 @@
             android:layout_height="22dp"
             android:layout_marginStart="10dp"
             android:importantForAccessibility="no"
-            android:src="@drawable/ic_w_paste" />
+            android:src="@drawable/ic_w_cards" />
 
         <ImageView
             android:layout_width="22dp"
