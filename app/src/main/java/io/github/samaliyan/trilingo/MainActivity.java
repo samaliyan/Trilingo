@@ -560,11 +560,15 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                 }
                 // The service "translated" a word no list knows (hous → Haus): a very likely correction is
                 // still offered, without replacing the answer.
-                if (!res.hasSuggestion() && !echoes(res) && prep.split == null && !query.contains(" ")
-                        && !(res.source == Lang.EN && Character.isUpperCase(query.charAt(0)))) {
+                if (!res.hasSuggestion() && !echoes(res) && prep.split == null && !query.contains(" ")) {
                     // automatic: English and German both (the service may take a German typo for English)
-                    List<Spelling.Candidate> c = Lexicon.spellings(query, f, 1);
-                    if (!c.isEmpty() && c.get(0).cost < 0.85) res = res.withSuggestion(c.get(0).word);
+                    Spelling.Candidate c = null;
+                    if (f == null) c = Lexicon.bestAny(query);
+                    else if (!(f == Lang.EN && Character.isUpperCase(query.charAt(0)))) {
+                        List<Spelling.Candidate> all = Lexicon.spellings(query, f, 1);
+                        c = all.isEmpty() ? null : all.get(0);
+                    }
+                    if (c != null && c.cost < 0.85) res = res.withSuggestion(c.word);
                 }
                 if (!res.hasSuggestion() && umlautHint != null) res = res.withSuggestion(umlautHint);
                 // Misspelled and the "translation" only repeats it: show the corrected word's translation instead.

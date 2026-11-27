@@ -238,11 +238,23 @@ final class Lexicon {
 
     /** The best correction of one word in English or German (or Persian for Persian letters), or null. */
     static String closestAny(String typed) {
+        Spelling.Candidate c = bestAny(typed);
+        return c == null ? null : c.word;
+    }
+
+    /**
+     * As {@link #closestAny}, with how sure it is. A capitalised word is only corrected to a German word
+     * (Termien → Termin); otherwise it is taken for a name.
+     */
+    static Spelling.Candidate bestAny(String typed) {
         String t = Text.clean(typed);
-        if (t.isEmpty() || Character.isUpperCase(t.charAt(0)) && Text.hasLetter(t) && en != null && de != null
-                && !de.known(t) && Spelling.candidates(de, t, 1).isEmpty()) return null;   // a name
+        if (t.isEmpty() || t.contains(" ")) return null;
+        if (Character.isUpperCase(t.charAt(0)) && !Text.hasPersian(t)) {
+            List<Spelling.Candidate> d = Spelling.candidates(de, t, 1);
+            return d.isEmpty() || en != null && en.known(t) ? null : d.get(0);
+        }
         List<Spelling.Candidate> c = spellings(t, null, 1);
-        return c.isEmpty() ? null : c.get(0).word;
+        return c.isEmpty() ? null : c.get(0);
     }
 
     /**
