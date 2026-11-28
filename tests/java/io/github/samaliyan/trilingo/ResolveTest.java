@@ -579,6 +579,9 @@ public final class ResolveTest {
         eq(3, light.size(), "one meaning per word kind");
         eq("نور", light.get(0).label, "the translation shown first");
         eq("سبک", light.get(1).label, "the adjective");
+        java.util.Set<String> kinds = new java.util.HashSet<>(java.util.Arrays.asList("verb"));
+        eq(0, Senses.of(new Lookup("light", Lang.EN, rs, "t", 1), null, kinds).size(),
+                "a kind the dictionary does not know is not offered (give as a noun)");
     }
 
     static void progress() {

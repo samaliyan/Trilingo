@@ -1441,9 +1441,20 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
      * the word opens with it next time and is saved with it.
      */
     private View senseRow(Lookup l) {
+        if (Resolver.NUMBER.equals(l.service)) return null;
         Phrasal ph = Lexicon.phrasal();
         String phrasal = ph == null || l.source != Lang.EN ? null : ph.meaning(Text.clean(l.query).toLowerCase(Locale.ROOT));
-        List<Senses.Option> options = Senses.of(l, phrasal);
+        // the word kinds the built-in dictionary knows (noun, verb …); without an entry, no choice by kind
+        java.util.Set<String> kinds = new java.util.HashSet<>();
+        Dict d = Lexicon.dict(l.source);
+        Dict.Entry de = d == null ? null : d.find(Text.clean(l.query));
+        if (de != null && de.word.equalsIgnoreCase(Text.clean(l.query)))
+        {
+            // the kinds of the language the choices are in (Persian; English for a Persian word)
+            List<Lookup.Sense> ss = de.targets.get(l.source == Lang.FA ? Lang.EN : Lang.FA);
+            if (ss != null) for (Lookup.Sense x : ss) if (x.pos != null) kinds.add(x.pos.toLowerCase(Locale.ROOT));
+        }
+        List<Senses.Option> options = Senses.of(l, phrasal, kinds);
         if (options.isEmpty()) return null;
         LinearLayout box = column();
         box.setPadding(0, 0, 0, ui.dp(12));

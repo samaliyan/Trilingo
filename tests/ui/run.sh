@@ -132,7 +132,7 @@ type_text "give"
 wait_for "PERSIAN" "" 20
 back
 if [ -n "$(nfind "Translated by MyMemory")" ]; then log "Google did not answer: phrasal verbs (need word types) skipped"; open_app; type_text "x"; else
-wait_for "Phrasal verbs" "" 5
+scroll_to "Phrasal verbs"
 tap "Phrasal verbs"
 sleep 2
 shot 02a5_phrasal_verbs 1
@@ -524,8 +524,14 @@ scroll_to "Learn" "^Learn$"
 tap "Learn" "^Learn$"
 wait_for "today's lesson" "^Today's lesson$" 20
 expect "units" "^Unit 1$"
-expect "weak spots" "^Your weak spots$"
 shot 03z15b_learn 1
+scroll_to "weak spots" "^Your weak spots$"
+shot 03z15b2_learn_weak 1
+open_app
+back
+scroll_to "Learn" "^Learn$"
+tap "Learn" "^Learn$"
+wait_for "today's lesson again" "^Today's lesson$" 20
 tap "Start" "^Start$"
 wait_for "lesson exercise" "^(New word|What does it mean\?|Which (German|English) word\?|Write it in .*|Which article\?|Write the right form|Say it aloud)$" 15
 shot 03z15c_lesson 1
@@ -535,7 +541,7 @@ if [ -n "$(nfind "Got it" "^Got it$")" ]; then
 fi
 back
 wait_for "stop question" "^Stop this lesson\? Your answers so far are kept\.$" 5
-tap "Stop" "^Stop$"
+tap "Stop" "(?i)^stop$"
 wait_for "learn home again" "^Today's lesson$" 10
 expect "a word met" "^[1-9][0-9]* of [0-9]+ words of this level met$"
 back
@@ -551,7 +557,7 @@ back
 
 # 3z15f. Which meaning (1.13): put on as wear, not as put
 open_app
-type_text "put on"
+type_text "put%son"
 wait_for "meanings" "^Which meaning\?$" 25
 expect "wear" "^wear$"
 tap "wear" "^wear$"

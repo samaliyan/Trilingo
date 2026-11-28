@@ -32,6 +32,14 @@ final class Senses {
 
     /** The meanings to choose from; empty when the word has only one, or is a sentence. */
     static List<Option> of(Lookup l, String phrasalMeanings) {
+        return of(l, phrasalMeanings, null);
+    }
+
+    /**
+     * As above; {@code kinds}: the word kinds the built-in dictionary knows for the word (noun, verb …). A
+     * kind only the translation service lists is mostly a rare use ("give" as a noun: دهش) and is not offered.
+     */
+    static List<Option> of(Lookup l, String phrasalMeanings, java.util.Set<String> kinds) {
         List<Option> out = new ArrayList<>();
         String q = Text.clean(l.query);
         if (q.isEmpty() || q.split(" ").length > 3 || l.results.isEmpty()) return out;
@@ -45,9 +53,11 @@ final class Senses {
             if (r != null) {
                 // one meaning per word kind (light: نور as a noun, سبک as an adjective, روشن کردن as a verb);
                 // the other words of one kind are mostly the same meaning said differently, not meanings
-                java.util.Set<String> kinds = new java.util.HashSet<>();
+                java.util.Set<String> seen = new java.util.HashSet<>();
                 for (Lookup.Sense s : r.senses) {
-                    if (s.terms.isEmpty() || s.pos == null || s.pos.isEmpty() || !kinds.add(s.pos.toLowerCase(Locale.ROOT))) continue;
+                    if (s.terms.isEmpty() || s.pos == null || s.pos.isEmpty()) continue;
+                    String k = s.pos.toLowerCase(Locale.ROOT);
+                    if (kinds != null && !kinds.contains(k) || !seen.add(k)) continue;
                     add(out, Text.clean(s.terms.get(0)), own);
                 }
                 if (out.size() >= 2) {
