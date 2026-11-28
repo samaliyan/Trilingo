@@ -117,8 +117,8 @@ final class Senses {
         for (Lookup.Result r : l.results) {
             String main = r.lang == o.lang ? o.label : byLang.get(r.lang);
             if (main == null || Text.clean(main).isEmpty()) main = r.text;
-            // "to wear" was asked: the German "zu tragen" is tragen
-            main = Text.clean(main).replaceFirst("^(zu|to) ", "");
+            // "to wear" was asked: the German "zu tragen" is tragen, the Persian "برای روشن کردن" روشن کردن
+            main = Text.clean(main).replaceFirst("^(zu|to|um) ", "").replaceFirst("^برای ", "");
             List<Lookup.Sense> senses = new ArrayList<>();
             List<String> first = new ArrayList<>();
             first.add(main);

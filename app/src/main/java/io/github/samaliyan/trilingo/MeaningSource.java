@@ -259,7 +259,7 @@ final class MeaningSource {
         if (Resolver.NUMBER.equals(l.service)) return;
         String de = germanWord(l);
         if (de != null && german != null) de = german.apply(de);
-        boolean verb = isVerb(m, l) || (de != null && isGermanInfinitive(de));
+        boolean verb = isVerb(m, l) || (de != null && isGermanInfinitive(de)) || phrasalVerb(l);
         // An action has no picture of its own. For a German verb its Wiktionary page has one chosen for that
         // verb; for an English or Persian verb the German translation is only one of its meanings (پوشیدن →
         // tragen, whose picture shows carrying), and a Wikipedia article on "Wear" is about worn-out gears:
@@ -371,6 +371,17 @@ final class MeaningSource {
         if (from.lang != m.lang) m.imageCaption = "";
         else m.imageCaption = base.isEmpty() ? from.imageCaption : base + (from.imageCaption.isEmpty() ? "" : ": " + from.imageCaption);
         m.imageSource = from.imageSource;
+    }
+
+    private static final java.util.Set<String> PARTICLES = new java.util.HashSet<>(java.util.Arrays.asList("up", "down",
+            "out", "off", "on", "in", "away", "back", "over", "around", "round", "through", "after", "into", "about",
+            "across", "along", "by", "apart", "forward"));
+
+    /** An English phrasal verb (give up, put on): an action, not a thing to show. */
+    static boolean phrasalVerb(Lookup l) {
+        if (l.source != Lang.EN) return false;
+        String[] w = Text.clean(l.query).toLowerCase(Locale.ROOT).split(" ");
+        return w.length >= 2 && w.length <= 3 && PARTICLES.contains(w[w.length - 1]);
     }
 
     private static boolean isGermanInfinitive(String w) {

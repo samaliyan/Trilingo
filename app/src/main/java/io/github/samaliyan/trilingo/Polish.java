@@ -55,7 +55,12 @@ final class Polish {
         if (e != null && e.word.equalsIgnoreCase(Text.clean(l.query))) {
             List<Lookup.Sense> fa = e.targets.get(Lang.FA);
             String first = fa == null || fa.isEmpty() || fa.get(0).terms.isEmpty() ? null : fa.get(0).terms.get(0);
-            if (first != null && !same(first, main) && !listed(fa, main) && listed(r.senses, first)) main = first;
+            if (first != null && !same(first, main) && !listed(fa, main)
+                    // the service lists the dictionary's word too; or it gave no list at all (German → Persian goes
+                    // through English): for a noun (Tisch → table → جدول, Apfel → apple → اپل), or for a verb
+                    // whose answer is an order (gehen → go → برو)
+                    && (listed(r.senses, first) || r.senses.isEmpty() && (Character.isUpperCase(Text.clean(l.query).charAt(0))
+                    && l.source == Lang.DE || first.endsWith("ن") && !main.endsWith("ن")))) main = first;
         }
         // a verb (its first kind is verb): the infinitive (…ن), not an order (برو، رانندگی کنید)
         boolean verb = !r.senses.isEmpty() && r.senses.get(0).pos != null && r.senses.get(0).pos.toLowerCase(Locale.ROOT).startsWith("verb");
@@ -101,7 +106,8 @@ final class Polish {
         if (r.lang == Lang.DE) {
             // a German word keeps its capital only as a noun (or a name: then the list does not have it small)
             boolean noun = nouns != null && nouns.exact(t) != null;
-            return !noun && l.source == Lang.EN && Character.isLowerCase(q.charAt(0)) && de != null && de.known(low) ? low : main;
+            boolean small = l.source == Lang.FA || l.source == Lang.EN && Character.isLowerCase(q.charAt(0));
+            return !noun && small && de != null && de.known(low) ? low : main;
         }
         return main;
     }
