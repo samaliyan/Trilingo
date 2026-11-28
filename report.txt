@@ -1,0 +1,302 @@
+[ui] API 34
+[ui] shot 00_intro_1
+[ui] ok: sees 'Translate in a moment'
+[ui] shot 00_intro_2
+[ui] ok: sees 'Understand the meaning'
+[ui] shot 00_intro_3
+[ui] ok: sees 'Keep what you learn'
+[ui] shot 00_intro_4
+[ui] ok: sees 'Learn from real texts'
+[ui] shot 01_first_start
+[ui] ok: keyboard open on first start
+[ui] ok: keyboard stays closed
+[ui] ok: sees 'English · German · Persian'
+[ui] ok: sees 'Type a word'
+[ui] ok: sees 'PERSIAN'
+[ui] shot 02_english_house
+[ui] ok: sees 'From English · detected'
+[ui] ok: sees 'GERMAN'
+[ui] ok: sees 'Haus'
+[ui] ok: sees 'Noun'
+[ui] ok: sees 'Translate dictionary'
+[ui] shot 02a_suggestions
+[ui] ok: sees 'GERMAN'
+[ui] shot 02a2_dictionary_result
+[ui] ok: sees 'das Wörterbuch'
+[ui] ok: sees 'German noun: das Haus'
+[ui] shot 02a3_german_noun
+[ui] ok: sees 'die Häuser'
+[ui] ok: sees 'Showing results for'
+[ui] shot 02a4_umlaut_fixed
+[ui] ok: sees 'müde'
+[ui] ok: sees 'tired'
+[ui] ok: sees 'PERSIAN'
+[ui] shot 02a5_phrasal_verbs
+[ui] ok: sees 'give up'
+[ui] ok: sees 'stop trying; quit'
+[ui] ok: sees 'From English'
+[ui] shot 02a6_give_up_result
+[ui] ok: sees 'ENGLISH'
+[ui] shot 02a7_prefix_verbs
+[ui] ok: sees 'bekommen'
+[ui] ok: no 'gekommen'
+[ui] ok: sees 'German has no phrasal verbs'
+[ui] ok: sees 'ENGLISH'
+[ui] ok: sees 'English tab'
+[ui] ok: sees 'example sentences'
+[ui] shot 02a8_examples_english_tab
+[ui] ok: sees 'house'
+[ui] ok: sees 'Did you mean'
+[ui] shot 02b_did_you_mean
+[ui] ok: sees 'house'
+[ui] ok: sees 'Haus'
+[ui] ok: no 'Did you mean'
+[ui] ok: sees 'Showing results for'
+[ui] shot 02c_corrected_german
+[ui] ok: sees 'Schmetterling'
+[ui] ok: sees 'butterfly'
+[ui] ok: sees 'two mistakes'
+[ui] ok: sees 'Kühlschrank'
+[ui] shot 02c2_two_mistakes
+[ui] ok: sees 'Termin'
+[ui] ok: sees 'other spellings'
+[ui] shot 02c3_other_spellings
+[ui] ok: sees 'From German · detected'
+[ui] shot 03_german_word
+[ui] ok: sees 'butterfly'
+[ui] ok: sees 'example sentences'
+[ui] shot 03b_examples_german
+[ui] ok: sees 'butterfly|Butterfly'
+[ui] ok: sees 'ENGLISH'
+[ui] ok: sees 'Conjugation'
+[ui] shot 03c_habe_result
+[ui] shot 03d_conjugation_german
+[ui] ok: sees 'hast'
+[ui] ok: sees 'Präsens'
+[ui] shot 03e_conjugation_english
+[ui] ok: sees 'has'
+[ui] ok: sees 'Persian tab'
+[ui] shot 03f_conjugation_persian
+[ui] ok: sees 'دارم'
+[ui] shot 03g_conjugation_persian_scrolled
+[ui] ok: sees 'Conjugation'
+[ui] shot 03h_conjugation_from_persian
+[ui] ok: sees 'می‌روم'
+[ui] ok: sees 'went'
+[ui] ok: sees 'tense examples'
+[ui] shot 03h2_tense_examples
+[ui] ok: sees 'tense sentences'
+[ui] ok: sees 'examples result'
+[ui] shot 03i_examples_persian
+[ui] ok: sees 'PERSIAN'
+[ui] ok: sees 'Examples'
+[ui] ok: no 'Conjugation'
+[ui] ok: sees 'ENGLISH'
+[ui] ok: sees 'example sentences'
+[ui] shot 03j_examples_tisch
+[ui] ok: sees 'a sentence with Tisch'
+[ui] ok: no 'No examples found'
+[ui] ok: sees 'ENGLISH'
+[ui] ok: sees 'Grammar'
+[ui] shot 03k_fernsehen_actions
+[ui] shot 03l_grammar_for_word
+[ui] ok: sees 'Grammar for this word'
+[ui] ok: sees 'separable verbs lesson'
+[ui] shot 03m_lesson_persian
+[ui] ok: sees 'Persian explanation'
+[ui] shot 03n_lesson_scrolled
+[ui] ok: sees 'example sentence'
+[ui] shot 03o_lesson_end
+[ui] shot 03p_lesson_english
+[ui] ok: sees 'Separable verbs (like fernsehen, anrufen)'
+[ui] shot 03q_grammar_screen
+[ui] ok: sees 'German grammar'
+[ui] ok: sees 'first German lesson'
+[ui] shot 03r_grammar_english_list
+[ui] ok: sees 'first English lesson'
+[ui] shot 03s_search_word
+[ui] ok: sees 'Separable verbs (like fernsehen, anrufen)'
+[ui] shot 03t_search_topic
+[ui] ok: sees 'The passive: is made, was built, has been done'
+[ui] ok: sees 'Separable verbs (like fernsehen, anrufen)'
+[ui] shot 03u_search_nothing
+[ui] ok: sees 'No lessons found'
+[ui] ok: sees 'ENGLISH'
+[ui] ok: sees 'meaning header'
+[ui] ok: sees 'German meaning'
+[ui] ok: sees 'picture'
+[ui] shot 03v_meaning_first
+[ui] ok: sees 'Level A1, Beginner'
+[ui] ok: sees 'Remove from saved words'
+[ui] ok: no 'ENGLISH'
+[ui] shot 03w_meaning_scrolled
+[ui] shot 03x_translation_first
+[ui] ok: sees 'a translation'
+[ui] shot 03y_english_meaning
+[ui] ok: sees 'Listen to a recording in English'
+[ui] recording could not start on this emulator (no microphone) — the app shows a message
+[ui] shot 03z2_voice_language
+[ui] shot 03z3_voice_after
+[ui] shot 03z4_home_tiles
+[ui] ok: sees 'Review tile'
+[ui] shot 03z5_saved_words
+[ui] ok: sees 'Tisch'
+[ui] ok: sees 'Export for Anki'
+[ui] shot 03z6_folder
+[ui] ok: sees 'folder chip'
+[ui] shot 03z7_review_front
+[ui] shot 03z8_review_back
+[ui] ok: reviewed one card
+[ui] ok: sees 'question'
+[ui] shot 03z9_find_mistake
+[ui] ok: sees 'Question 1'
+[ui] ok: sees 'Question 1'
+[ui] ok: sees 'question'
+[ui] shot 03z10_practice
+[ui] ok: sees 'result'
+[ui] shot 03z11_check
+[ui] ok: sees 'possible mistake'
+[ui] ok: sees 'scan result'
+[ui] shot 03z12_scan
+[ui] ok: sees 'Tap a word to translate it.'
+[ui] ok: sees 'turn photo'
+[ui] ok: sees 'translation'
+[ui] shot 03z13_scan_word
+[ui] ok: sees 'text translated'
+[ui] shot 03z13b_scan_text
+[ui] shot 03z14_listen_write
+[ui] ok: sees 'Question 1'
+[ui] shot 03z15_listen_write_checked
+[ui] ok: sees 'Not quite.'
+[ui] ok: sees 'Question 1'
+[ui] ok: sees 'today's lesson'
+[ui] ok: sees 'units'
+[ui] shot 03z15b_learn
+[ui] shot 03z15b2_learn_weak
+[ui] ok: sees 'today's lesson again'
+[ui] ok: sees 'lesson exercise'
+[ui] shot 03z15c_lesson
+[ui] ok: sees 'next exercise'
+[ui] ok: sees 'stop question'
+[ui] ok: sees 'learn home again'
+[ui] ok: sees 'a word met'
+[ui] ok: sees 'streak'
+[ui] ok: sees 'answers this week'
+[ui] ok: sees 'chart'
+[ui] shot 03z15e_progress
+[ui] ok: sees 'meanings'
+[ui] ok: sees 'wear'
+[ui] ok: sees 'wear in Persian'
+[ui] shot 03z15f_put_on_wear
+[ui] ok: sees 'drawing'
+[ui] ok: no 'German caption'
+[ui] shot 03z15g_put_on_drawing
+[ui] ok: sees 'new words'
+[ui] shot 03z16_text_words
+[ui] ok: sees 'German text · Your level'
+[ui] shot 03z17_text_words_c1
+[ui] ok: sees 'new words'
+[ui] shot 03z18_text_words_folder
+[ui] ok: sees 'No new words at this level'
+[ui] shot 03z19_search
+[ui] ok: sees '1 word found'
+[ui] ok: sees 'Tisch'
+[ui] shot 03z20_sorted
+[ui] ok: sees 'ENGLISH|GERMAN'
+[ui] shot 04_gift_auto
+[ui] ok: sees 'From German'
+[ui] shot 05_gift_forced_german
+[ui] ok: sees 'poison'
+[ui] ok: sees 'PERSIAN'
+[ui] shot 06_sentence
+[ui] ok: sees 'words of the sentence'
+[ui] shot 06a_sentence_meaning
+[ui] ok: sees 'number row'
+[ui] ok: sees 'eight'
+[ui] ok: sees 'acht'
+[ui] shot 06b_number
+[ui] ok: sees 'eight'
+[ui] shot 06c_persian_digit
+[ui] ok: sees 'corrected'
+[ui] ok: sees 'parts'
+[ui] ok: sees 'female form'
+[ui] ok: sees 'part Marketing'
+[ui] ok: sees 'a meaning, never empty'
+[ui] shot 06d_compound
+[ui] ok: sees 'From Persian'
+[ui] shot 07_persian_from_text_menu
+[ui] ok: sees 'house|home'
+[ui] shot 08_copied
+[ui] shot 09_recent_keyboard
+[ui] ok: keyboard open
+[ui] shot 09b_recent
+[ui] ok: sees 'Recent'
+[ui] ok: no 'hous'
+[ui] ok: no 'Schmeterling'
+[ui] shot 10_remove_dialog
+[ui] ok: undo brought the word back
+[ui] shot 10b_swiped_away
+[ui] ok: sees 'Removed “fernsehen”'
+[ui] ok: no 'fernsehen'
+[ui] shot 10c_swiped_saved
+[ui] shot 11_from_history
+[ui] ok: sees 'Haus'
+[ui] shot 12_offline_known
+[ui] ok: sees 'Haus'
+[ui] offline dictionary: this emulator stayed online (answered by the service)
+[ui] shot 13_offline_new
+[ui] offline message test skipped: this emulator stayed online
+[ui] ok: sees 'PERSIAN'
+[ui] shot 14_back_online
+[ui] ok: sees 'number row'
+[ui] shot 15a_number
+[ui] ok: sees 'twelve thousand'
+[ui] shot 15_no_letters
+[ui] ok: sees 'Type a word to translate.'
+[ui] shot 16_settings
+[ui] shot 17_service_choice
+[ui] ok: sees 'a result'
+[ui] MyMemory did not answer from this network (daily limit); Google was used instead — ok
+[ui] shot 18_mymemory
+[ui] shot 19_settings_dark
+[ui] ok: sees 'From German · detected'
+[ui] shot 20_dark_result
+[ui] ok: no 'Conjugation'
+[ui] ok: sees 'example sentences'
+[ui] shot 20c_dark_examples
+[ui] ok: sees 'ENGLISH'
+[ui] shot 20b_dark_conjugation
+[ui] ok: sees 'ENGLISH'
+[ui] shot 26a_bubble_on
+[ui] shot 26b_bubble_home
+[ui] ok: sees 'bubble panel'
+[ui] ok: sees 'translation in the panel'
+[ui] shot 26c_bubble_panel
+[ui] ok: sees 'Vibration'
+[ui] shot 26d_backup_picker
+[ui] shot 26e_restore_picker
+[ui] ok: sees 'restore question'
+[ui] shot 26f_restore_confirm
+[ui] ok: backup saved and restored
+[ui] shot 21_pin_widget_dialog
+[ui] shot 22_home_screen_widget
+[ui] shot 23_opened_from_widget
+[ui] ok: sees 'translate window'
+[ui] app updated in place
+[ui] shot 23a_home_after_update
+[ui] ok: sees 'widget after update'
+[ui] shot 23b_widget_after_update
+[ui] ok: sees 'translate window after update'
+[ui] shot 24_large_text
+[ui] shot 25_landscape
+[ui] ok: sees 'PERSIAN'
+[ui] shot 25b_landscape_two_columns
+[ui] this emulator did not turn the screen sideways — two columns not checked here
+[ui] shot 26_update_check
+[ui] old build installed
+[ui] ok: sees 'Update available'
+[ui] shot 27_update_offered
+[ui] shot 28_install_confirm
+[ui] ok: updated in-app to build 152
+[ui] ok: no crash
+[ui] failures: 0
