@@ -120,9 +120,6 @@ final class Senses {
             // "to wear" was asked: the German "zu tragen" is tragen, the Persian "برای روشن کردن" روشن کردن
             main = Text.clean(main).replaceFirst("^(zu|to|um) ", "").replaceFirst("^برای ", "");
             List<Lookup.Sense> senses = new ArrayList<>();
-            List<String> first = new ArrayList<>();
-            first.add(main);
-            senses.add(new Lookup.Sense("", first));
             for (Lookup.Sense s : r.senses) {
                 List<String> rest = new ArrayList<>();
                 for (String t : s.terms) if (!t.equalsIgnoreCase(main)) rest.add(t);

@@ -254,6 +254,19 @@ final class MeaningSource {
     }
 
     static void picture(Meaning m, Lookup l, Fetch net, java.util.function.UnaryOperator<String> german, Resolver r) {
+        photo(m, l, net, german, r);
+        // a thing with no photo anywhere (a word of everyday life): its drawing
+        if (m.image.isEmpty() && !Resolver.NUMBER.equals(l.service) && isNounLookup(m, l)) pictogram(m, l, Pictograms.NOUN, net);
+    }
+
+    private static boolean isNounLookup(Meaning m, Lookup l) {
+        if (!m.senses.isEmpty()) return "Noun".equals(m.senses.get(0).pos);
+        for (Lookup.Result r : l.results)
+            if (!r.senses.isEmpty()) return r.senses.get(0).pos.toLowerCase(Locale.ROOT).startsWith("noun");
+        return false;
+    }
+
+    private static void photo(Meaning m, Lookup l, Fetch net, java.util.function.UnaryOperator<String> german, Resolver r) {
         if (!m.image.isEmpty()) return;
         // a number: the app draws it (Wikipedia's "25" or "1000" is a year, a calendar)
         if (Resolver.NUMBER.equals(l.service)) return;
@@ -265,6 +278,8 @@ final class MeaningSource {
         // tragen, whose picture shows carrying), and a Wikipedia article on "Wear" is about worn-out gears:
         // no picture is better than a wrong one.
         if (verb && l.source != Lang.DE) {
+            // first a drawing of that very action (put on as wear → a person dressing; switch on → a switch)
+            if (pictogram(m, l, Pictograms.VERB, net)) return;
             // only when the German verb has one meaning or two (fall asleep → einschlafen → a sleeping boy);
             // a verb of many meanings (tragen: carry, wear, bear …) may show another one
             if (de == null || !isGermanInfinitive(de)) return;
@@ -291,6 +306,16 @@ final class MeaningSource {
             }
         }
         if (!m.image.isEmpty()) return;
+        // a German verb with no picture of its own, a quality (beautiful): a drawing, never a Wikipedia article
+        // (the article "Gehen" is about a sport, "Beautiful" about songs)
+        if (verb) {
+            pictogram(m, l, Pictograms.VERB, net);
+            return;
+        }
+        if (isAdjective(m, l)) {
+            pictogram(m, l, Pictograms.ADJECTIVE, net);
+            if (!m.image.isEmpty()) return;
+        }
         String en = englishWord(l);
         if (en != null && en.toLowerCase(Locale.ROOT).startsWith("to ")) en = en.substring(3);
         List<String[]> tries = new ArrayList<>();                       // {wikipedia language, title}
@@ -341,6 +366,35 @@ final class MeaningSource {
         }
     }
 
+    /**
+     * A drawing of the word's meaning (see {@link Pictograms}), looked for in English: the chosen meaning first
+     * ("take off" as "remove (clothes)"), then the English word or translation. False when none fits exactly.
+     */
+    static boolean pictogram(Meaning m, Lookup l, int kind, Fetch net) {
+        if (!m.image.isEmpty()) return true;
+        String sense = l.source == Lang.EN ? l.sense : "";
+        String hint = Pictograms.hint(sense);
+        List<String> terms = Pictograms.terms(sense, englishWord(l));
+        int own = sense == null || sense.trim().isEmpty() ? 0 : Pictograms.terms(sense, "").size();
+        for (int i = 0; i < terms.size(); i++) {
+            String t = terms.get(i);
+            try {
+                // the word itself after its chosen meaning: only a drawing of that meaning (take off: not a plane)
+                String json = net.get(Pictograms.searchUrl(t));
+                int id = i < own ? Pictograms.best(json, t, kind, hint) : Pictograms.best(json, t, kind, hint, own > 0 ? sense : null);
+                if (id >= 0) {
+                    m.image = Pictograms.imageUrl(id);
+                    m.imageCaption = "";
+                    m.imageSource = Pictograms.SOURCE;
+                    return true;
+                }
+            } catch (IOException | RuntimeException e) {
+                return false;
+            }
+        }
+        return false;
+    }
+
     /** Takes the picture of a Wikipedia article (not a list of meanings); false when it has none. */
     private static boolean wikipediaPicture(Meaning m, String host, String title, Fetch net) {
         try {
@@ -387,6 +441,13 @@ final class MeaningSource {
     private static boolean isGermanInfinitive(String w) {
         return w.length() >= 4 && Character.isLowerCase(w.charAt(0)) && !w.contains(" ")
                 && (w.endsWith("en") || w.endsWith("ern") || w.endsWith("eln"));
+    }
+
+    private static boolean isAdjective(Meaning m, Lookup l) {
+        if (!m.senses.isEmpty()) return "Adjective".equals(m.senses.get(0).pos);
+        for (Lookup.Result r : l.results)
+            if (!r.senses.isEmpty()) return r.senses.get(0).pos.toLowerCase(Locale.ROOT).startsWith("adj");
+        return false;
     }
 
     private static boolean isVerb(Meaning m, Lookup l) {

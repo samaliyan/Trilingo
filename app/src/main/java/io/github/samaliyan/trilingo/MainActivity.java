@@ -1605,8 +1605,12 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         }
 
         String sep = r.lang == Lang.FA ? "\u060C " : ", ";
-        for (Lookup.Sense s : r.senses) {
-            if (s.terms.size() == 1 && s.terms.get(0).equalsIgnoreCase(r.text) && r.senses.size() == 1) break;
+        for (Lookup.Sense s0 : r.senses) {
+            // the main word is already shown big above: not again as its own line or at the start of a list
+            List<String> rest = new ArrayList<>();
+            for (String t : s0.terms) if (!Text.clean(t).equalsIgnoreCase(Text.clean(r.text))) rest.add(t);
+            if (rest.isEmpty()) continue;
+            Lookup.Sense s = new Lookup.Sense(s0.pos == null ? "" : s0.pos, rest);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.topMargin = ui.dp(14);
             lp.rightMargin = ui.dp(12);

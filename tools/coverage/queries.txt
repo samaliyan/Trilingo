@@ -38,3 +38,18 @@ Kühlschrank
 8
 how are you
 Ich habe einen Hund
+sense:take off|remove (clothes)
+sense:put on|gain (weight)
+eat
+essen
+خوردن
+öffnen
+open
+write
+schreiben
+nehmen
+stand up
+aufstehen
+happy
+müde
+cup

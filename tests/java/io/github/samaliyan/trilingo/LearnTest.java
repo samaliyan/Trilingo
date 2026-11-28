@@ -136,17 +136,70 @@ public final class LearnTest {
                 new Lookup.Result(Lang.FA, "خوابیدن", Collections.emptyList())), "Google", 0);
         m = MeaningSource.load(fall, net, w -> w, null);
         eq("Anker Schlafender Knabe im Heu.jpg", m.image, "fall asleep → picture of schlafen");
-        // a verb with no Wiktionary picture: Wikipedia's article about the activity (English -ing form)
+        // a verb with no Wiktionary picture: none (a Wikipedia article on "Opening" or "Wear" is about
+        // something else — worn gears for wear)
         Lookup open = new Lookup("öffnen", Lang.DE, Arrays.asList(new Lookup.Result(Lang.EN, "open", Collections.emptyList())), "Google", 0);
         m = MeaningSource.load(open, net, w -> w, null);
-        eq("https://upload.example/door.jpg", m.image, "öffnen → Wikipedia 'Opening'");
-        ok(asked.contains(Meaning.wikipediaUrl("de", "Öffnen")), "German Wikipedia asked first");
+        eq("", m.image, "öffnen: no Wikipedia picture for a verb");
         // a disambiguation page gives no picture
         Lookup work = new Lookup("work", Lang.EN, Arrays.asList(new Lookup.Result(Lang.DE, "Arbeit", Collections.emptyList())), "Google", 0);
         Meaning wm = new Meaning(Lang.EN, "work");
         wm.senses.add(new Meaning.Sense("Verb", "to do a job", ""));
         MeaningSource.picture(wm, work, net, w -> w);
         eq("", wm.image, "disambiguation page: no picture");
+        pictograms(pages, net);
+    }
+
+    /** A drawing (ARASAAC search answer) for each kind, like the real ones. */
+    static String pic(int id, String kws, String cats, boolean sex) {
+        StringBuilder k = new StringBuilder();
+        for (String w : kws.split(",")) {
+            String[] x = w.split(":");
+            if (k.length() > 0) k.append(',');
+            k.append("{\"keyword\":\"").append(x[0]).append("\",\"type\":").append(x[1]).append('}');
+        }
+        StringBuilder c = new StringBuilder();
+        for (String w : cats.split(",")) c.append(c.length() > 0 ? "," : "").append('"').append(w).append('"');
+        return "{\"_id\":" + id + ",\"sex\":" + sex + ",\"violence\":false,\"keywords\":[" + k + "],\"categories\":[" + c + "],\"tags\":[]}";
+    }
+
+    static void pictograms(java.util.Map<String, String> pages, MeaningSource.Fetch net) throws IOException {
+        String putOn = "[" + pic(14534, "put on shoes:3,put shoes on:3,put on:3", "verb,footwear", false) + ","
+                + pic(39109, "New Year's Eve:1", "new year", false) + "]";
+        String wear = "[" + pic(16849, "spray with perfume:3,wear perfume:3", "verb,hygiene product", false) + ","
+                + pic(6627, "dress:3,get dressed:3,wear:3", "usual verbs,routine", false) + "]";
+        String takeOff = "[" + pic(7018, "take off:3", "verb,aerial transport", false) + ","
+                + pic(15499, "take off the bra:3,take off:3", "verb,clothes,underwear", false) + ","
+                + pic(11751, "remove:3,take off:3", "verb", false) + "]";
+        // the drawing of the very word, of its kind
+        eq(6627, Pictograms.best(wear, "wear", Pictograms.VERB, ""), "wear → a person dressing, not wearing perfume");
+        eq(14534, Pictograms.best(putOn, "put on", Pictograms.VERB, ""), "put on: a drawing that has the words put on");
+        eq(-1, Pictograms.best(putOn, "put on", Pictograms.NOUN, ""), "not of another kind");
+        eq(-1, Pictograms.best(putOn, "give up", Pictograms.VERB, ""), "nothing when no drawing has the word");
+        eq(11751, Pictograms.best(takeOff, "take off", Pictograms.VERB, "clothes", "remove (clothes)"), "take off as remove: not the plane, not underwear");
+        eq(7018, Pictograms.best(takeOff, "take off", Pictograms.VERB, ""), "take off with no meaning chosen: its first drawing");
+        eq(-1, Pictograms.best("[" + pic(1, "kiss:3", "verb", true) + "]", "kiss", Pictograms.VERB, ""), "no adult drawings");
+        eq(-1, Pictograms.best("", "x", Pictograms.VERB, ""), "no answer");
+        eq(Arrays.asList("remove clothes", "remove", "take off"), Pictograms.terms("remove (clothes)", "take off"), "terms of a chosen meaning");
+        eq("clothes", Pictograms.hint("remove (clothes)"), "what the meaning is about");
+        eq(Arrays.asList("wear"), Pictograms.terms("", "to wear"), "to wear → wear");
+        // put on, chosen as wear: the drawing of wear
+        pages.put(Pictograms.searchUrl("wear"), wear);
+        pages.put(Pictograms.searchUrl("put on"), putOn);
+        Lookup put = new Lookup("put on", Lang.EN, Arrays.asList(new Lookup.Result(Lang.DE, "anziehen", Collections.emptyList()),
+                new Lookup.Result(Lang.FA, "پوشیدن", Collections.emptyList())), "Google", 0, null, null, "wear");
+        Meaning m = MeaningSource.load(put, net, w -> w, null);
+        eq(Pictograms.imageUrl(6627), m.image, "put on as wear → a person dressing");
+        eq(Pictograms.SOURCE, m.imageSource, "said where the drawing is from");
+        eq("", m.imageCaption, "no caption in another language");
+        // پوشیدن: the drawing of its English translation
+        Lookup pu = new Lookup("پوشیدن", Lang.FA, Arrays.asList(new Lookup.Result(Lang.EN, "to wear",
+                Collections.singletonList(new Lookup.Sense("verb", Arrays.asList("wear", "put on")))),
+                new Lookup.Result(Lang.DE, "tragen", Collections.emptyList())), "Google", 0);
+        m = new Meaning(Lang.FA, "پوشیدن");
+        MeaningSource.picture(m, pu, net, w -> w);
+        eq(Pictograms.imageUrl(6627), m.image, "پوشیدن → a person dressing");
+        eq("https://static.arasaac.org/pictograms/6627/6627_500.png", Meaning.fileUrl(m.image, 400), "used as it is");
     }
 
     static void sources() throws IOException {

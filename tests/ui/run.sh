@@ -81,6 +81,14 @@ sleep 2.5
 shot 01_first_start
 KB=$(adb shell dumpsys input_method | grep -c "mInputShown=true")
 [ "$KB" -gt 0 ] && log "ok: keyboard open on first start" || fail "keyboard not open on first start"
+# 1.10: closed with Back, the keyboard stays closed (it used to come back up twice)
+if [ "$KB" -gt 0 ]; then
+  back
+  sleep 3.5
+  KB=$(adb shell dumpsys input_method | grep -c "mInputShown=true")
+  [ "$KB" -eq 0 ] && log "ok: keyboard stays closed" || fail "keyboard came back after Back"
+  tap "search field" "^Type a word$" > /dev/null || true
+fi
 expect "English · German · Persian"
 expect "Type a word"
 
@@ -124,7 +132,7 @@ type_text "give"
 wait_for "PERSIAN" "" 20
 back
 if [ -n "$(nfind "Translated by MyMemory")" ]; then log "Google did not answer: phrasal verbs (need word types) skipped"; open_app; type_text "x"; else
-wait_for "Phrasal verbs" "" 5
+scroll_to "Phrasal verbs"
 tap "Phrasal verbs"
 sleep 2
 shot 02a5_phrasal_verbs 1
@@ -176,6 +184,17 @@ wait_for "Showing results for" "" 25
 shot 02c_corrected_german 1
 expect "Schmetterling" "^Schmetterling$"
 expect "butterfly" "(?i)butterfly"
+# 1.9: two mistakes and sound-alike letters are understood; more spellings to choose from
+clear_field
+type_text "Kuehlschrank"
+wait_for "two mistakes" "^(Did you mean|Showing results for)$" 25
+expect "Kühlschrank" "^Kühlschrank$"
+shot 02c2_two_mistakes 1
+clear_field
+type_text "Termien"
+wait_for "Termin" "^(Did you mean|Showing results for)$" 25
+wait_for "other spellings" "^Other spellings$" 10
+shot 02c3_other_spellings 1
 
 # 3. German word → English + Persian
 clear_field
@@ -220,6 +239,12 @@ shot 03h_conjugation_from_persian 1
 expect "می‌روم" "^می.روم$"
 tap "English: go"
 expect "went" "^went$"
+# 1.10: example sentences of one tense (the first tense card's Examples button)
+tap "tense examples" "^Example sentences in the .* of go$"
+wait_for "tense examples" "^(Listen in English|No sentences found with this tense yet\.)$" 30
+shot 03h2_tense_examples 1
+expect "tense sentences" "^Listen in English$"
+back
 back
 scroll_to "Examples"; tap "Examples"
 wait_for "examples result" "^(Sentences from Tatoeba|No examples found)" 25
@@ -445,9 +470,10 @@ sleep 3
 MID=$(adb shell content query --uri content://media/external/images/media --projection _id:_display_name 2>/dev/null | grep scan_sample | head -1 | sed -n 's/.*_id=\([0-9]*\).*/\1/p')
 if [ -n "$MID" ]; then
   adb shell am start -a android.intent.action.SEND -t image/png -d "content://media/external/images/media/$MID" --grant-read-uri-permission -n "$PKG/.ScanActivity" > /dev/null
-  wait_for "scan result" "^(Tap a word to translate it\.|No text found in this picture\.|Could not read.*)$" 30
+  wait_for "scan result" "^(Tap a word to translate it\..*|No text found in this picture\.|Could not read.*)$" 30
   shot 03z12_scan 1
-  expect "Tap a word to translate it."
+  expect "Tap a word to translate it." "^Tap a word to translate it\. Drag over the photo.*$"
+  expect "turn photo" "^Turn photo$"
   P=$(nfind "photo" "^Photo with \d+ words.*")
   if [ -n "$P" ]; then
     set -- $P
@@ -456,6 +482,12 @@ if [ -n "$MID" ]; then
     wait_for "translation" "(?i).*(station|ایستگاه).*" 25
     shot 03z13_scan_word 1
   fi
+  # 1.9: the whole text, editable, translated as a whole
+  scroll_to "the text" "^The text · German$"
+  scroll_to "translate the text" "^Translate the text$"
+  tap "Translate the text" "^Translate the text$"
+  wait_for "text translated" "(?i)^ENGLISH$" 25
+  shot 03z13b_scan_text 1
   back
 else
   log "scan test skipped: the picture could not be found in the media store"
@@ -484,6 +516,55 @@ else
   expect "Question 1"
 fi
 back
+
+# 3z15b. Learn (1.13): today's lesson starts with a new word; stopping keeps the answers; then Progress
+open_app
+back
+scroll_to "Learn" "^Learn$"
+tap "Learn" "^Learn$"
+wait_for "today's lesson" "^Today's lesson$" 20
+expect "units" "^Unit 1$"
+shot 03z15b_learn 1
+scroll_to "weak spots" "^Your weak spots$"
+shot 03z15b2_learn_weak 1
+open_app
+back
+scroll_to "Learn" "^Learn$"
+tap "Learn" "^Learn$"
+wait_for "today's lesson again" "^Today's lesson$" 20
+tap "Start" "^Start$"
+wait_for "lesson exercise" "^(New word|What does it mean\?|Which (German|English) word\?|Write it in .*|Which article\?|Write the right form|Say it aloud)$" 15
+shot 03z15c_lesson 1
+if [ -n "$(nfind "Got it" "^Got it$")" ]; then
+  tap "Got it" "^Got it$"
+  wait_for "next exercise" "^(New word|What does it mean\?|Which (German|English) word\?|Write it in .*|Which article\?|Write the right form|Say it aloud)$" 10
+fi
+back
+wait_for "stop question" "^Stop this lesson\? Your answers so far are kept\.$" 5
+tap "Stop" "(?i)^stop$"
+wait_for "learn home again" "^Today's lesson$" 10
+expect "a word met" "^[1-9][0-9]* of [0-9]+ words of this level met$"
+back
+open_app
+back
+scroll_to "Progress" "^Progress$"
+tap "Progress" "^Progress$"
+wait_for "streak" "^days? in a row$" 10
+expect "answers this week" "^answers$"
+expect "chart" "^Words learned per week$"
+shot 03z15e_progress 1
+back
+
+# 3z15f. Which meaning (1.13): put on as wear, not as put
+open_app
+type_text "put%son"
+wait_for "meanings" "^Which meaning\?$" 25
+expect "wear" "^wear$"
+tap "wear" "^wear$"
+wait_for "wear in Persian" "^پوشیدن$" 25
+back
+scroll_to "German follows" "(?i)^(tragen|anziehen|anhaben)$"
+shot 03z15f_put_on_wear 1
 
 # 3z16. Words from a text (shared text → the new words at your level → save them)
 adb shell "am start -a android.intent.action.SEND -t text/plain --es android.intent.extra.TEXT 'Die Verwaltung hat die Genehmigung verweigert, obwohl die Anwohner sich beschwert hatten.' -n $PKG/.TextWordsActivity" > /dev/null
@@ -662,6 +743,12 @@ shot 14_back_online 1.5
 # 10. Not a word
 clear_field
 type_text "12345"; sleep 1.5
+# a number is translated as words (1.8)
+wait_for "number row" "^Number 12,345$" 10
+shot 15a_number 0.5
+expect "twelve thousand" "(?i)^twelve thousand three hundred forty-five$"
+clear_field
+type_text "...%s!!"; sleep 1.5
 shot 15_no_letters
 expect "Type a word to translate."
 
@@ -753,19 +840,38 @@ back
 # 12. Widget on the home screen
 open_app; back; tap "Settings"
 if scroll_to "Add widget to home screen" "" quiet; then
+  # the last item may sit at the very bottom edge: a little further, then tap
+  adb shell input swipe 540 1500 540 1100 300; sleep 1
   tap "Add widget to home screen"
   shot 21_pin_widget_dialog 2
   tap_any "Add automatically" "ADD AUTOMATICALLY" "Add to home screen" "ADD TO HOME SCREEN" "Add" "ADD"
   sleep 2
   adb shell input keyevent KEYCODE_HOME
   shot 22_home_screen_widget 3
-  if [ -z "$(nfind "Translate a word")" ]; then
+  if [ -z "$(nfind "Translate" "^Translate$")" ]; then
     adb shell input swipe 900 1200 150 1200 300
     shot 22b_home_screen_widget_page2 2
   fi
-  if tap "Translate a word"; then
+  if tap "Translate" "^Translate$"; then
+    # 1.10: a small translate window right on the home screen
     shot 23_opened_from_widget 2.5
-    expect "Type a word"
+    expect "translate window" "^(Copy text, or type here|Open in Trilingo)$"
+    back
+    # 1.11: after an update the widget is drawn anew (the old drawing opened the app wherever it was tapped)
+    adb install -r "$APK" > /dev/null && log "app updated in place"
+    sleep 4
+    adb shell input keyevent KEYCODE_HOME; sleep 2
+    # the widget may be on the second page of the home screen (as when it was added)
+    if [ -z "$(nfind "Translate" "^Translate$")" ]; then adb shell input swipe 900 1200 150 1200 300; sleep 2; fi
+    shot 23a_home_after_update 1
+    wait_for "widget after update" "^Translate$" 20
+    if tap "Translate" "^Translate$"; then
+      shot 23b_widget_after_update 2
+      expect "translate window after update" "^(Copy text, or type here|Open in Trilingo)$"
+      back
+    else
+      fail "widget gone after the update"
+    fi
   else
     fail "widget not visible on the home screen"
   fi
