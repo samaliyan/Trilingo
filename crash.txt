@@ -1,0 +1,46 @@
+11-28 15:10:55.936 15502 15502 E AndroidRuntime: *** FATAL EXCEPTION IN SYSTEM PROCESS: main
+11-28 15:10:55.936 15502 15502 E AndroidRuntime: java.lang.SecurityException: WifiService: Neither user 2000 nor current process has android.permission.CHANGE_WIFI_STATE.
+11-28 15:10:55.936 15502 15502 E AndroidRuntime: 	at android.os.Parcel.readException(Parcel.java:1943)
+11-28 15:10:55.936 15502 15502 E AndroidRuntime: 	at android.os.Parcel.readException(Parcel.java:1889)
+11-28 15:10:55.936 15502 15502 E AndroidRuntime: 	at android.net.wifi.IWifiManager$Stub$Proxy.setWifiEnabled(IWifiManager.java:1263)
+11-28 15:10:55.936 15502 15502 E AndroidRuntime: 	at com.android.commands.svc.WifiCommand.run(WifiCommand.java:55)
+11-28 15:10:55.936 15502 15502 E AndroidRuntime: 	at com.android.commands.svc.Svc.main(Svc.java:41)
+11-28 15:10:55.936 15502 15502 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit.nativeFinishInit(Native Method)
+11-28 15:10:55.936 15502 15502 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit.main(RuntimeInit.java:284)
+11-28 15:10:55.937 15502 15502 E AndroidRuntime: Error reporting crash
+11-28 15:10:55.937 15502 15502 E AndroidRuntime: java.lang.RuntimeException: Bad file descriptor
+11-28 15:10:55.937 15502 15502 E AndroidRuntime: 	at android.os.BinderProxy.transactNative(Native Method)
+11-28 15:10:55.937 15502 15502 E AndroidRuntime: 	at android.os.BinderProxy.transact(Binder.java:748)
+11-28 15:10:55.937 15502 15502 E AndroidRuntime: 	at android.os.ServiceManagerProxy.getService(ServiceManagerNative.java:123)
+11-28 15:10:55.937 15502 15502 E AndroidRuntime: 	at android.os.ServiceManager.getService(ServiceManager.java:56)
+11-28 15:10:55.937 15502 15502 E AndroidRuntime: 	at android.app.ActivityManager$1.create(ActivityManager.java:4214)
+11-28 15:10:55.937 15502 15502 E AndroidRuntime: 	at android.app.ActivityManager$1.create(ActivityManager.java:4212)
+11-28 15:10:55.937 15502 15502 E AndroidRuntime: 	at android.util.Singleton.get(Singleton.java:34)
+11-28 15:10:55.937 15502 15502 E AndroidRuntime: 	at android.app.ActivityManager.getService(ActivityManager.java:4207)
+11-28 15:10:55.937 15502 15502 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$KillApplicationHandler.uncaughtException(RuntimeInit.java:115)
+11-28 15:10:55.937 15502 15502 E AndroidRuntime: 	at java.lang.ThreadGroup.uncaughtException(ThreadGroup.java:1068)
+11-28 15:10:55.937 15502 15502 E AndroidRuntime: 	at java.lang.ThreadGroup.uncaughtException(ThreadGroup.java:1063)
+11-28 15:10:55.937 15502 15502 E AndroidRuntime: 	at java.lang.Thread.dispatchUncaughtException(Thread.java:1953)
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: *** FATAL EXCEPTION IN SYSTEM PROCESS: main
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: java.lang.SecurityException: WifiService: Neither user 2000 nor current process has android.permission.CHANGE_WIFI_STATE.
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: 	at android.os.Parcel.readException(Parcel.java:1943)
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: 	at android.os.Parcel.readException(Parcel.java:1889)
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: 	at android.net.wifi.IWifiManager$Stub$Proxy.setWifiEnabled(IWifiManager.java:1263)
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: 	at com.android.commands.svc.WifiCommand.run(WifiCommand.java:55)
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: 	at com.android.commands.svc.Svc.main(Svc.java:41)
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit.nativeFinishInit(Native Method)
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit.main(RuntimeInit.java:284)
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: Error reporting crash
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: java.lang.RuntimeException: Bad file descriptor
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: 	at android.os.BinderProxy.transactNative(Native Method)
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: 	at android.os.BinderProxy.transact(Binder.java:748)
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: 	at android.os.ServiceManagerProxy.getService(ServiceManagerNative.java:123)
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: 	at android.os.ServiceManager.getService(ServiceManager.java:56)
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: 	at android.app.ActivityManager$1.create(ActivityManager.java:4214)
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: 	at android.app.ActivityManager$1.create(ActivityManager.java:4212)
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: 	at android.util.Singleton.get(Singleton.java:34)
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: 	at android.app.ActivityManager.getService(ActivityManager.java:4207)
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$KillApplicationHandler.uncaughtException(RuntimeInit.java:115)
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: 	at java.lang.ThreadGroup.uncaughtException(ThreadGroup.java:1068)
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: 	at java.lang.ThreadGroup.uncaughtException(ThreadGroup.java:1063)
+11-28 15:11:30.401 15802 15802 E AndroidRuntime: 	at java.lang.Thread.dispatchUncaughtException(Thread.java:1953)
