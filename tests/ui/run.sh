@@ -562,7 +562,8 @@ wait_for "meanings" "^Which meaning\?$" 25
 expect "wear" "^wear$"
 tap "wear" "^wear$"
 wait_for "wear in Persian" "^پوشیدن$" 25
-expect "German follows" "(?i)^(tragen|anziehen|anhaben)$"
+back
+scroll_to "German follows" "(?i)^(tragen|anziehen|anhaben)$"
 shot 03z15f_put_on_wear 1
 
 # 3z16. Words from a text (shared text → the new words at your level → save them)
