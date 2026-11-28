@@ -193,6 +193,11 @@ public final class LearnTest {
         bm.senses.add(new Meaning.Sense("Adjective", "Pleasing to the eye.", ""));
         MeaningSource.mainKindFirst(bm, bl);
         eq("Adjective", bm.senses.get(0).pos, "the main kind first");
+        Meaning wm2 = new Meaning(Lang.EN, "wear");
+        wm2.senses.add(new Meaning.Sense("Noun", "clothing", ""));
+        wm2.senses.add(new Meaning.Sense("Verb", "to carry or have on the body", ""));
+        MeaningSource.mainKindFirst(wm2, new Lookup("put on", Lang.EN, Collections.emptyList(), "Google", 0));
+        eq("Verb", wm2.senses.get(0).pos, "put on as wear: the verb first, not clothing");
         // put on, chosen as wear: the drawing of wear
         pages.put(Pictograms.searchUrl("wear"), wear);
         pages.put(Pictograms.searchUrl("put on"), putOn);
