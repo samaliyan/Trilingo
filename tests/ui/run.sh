@@ -565,6 +565,12 @@ wait_for "wear in Persian" "^پوشیدن$" 25
 back
 scroll_to "German follows" "(?i)^(tragen|anziehen|anhaben)$"
 shot 03z15f_put_on_wear 1
+# its meaning has a drawing of that meaning (a person dressing), not a photo of another one
+scroll_to "Meaning tab" "^Meaning$"
+tap "Meaning tab" "^Meaning$"
+wait_for "drawing" "^Drawing: Sergio Palao.*" 25
+expect_not "German caption" ".*(trägt|Pavian).*"
+shot 03z15g_put_on_drawing 1
 
 # 3z16. Words from a text (shared text → the new words at your level → save them)
 adb shell "am start -a android.intent.action.SEND -t text/plain --es android.intent.extra.TEXT 'Die Verwaltung hat die Genehmigung verweigert, obwohl die Anwohner sich beschwert hatten.' -n $PKG/.TextWordsActivity" > /dev/null

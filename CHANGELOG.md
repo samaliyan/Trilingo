@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.15 — 2026-11-28
+
+- **A drawing for actions and qualities**: verbs, phrasal verbs and adjectives now show a clear drawing of what they mean — *put on* as wear: a person getting dressed; as switch on: a hand turning on a device; *eat*, *drive*, *open*, *write*, *stand up*, *beautiful*, *happy*, and the same for their German and Persian words (پوشیدن, خوردن, رانندگی, زیبا, fahren, öffnen). The drawings come from ARASAAC (Sergio Palao, CC BY-NC-SA) and are named under the picture. A drawing is shown only when it is of that very word and of that meaning; otherwise none (*give up*).
+- Things keep their photos (house, apple, butterfly), and a thing with no photo gets its drawing.
+- **The main meaning first**: *beautiful* is explained first as "attractive", not as "a beautiful person".
+
 ## 1.14 — 2026-11-28
 
 - **Auto finds the language by the word lists**: *put on* (and any English phrase) is English, even when typed right after opening the app (it waits a moment for the lists) and even if an older wrong lookup is in the history. Before, the service's guess could take it for German and show only English.

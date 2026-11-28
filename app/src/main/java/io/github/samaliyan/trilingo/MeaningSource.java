@@ -135,6 +135,7 @@ final class MeaningSource {
                 wikipedia(m, l.source, w, net);
         }
         if (m.isEmpty() && Resolver.NUMBER.equals(l.service)) number(m, l);
+        if (l.source == Lang.EN) mainKindFirst(m, l);
         // a sentence (or a word with no entry of its own): the meanings of its words, in its own language
         if (m.isEmpty() && r != null) words(m, l, net, german, enWords, r);
         // never the meaning of a translation: the meaning section is only in the word's own language
@@ -254,6 +255,18 @@ final class MeaningSource {
     }
 
     static void picture(Meaning m, Lookup l, Fetch net, java.util.function.UnaryOperator<String> german, Resolver r) {
+        photo(m, l, net, german, r);
+        // a thing with no photo anywhere (a word of everyday life): its drawing
+        if (m.image.isEmpty() && !Resolver.NUMBER.equals(l.service) && isNounLookup(m, l)) pictogram(m, l, Pictograms.NOUN, net);
+    }
+
+    private static boolean isNounLookup(Meaning m, Lookup l) {
+        String k = mainKind(l);
+        if (!k.isEmpty()) return k.startsWith("noun");
+        return !m.senses.isEmpty() && "Noun".equals(m.senses.get(0).pos);
+    }
+
+    private static void photo(Meaning m, Lookup l, Fetch net, java.util.function.UnaryOperator<String> german, Resolver r) {
         if (!m.image.isEmpty()) return;
         // a number: the app draws it (Wikipedia's "25" or "1000" is a year, a calendar)
         if (Resolver.NUMBER.equals(l.service)) return;
@@ -265,6 +278,8 @@ final class MeaningSource {
         // tragen, whose picture shows carrying), and a Wikipedia article on "Wear" is about worn-out gears:
         // no picture is better than a wrong one.
         if (verb && l.source != Lang.DE) {
+            // first a drawing of that very action (put on as wear → a person dressing; switch on → a switch)
+            if (pictogram(m, l, Pictograms.VERB, net)) return;
             // only when the German verb has one meaning or two (fall asleep → einschlafen → a sleeping boy);
             // a verb of many meanings (tragen: carry, wear, bear …) may show another one
             if (de == null || !isGermanInfinitive(de)) return;
@@ -291,6 +306,16 @@ final class MeaningSource {
             }
         }
         if (!m.image.isEmpty()) return;
+        // a German verb with no picture of its own, a quality (beautiful): a drawing, never a Wikipedia article
+        // (the article "Gehen" is about a sport, "Beautiful" about songs)
+        if (verb) {
+            pictogram(m, l, Pictograms.VERB, net);
+            return;
+        }
+        if (isAdjective(m, l)) {
+            pictogram(m, l, Pictograms.ADJECTIVE, net);
+            if (!m.image.isEmpty()) return;
+        }
         String en = englishWord(l);
         if (en != null && en.toLowerCase(Locale.ROOT).startsWith("to ")) en = en.substring(3);
         List<String[]> tries = new ArrayList<>();                       // {wikipedia language, title}
@@ -341,6 +366,35 @@ final class MeaningSource {
         }
     }
 
+    /**
+     * A drawing of the word's meaning (see {@link Pictograms}), looked for in English: the chosen meaning first
+     * ("take off" as "remove (clothes)"), then the English word or translation. False when none fits exactly.
+     */
+    static boolean pictogram(Meaning m, Lookup l, int kind, Fetch net) {
+        if (!m.image.isEmpty()) return true;
+        String sense = l.source == Lang.EN ? l.sense : "";
+        String hint = Pictograms.hint(sense);
+        List<String> terms = Pictograms.terms(sense, englishWord(l));
+        int own = sense == null || sense.trim().isEmpty() ? 0 : Pictograms.terms(sense, "").size();
+        for (int i = 0; i < terms.size(); i++) {
+            String t = terms.get(i);
+            try {
+                // the word itself after its chosen meaning: only a drawing of that meaning (take off: not a plane)
+                String json = net.get(Pictograms.searchUrl(t));
+                int id = i < own ? Pictograms.best(json, t, kind, hint) : Pictograms.best(json, t, kind, hint, own > 0 ? sense : null);
+                if (id >= 0) {
+                    m.image = Pictograms.imageUrl(id);
+                    m.imageCaption = "";
+                    m.imageSource = Pictograms.SOURCE;
+                    return true;
+                }
+            } catch (IOException | RuntimeException e) {
+                return false;
+            }
+        }
+        return false;
+    }
+
     /** Takes the picture of a Wikipedia article (not a list of meanings); false when it has none. */
     private static boolean wikipediaPicture(Meaning m, String host, String title, Fetch net) {
         try {
@@ -389,7 +443,54 @@ final class MeaningSource {
                 && (w.endsWith("en") || w.endsWith("ern") || w.endsWith("eln"));
     }
 
+    /**
+     * The word's main kind as the translation service gives it ("adjective" for beautiful), or "". It comes
+     * before the dictionary's order, which may start with a rare use ("beautiful" as a noun: a beautiful person).
+     */
+    static String mainKind(Lookup l) {
+        for (Lookup.Result r : l.results)
+            if (!r.senses.isEmpty() && r.senses.get(0).pos != null && !r.senses.get(0).pos.isEmpty())
+                return r.senses.get(0).pos.toLowerCase(Locale.ROOT);
+        return "";
+    }
+
+    private static boolean isAdjective(Meaning m, Lookup l) {
+        String k = mainKind(l);
+        if (!k.isEmpty()) return k.startsWith("adj");
+        return !m.senses.isEmpty() && "Adjective".equals(m.senses.get(0).pos);
+    }
+
+    /** The explanations of the word's main kind first (beautiful: "pleasing to the eye" before "a beautiful person"). */
+    static void mainKindFirst(Meaning m, Lookup l) {
+        String k = mainKind(l);
+        if (k.isEmpty() || m.senses.isEmpty()) return;
+        List<Meaning.Sense> yes = new ArrayList<>(), no = new ArrayList<>();
+        for (Meaning.Sense x : m.senses) (x.pos != null && x.pos.toLowerCase(Locale.ROOT).equals(k) ? yes : no).add(x);
+        if (yes.isEmpty() || no.isEmpty() || m.senses.get(0) == yes.get(0)) return;
+        m.senses.clear();
+        m.senses.addAll(yes);
+        m.senses.addAll(no);
+    }
+
+    /**
+     * A Persian infinitive (پوشیدن, رفتن, روشن کردن) whose English is an action ("wearing", "to go", a verb
+     * among its meanings) — not a noun that only ends the same way (بدن, گردن).
+     */
+    static boolean persianVerb(Lookup l) {
+        if (l.source != Lang.FA) return false;
+        String w = Text.clean(l.query);
+        if (w.length() < 3 || !(w.endsWith("دن") || w.endsWith("تن"))) return false;
+        for (Lookup.Result r : l.results) {
+            if (r.lang != Lang.EN) continue;
+            String e = Text.clean(r.text).toLowerCase(Locale.ROOT);
+            if (e.startsWith("to ") || e.endsWith("ing") && !e.contains(" ")) return true;
+            for (Lookup.Sense s : r.senses) if (s.pos != null && s.pos.toLowerCase(Locale.ROOT).startsWith("verb")) return true;
+        }
+        return false;
+    }
+
     private static boolean isVerb(Meaning m, Lookup l) {
+        if (persianVerb(l)) return true;
         if (!m.senses.isEmpty()) return "Verb".equals(m.senses.get(0).pos);
         for (Lookup.Result r : l.results)
             if (!r.senses.isEmpty() && r.senses.get(0).pos.toLowerCase(Locale.ROOT).startsWith("verb")) return true;

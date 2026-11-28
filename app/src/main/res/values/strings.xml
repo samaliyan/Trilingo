@@ -154,6 +154,7 @@
     <string name="word_family">Word family</string>
     <string name="picture_of">Picture: %1$s. Tap to enlarge</string>
     <string name="picture_credit">Picture: %1$s (Wikimedia Commons)</string>
+    <string name="pictogram_credit">Drawing: Sergio Palao · ARASAAC (CC BY-NC-SA)</string>
     <string name="listen">Listen</string>
     <string name="listen_real">Listen to a recording in %1$s</string>
     <string name="listen_tts">Listen in %1$s</string>

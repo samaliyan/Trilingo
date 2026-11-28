@@ -135,7 +135,8 @@ final class MeaningView {
             card.addView(cap);
         }
         TextView credit = ui.text(11, ui.sub, Ui.REGULAR);
-        credit.setText(act.getString(R.string.picture_credit, m.imageSource.isEmpty() ? "Wikimedia" : m.imageSource));
+        credit.setText(Pictograms.SOURCE.equals(m.imageSource) ? act.getString(R.string.pictogram_credit)
+                : act.getString(R.string.picture_credit, m.imageSource.isEmpty() ? "Wikimedia" : m.imageSource));
         credit.setGravity(Gravity.CENTER);
         credit.setPadding(0, ui.dp(2), 0, 0);
         card.addView(credit);
