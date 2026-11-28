@@ -6,6 +6,7 @@
 - **Which meaning, fixed**: a phrasal verb opens with its first meaning (put on → پوشیدن · anziehen); a chosen meaning no longer comes back as "برای روشن کردن" or "zu tragen", just روشن کردن · einschalten.
 - **Pictures only when they fit**: no picture for verbs and phrasal verbs from English or Persian (*wear* showed a German page's picture of something else); the picture under a word is described only in that word's language — no German caption under an English or Persian word.
 - **Cleaner translations**: Persian verbs in the infinitive (gehen → رفتن, not برو); the dictionary's meaning first when the service gives a rarer one (Tisch → میز, not جدول; Apfel → سیب, not اپل); English and German in small letters where they should be (house, auch, schön), nouns keep their capital.
+- **No repeated word**: the translation is no longer shown a second time in small letters under itself (پوشیدن under پوشیدن, tragen under tragen).
 
 ## 1.13 — 2026-11-28
 
