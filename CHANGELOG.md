@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.14 — 2026-11-28
+
+- **Auto finds the language by the word lists**: *put on* (and any English phrase) is English, even when typed right after opening the app (it waits a moment for the lists) and even if an older wrong lookup is in the history. Before, the service's guess could take it for German and show only English.
+- **Which meaning, fixed**: a phrasal verb opens with its first meaning (put on → پوشیدن · anziehen); a chosen meaning no longer comes back as "برای روشن کردن" or "zu tragen", just روشن کردن · einschalten.
+- **Pictures only when they fit**: no picture for verbs and phrasal verbs from English or Persian (*wear* showed a German page's picture of something else); the picture under a word is described only in that word's language — no German caption under an English or Persian word.
+- **Cleaner translations**: Persian verbs in the infinitive (gehen → رفتن, not برو); the dictionary's meaning first when the service gives a rarer one (Tisch → میز, not جدول; Apfel → سیب, not اپل); English and German in small letters where they should be (house, auch, schön), nouns keep their capital.
+
 ## 1.13 — 2026-11-28
 
 - **Which meaning?** A word with several meanings shows them to choose from — *put on*: wear · switch on · gain weight; *light*: نور · سبک · روشن کردن. The chosen one is translated again, so the German and Persian, the explanation and the picture all follow it (put on → پوشیدن · anziehen). It is kept: the word opens with it next time and is saved with it.

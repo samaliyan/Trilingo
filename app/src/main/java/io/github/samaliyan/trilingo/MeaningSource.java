@@ -259,8 +259,28 @@ final class MeaningSource {
         if (Resolver.NUMBER.equals(l.service)) return;
         String de = germanWord(l);
         if (de != null && german != null) de = german.apply(de);
-        if (m.image.isEmpty() && de != null && l.source != Lang.DE) take(m, germanPage(de, net), "");
-        boolean verb = isVerb(m, l) || (de != null && isGermanInfinitive(de));
+        boolean verb = isVerb(m, l) || (de != null && isGermanInfinitive(de)) || phrasalVerb(l);
+        // An action has no picture of its own. For a German verb its Wiktionary page has one chosen for that
+        // verb; for an English or Persian verb the German translation is only one of its meanings (پوشیدن →
+        // tragen, whose picture shows carrying), and a Wikipedia article on "Wear" is about worn-out gears:
+        // no picture is better than a wrong one.
+        if (verb && l.source != Lang.DE) {
+            // only when the German verb has one meaning or two (fall asleep → einschlafen → a sleeping boy);
+            // a verb of many meanings (tragen: carry, wear, bear …) may show another one
+            if (de == null || !isGermanInfinitive(de)) return;
+            Meaning page = germanPage(de, net);
+            if (page != null && page.senses.size() <= 2) take(m, page, "");
+            if (m.image.isEmpty() && (page == null || page.senses.size() <= 2)) {
+                for (String p : PREFIXES) {
+                    String base = de.startsWith(p) ? de.substring(p.length()) : "";
+                    if (base.length() >= 4 && isGermanInfinitive(base)) {
+                        take(m, germanPage(base, net), base);
+                        if (!m.image.isEmpty()) break;
+                    }
+                }
+            }
+            return;
+        }
         if (m.image.isEmpty() && de != null && isGermanInfinitive(de)) {
             for (String p : PREFIXES) {
                 String base = de.startsWith(p) ? de.substring(p.length()) : "";
@@ -276,15 +296,6 @@ final class MeaningSource {
         List<String[]> tries = new ArrayList<>();                       // {wikipedia language, title}
         if (isNoun(m) || m.senses.isEmpty() && !verb) {
             if (en != null && !en.isEmpty() && en.split(" ").length <= 2) tries.add(new String[]{"en", capital(en)});
-        } else if (verb) {
-            if (de != null && isGermanInfinitive(de)) tries.add(new String[]{"de", capital(de)});
-            if (en != null && !en.isEmpty() && !en.contains(" ")) {
-                String base = EnglishVerbs.lemma(en.toLowerCase(Locale.ROOT));
-                if (base != null && !base.isEmpty()) {
-                    tries.add(new String[]{"en", capital(EnglishVerbs.ing(base))});
-                    tries.add(new String[]{"en", capital(base)});
-                }
-            }
         }
         // a German compound: its own Wikipedia article, then the picture of its last part (…lampe → Lampe)
         Compounds.Split split = r == null || de == null || r.compounds == null ? null : r.compounds.split(de, true);
@@ -296,6 +307,10 @@ final class MeaningSource {
                 return;
             }
         }
+        // then the picture of the German translation's Wiktionary page (its first meaning: for an English
+        // word the Wikipedia article above is more often the meaning meant — Bank as a bank, not a bench)
+        if (m.image.isEmpty() && de != null && l.source != Lang.DE) take(m, germanPage(de, net), "");
+        if (!m.image.isEmpty()) return;
         if (split != null) {
             String last = split.parts.get(split.parts.size() - 1).base;
             take(m, germanPage(last, net), last);
@@ -352,8 +367,21 @@ final class MeaningSource {
     private static void take(Meaning m, Meaning from, String base) {
         if (from == null || from.image.isEmpty()) return;
         m.image = from.image;
-        m.imageCaption = base.isEmpty() ? from.imageCaption : base + (from.imageCaption.isEmpty() ? "" : ": " + from.imageCaption);
+        // the caption is in the language of the page it came from: only under a word of that language
+        if (from.lang != m.lang) m.imageCaption = "";
+        else m.imageCaption = base.isEmpty() ? from.imageCaption : base + (from.imageCaption.isEmpty() ? "" : ": " + from.imageCaption);
         m.imageSource = from.imageSource;
+    }
+
+    private static final java.util.Set<String> PARTICLES = new java.util.HashSet<>(java.util.Arrays.asList("up", "down",
+            "out", "off", "on", "in", "away", "back", "over", "around", "round", "through", "after", "into", "about",
+            "across", "along", "by", "apart", "forward"));
+
+    /** An English phrasal verb (give up, put on): an action, not a thing to show. */
+    static boolean phrasalVerb(Lookup l) {
+        if (l.source != Lang.EN) return false;
+        String[] w = Text.clean(l.query).toLowerCase(Locale.ROOT).split(" ");
+        return w.length >= 2 && w.length <= 3 && PARTICLES.contains(w[w.length - 1]);
     }
 
     private static boolean isGermanInfinitive(String w) {

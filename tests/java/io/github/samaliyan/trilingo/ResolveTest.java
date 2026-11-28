@@ -49,6 +49,7 @@ public final class ResolveTest {
         progress();
         senses();
         course(nouns);
+        polish(nouns);
         System.out.println(checks + " checks, " + failures + " failures");
         if (failures > 0) System.exit(1);
     }
@@ -551,7 +552,8 @@ public final class ResolveTest {
         List<Senses.Option> o = Senses.of(putOn, "wear; switch on; gain (weight)");
         eq(3, o.size(), "a phrasal verb's meanings");
         eq("wear", o.get(0).label, "first meaning");
-        eq("gain weight", Senses.query(o.get(2)), "brackets dropped for translating");
+        eq("to gain weight", Senses.query(o.get(2)), "brackets dropped, and as a verb (infinitive, not an order)");
+        eq("gain weight", Senses.gloss(o.get(2)), "kept without to");
         java.util.Map<Lang, String> by = new java.util.EnumMap<>(Lang.class);
         by.put(Lang.FA, "پوشیدن");
         by.put(Lang.DE, "anziehen");
@@ -582,6 +584,71 @@ public final class ResolveTest {
         java.util.Set<String> kinds = new java.util.HashSet<>(java.util.Arrays.asList("verb"));
         eq(0, Senses.of(new Lookup("light", Lang.EN, rs, "t", 1), null, kinds).size(),
                 "a kind the dictionary does not know is not offered (give as a noun)");
+    }
+
+    static void polish(Nouns nouns) throws IOException {
+        Dict ed = Dict.read(Lang.EN, new FileInputStream(A + "dict_en.txt"));
+        Dict dd = Dict.read(Lang.DE, new FileInputStream(A + "dict_de.txt"));
+        Polish p = new Polish(ed, dd, r.en, r.de, nouns);
+        // gehen → برو (an order) → رفتن
+        List<Lookup.Result> rs = new ArrayList<>();
+        rs.add(new Lookup.Result(Lang.EN, "go", new ArrayList<>()));
+        rs.add(new Lookup.Result(Lang.FA, "برو", java.util.Collections.singletonList(
+                new Lookup.Sense("verb", java.util.Arrays.asList("رفتن", "شدن")))));
+        Lookup g = p.apply(new Lookup("gehen", Lang.DE, rs, "Google", 1));
+        eq("رفتن", g.result(Lang.FA).text, "a verb in the infinitive, not an order");
+        eq("روشن کردن", Polish.infinitive("روشن کنید"), "روشن کنید → روشن کردن");
+        // Haus → House → house
+        rs = new ArrayList<>();
+        rs.add(new Lookup.Result(Lang.EN, "House", new ArrayList<>()));
+        rs.add(new Lookup.Result(Lang.FA, "خانه", new ArrayList<>()));
+        eq("house", p.apply(new Lookup("Haus", Lang.DE, rs, "Google", 1)).result(Lang.EN).text, "small letters in English");
+        // also → Auch → auch, but table → Tisch stays
+        rs = new ArrayList<>();
+        rs.add(new Lookup.Result(Lang.FA, "همچنین", new ArrayList<>()));
+        rs.add(new Lookup.Result(Lang.DE, "Auch", new ArrayList<>()));
+        eq("auch", p.apply(new Lookup("also", Lang.EN, rs, "Google", 1)).result(Lang.DE).text, "not a noun: small");
+        rs = new ArrayList<>();
+        rs.add(new Lookup.Result(Lang.FA, "جدول", new ArrayList<>()));
+        rs.add(new Lookup.Result(Lang.DE, "Tisch", new ArrayList<>()));
+        eq("Tisch", p.apply(new Lookup("table", Lang.EN, rs, "Google", 1)).result(Lang.DE).text, "a noun keeps its capital");
+        // Tisch → جدول (a spreadsheet table) → میز, when the dictionary says میز and the service lists it too
+        Dict.Entry tisch = dd.find("Tisch");
+        String first = tisch.targets.get(Lang.FA).get(0).terms.get(0);
+        rs = new ArrayList<>();
+        rs.add(new Lookup.Result(Lang.EN, "table", new ArrayList<>()));
+        rs.add(new Lookup.Result(Lang.FA, "جدول", java.util.Collections.singletonList(
+                new Lookup.Sense("noun", java.util.Arrays.asList("جدول", first)))));
+        eq(first, p.apply(new Lookup("Tisch", Lang.DE, rs, "Google", 1)).result(Lang.FA).text, "the dictionary's meaning first: " + first);
+        // light as نور stays (its first kind is a noun, not a verb)
+        rs = new ArrayList<>();
+        rs.add(new Lookup.Result(Lang.FA, "نور", java.util.Arrays.asList(new Lookup.Sense("noun", java.util.Arrays.asList("نور")),
+                new Lookup.Sense("verb", java.util.Arrays.asList("روشن کردن")))));
+        rs.add(new Lookup.Result(Lang.DE, "Licht", new ArrayList<>()));
+        eq("نور", p.apply(new Lookup("light", Lang.EN, rs, "Google", 1)).result(Lang.FA).text, "a noun is not made a verb");
+        // German → Persian through English gives no list: Tisch → جدول is still the dictionary's میز
+        rs = new ArrayList<>();
+        rs.add(new Lookup.Result(Lang.EN, "table", new ArrayList<>()));
+        rs.add(new Lookup.Result(Lang.FA, "جدول", new ArrayList<>()));
+        eq(first, p.apply(new Lookup("Tisch", Lang.DE, rs, "Google", 1)).result(Lang.FA).text, "no list: a noun takes the dictionary's meaning");
+        // زیبا → Schön → schön
+        rs = new ArrayList<>();
+        rs.add(new Lookup.Result(Lang.EN, "beautiful", new ArrayList<>()));
+        rs.add(new Lookup.Result(Lang.DE, "Schön", new ArrayList<>()));
+        eq("schön", p.apply(new Lookup("زیبا", Lang.FA, rs, "Google", 1)).result(Lang.DE).text, "from Persian: small letters in German");
+        // the chosen meaning "to switch on" in Persian comes back as برای روشن کردن
+        rs = new ArrayList<>();
+        rs.add(new Lookup.Result(Lang.FA, "پوشیدن", new ArrayList<>()));
+        rs.add(new Lookup.Result(Lang.DE, "anziehen", new ArrayList<>()));
+        java.util.Map<Lang, String> by = new java.util.HashMap<>();
+        by.put(Lang.FA, "برای روشن کردن");
+        by.put(Lang.DE, "zu einschalten");
+        Lookup ch = Senses.choose(new Lookup("put on", Lang.EN, rs, "Google", 1), new Senses.Option("switch on", Lang.EN, true), by, "switch on");
+        eq("روشن کردن", ch.result(Lang.FA).text, "برای is dropped");
+        eq("einschalten", ch.result(Lang.DE).text, "zu is dropped");
+        // a phrasal verb is an action: no picture
+        eq(true, MeaningSource.phrasalVerb(new Lookup("put on", Lang.EN, rs, "Google", 1)), "put on is a phrasal verb");
+        eq(false, MeaningSource.phrasalVerb(new Lookup("apple pie", Lang.EN, rs, "Google", 1)), "apple pie is not");
     }
 
     static void progress() {

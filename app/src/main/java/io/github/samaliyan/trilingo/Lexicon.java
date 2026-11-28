@@ -26,6 +26,19 @@ final class Lexicon {
     private static volatile Resolver resolver;
     private static boolean started;
     private static final List<Runnable> waiting = new ArrayList<>();
+    private static final java.util.concurrent.CountDownLatch LOADED = new java.util.concurrent.CountDownLatch(1);
+
+    /**
+     * Waits (on a worker thread) until the lists are loaded, at most {@code ms}: the language of a search is
+     * decided with them, not left to the service (which took "put on" for German).
+     */
+    static void await(long ms) {
+        try {
+            LOADED.await(ms, java.util.concurrent.TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 
     /** Starts loading (once); {@code done} runs on the loading thread when everything is there. */
     static synchronized void load(Context c, Runnable done) {
@@ -60,7 +73,9 @@ final class Lexicon {
                 // no offline dictionary: answers come from the translation service only
             }
             resolver = new Resolver(en, de, nouns, enDict, deDict);
+            Engine.polish = new Polish(enDict, deDict, en, de, nouns);
             grammar = readGrammar(am);
+            LOADED.countDown();
             List<Runnable> run;
             synchronized (Lexicon.class) {
                 run = new ArrayList<>(waiting);

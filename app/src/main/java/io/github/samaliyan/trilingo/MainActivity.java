@@ -523,7 +523,10 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         final String query = prep.text;
 
         long now0 = System.currentTimeMillis();
-        Lookup cached = history.find(query, prep.source != null ? prep.source : forced);
+        // Automatic: the language our word lists see (put on is English); a lookup kept from before under
+        // another language (a wrong guess of the service) is not taken for it.
+        Lang known = forced != null ? forced : prep.source != null ? prep.source : Lexicon.guessLatin(query);
+        Lookup cached = history.find(query, known);
         Lookup pre = cached == null ? prefetched.get(prefetchKey(query, forced)) : null;
         if (cached == null && pre != null) cached = pre;
         // Shown at once: the saved lookup, or what is known without the network (dictionary, number, a
@@ -542,14 +545,21 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         busy.setVisibility(View.VISIBLE);
         final Lang f = forced;
         // Automatic: a word only German (or only English) has is decided here; the rest by the service.
-        final Lang source = f != null ? f : prep.source != null ? prep.source : Lexicon.guessLatin(query);
         final int service = store.service();
         new Thread(() -> {
+            // right after the app starts the word lists may still be loading: wait a moment for them, so the
+            // language is decided by them and not guessed by the service
+            if (f == null && prep.source == null && Lexicon.words(Lang.EN) == null) Lexicon.await(4000);
+            final Lang source = f != null ? f : prep.source != null ? prep.source : Lexicon.guessLatin(query);
             Lookup res = null;
             Engine.Failure fail = null;
             boolean corrected = false;                       // the service's word was replaced by a corrected one
             try {
                 res = engine.translate(query, source, service, System.currentTimeMillis());
+                // An English phrasal verb opens with its first (most common) meaning from the built-in list:
+                // "put on" as wear (پوشیدن · tragen), not the service's word-for-word قرار دادن. The others are
+                // a tap away under "Which meaning?".
+                res = firstMeaning(res, service);
                 // No correction from the service for a word it does not know: the closest word of the built-in list.
                 if (!res.hasSuggestion() && echoes(res)) {
                     // automatic and one word: English and German both (Termien is German, though the
@@ -1488,6 +1498,24 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         return box;
     }
 
+    /** For an English phrasal verb with listed meanings: the lookup with the first one chosen (network). */
+    private Lookup firstMeaning(Lookup res, int service) {
+        if (res == null || res.source != Lang.EN || !res.sense.isEmpty()) return res;
+        Phrasal ph = Lexicon.phrasal();
+        String m = ph == null ? null : ph.meaning(Text.clean(res.query).toLowerCase(Locale.ROOT));
+        List<Senses.Option> options = m == null ? java.util.Collections.emptyList() : Senses.of(res, m);
+        if (options.isEmpty() || !options.get(0).verb) return res;
+        Senses.Option o = options.get(0);
+        try {
+            Lookup t = engine.translate(Senses.query(o), Lang.EN, service, System.currentTimeMillis());
+            java.util.Map<Lang, String> by = new java.util.EnumMap<>(Lang.class);
+            for (Lookup.Result r : t.results) by.put(r.lang, r.text);
+            return Senses.choose(res, o, by, Senses.gloss(o));
+        } catch (Engine.Failure e) {
+            return res;
+        }
+    }
+
     /** A Persian (or English) chip is the chosen meaning when its word is the translation shown now. */
     private static boolean isChosen(Lookup l, Senses.Option o) {
         Lookup.Result r = l.result(o.lang);
@@ -1513,7 +1541,7 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
             java.util.Map<Lang, String> by = new java.util.EnumMap<>(Lang.class);
             for (Lookup.Result r : res.results) by.put(r.lang, r.text);
             // the meaning in English: the chip itself (wear), or the English of a Persian chip (پوشیدن → wear)
-            String sense = o.lang == Lang.EN ? q : by.containsKey(Lang.EN) ? by.get(Lang.EN) : q;
+            String sense = o.lang == Lang.EN ? Senses.gloss(o) : by.containsKey(Lang.EN) ? by.get(Lang.EN) : q;
             Lookup chosen = Senses.choose(l, o, by, sense);
             history.add(chosen);
             WidgetProvider.updateAll(this);

@@ -33,6 +33,9 @@ public final class Coverage {
         Words en = Words.read(Lang.EN, new FileInputStream(A + "words_en.txt"));
         Words de = Words.read(Lang.DE, new FileInputStream(A + "words_de.txt"));
         Nouns nouns = Nouns.read(new FileInputStream(A + "de_nouns.txt"));
+        Phrasal phrasal = Phrasal.read(new FileInputStream(A + "phrasal_en.txt"));
+        Engine.polish = new Polish(Dict.read(Lang.EN, new FileInputStream(A + "dict_en.txt")),
+                Dict.read(Lang.DE, new FileInputStream(A + "dict_de.txt")), en, de, nouns);
         Resolver res = new Resolver(en, de, nouns, Dict.read(Lang.EN, new FileInputStream(A + "dict_en.txt")),
                 Dict.read(Lang.DE, new FileInputStream(A + "dict_de.txt")));
         Engine engine = new Engine(Engine.NET);
@@ -48,6 +51,13 @@ public final class Coverage {
             if (q.startsWith("fa:")) {
                 spoken = Lang.FA;
                 q = q.substring(3).trim();
+            }
+            // "sense:put on|wear": the lookup with that meaning chosen, as the app does
+            String sense = null;
+            if (q.startsWith("sense:")) {
+                String[] x = q.substring(6).split("\\|");
+                q = x[0];
+                sense = x[1];
             }
             Resolver.Prepared p = res.prepare(q, null, spoken);
             if (p.corrected) note += "corrected:" + p.text + " ";
@@ -67,6 +77,23 @@ public final class Coverage {
                 continue;
             }
             StringBuilder tr = new StringBuilder();
+            // as the app: a phrasal verb opens with its first listed meaning
+            if (sense == null && l != null && l.source == Lang.EN) {
+                String pm = phrasal.meaning(Text.clean(l.query).toLowerCase(java.util.Locale.ROOT));
+                if (pm != null) sense = pm.split(";")[0].trim();
+            }
+            if (sense != null && l != null) {
+                try {
+                    Senses.Option o = new Senses.Option(sense, Lang.EN, true);
+                    Lookup t = engine.translate(Senses.query(o), Lang.EN, Services.GOOGLE, System.currentTimeMillis());
+                    java.util.Map<Lang, String> by = new java.util.EnumMap<>(Lang.class);
+                    for (Lookup.Result r : t.results) by.put(r.lang, r.text);
+                    l = Senses.choose(l, o, by, Senses.gloss(o));
+                    note += "sense:" + sense + " ";
+                } catch (Exception e) {
+                    note += "sense failed ";
+                }
+            }
             for (Lookup.Result r : l.results) tr.append(r.lang.code).append('=').append(r.text).append(' ');
             String meanings = "-", pic = "-";
             {
@@ -77,6 +104,7 @@ public final class Coverage {
                     if (meanings.length() > 90) meanings = meanings.substring(0, 90);
                     pic = m.image.isEmpty() ? "-" : m.imageSource + ":" + m.image;
                     if (pic.length() > 70) pic = pic.substring(0, 70);
+                    if (!m.imageCaption.isEmpty()) pic += " [" + m.imageCaption + "]";
                 } catch (Exception e) {
                     note += "meaning failed: " + e;
                 }

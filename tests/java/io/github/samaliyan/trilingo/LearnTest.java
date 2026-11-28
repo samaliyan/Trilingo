@@ -136,11 +136,11 @@ public final class LearnTest {
                 new Lookup.Result(Lang.FA, "خوابیدن", Collections.emptyList())), "Google", 0);
         m = MeaningSource.load(fall, net, w -> w, null);
         eq("Anker Schlafender Knabe im Heu.jpg", m.image, "fall asleep → picture of schlafen");
-        // a verb with no Wiktionary picture: Wikipedia's article about the activity (English -ing form)
+        // a verb with no Wiktionary picture: none (a Wikipedia article on "Opening" or "Wear" is about
+        // something else — worn gears for wear)
         Lookup open = new Lookup("öffnen", Lang.DE, Arrays.asList(new Lookup.Result(Lang.EN, "open", Collections.emptyList())), "Google", 0);
         m = MeaningSource.load(open, net, w -> w, null);
-        eq("https://upload.example/door.jpg", m.image, "öffnen → Wikipedia 'Opening'");
-        ok(asked.contains(Meaning.wikipediaUrl("de", "Öffnen")), "German Wikipedia asked first");
+        eq("", m.image, "öffnen: no Wikipedia picture for a verb");
         // a disambiguation page gives no picture
         Lookup work = new Lookup("work", Lang.EN, Arrays.asList(new Lookup.Result(Lang.DE, "Arbeit", Collections.emptyList())), "Google", 0);
         Meaning wm = new Meaning(Lang.EN, "work");
