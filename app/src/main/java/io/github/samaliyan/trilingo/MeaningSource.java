@@ -62,6 +62,51 @@ final class MeaningSource {
 
     private static Meaning load(Lookup l, Fetch net, java.util.function.UnaryOperator<String> german, Words enWords, Resolver r)
             throws IOException {
+        Meaning m = loadAll(l, net, german, enWords, r);
+        if (!l.sense.isEmpty() && l.source == Lang.EN) {
+            forSense(m, l.sense, net, german, enWords);
+            // the picture of the chosen meaning (anziehen for "put on" as wear), not of the word's first one
+            Meaning p = new Meaning(m.lang, m.word);
+            picture(p, l, net, german, r);
+            if (!p.image.isEmpty()) {
+                m.image = p.image;
+                m.imageCaption = p.imageCaption;
+                m.imageSource = p.imageSource;
+            }
+        }
+        return m;
+    }
+
+    /**
+     * A meaning was chosen ("put on" as wear): its explanations first. When the dictionary has none for it,
+     * the explanation of the meaning's own word (wear) is shown instead, saying so.
+     */
+    private static void forSense(Meaning m, String sense, Fetch net, java.util.function.UnaryOperator<String> german,
+                                 Words enWords) {
+        List<Meaning.Sense> yes = new ArrayList<>(), no = new ArrayList<>();
+        for (Meaning.Sense x : m.senses) (Senses.matches(x.text, sense) ? yes : no).add(x);
+        if (!yes.isEmpty()) {
+            m.senses.clear();
+            m.senses.addAll(yes);
+            m.senses.addAll(no);
+            return;
+        }
+        String head = Text.clean(sense.replaceAll("\\(.*?\\)", " "));
+        try {
+            Meaning x = own(Lang.EN, head, net, german, enWords);
+            if (x.isEmpty() && head.contains(" ")) x = own(Lang.EN, head.substring(0, head.indexOf(' ')), net, german, enWords);
+            if (x.isEmpty()) return;
+            m.senses.clear();
+            m.senses.addAll(x.senses);
+            m.note = Meaning.NOTE_BASE;
+            m.noteWord = head;
+        } catch (IOException | RuntimeException e) {
+            // keep the word's own explanations
+        }
+    }
+
+    private static Meaning loadAll(Lookup l, Fetch net, java.util.function.UnaryOperator<String> german, Words enWords, Resolver r)
+            throws IOException {
         String w = word(l);
         Meaning m;
         if (w == null) {
@@ -88,29 +133,40 @@ final class MeaningSource {
             // Wikipedia explains names and things (Berlin, EU, Kühlschrank), not phrases (how are you)
             if (m.isEmpty() && !Resolver.NUMBER.equals(l.service) && (!w.contains(" ") || Character.isUpperCase(w.charAt(0))))
                 wikipedia(m, l.source, w, net);
-            if (m.isEmpty() && l.source != Lang.EN) {
-                String e = englishWord(l);
-                if (e != null && !e.isEmpty() && e.split(" ").length <= 3) {
-                    Meaning x = own(Lang.EN, e.toLowerCase(Locale.ROOT).startsWith("to ") ? e.substring(3) : e, net, german, enWords);
-                    if (!x.isEmpty()) {
-                        m.senses.addAll(x.senses);
-                        m.note = Meaning.NOTE_ENGLISH;
-                        m.noteWord = e;
-                    }
-                }
-            }
         }
         if (m.isEmpty() && Resolver.NUMBER.equals(l.service)) number(m, l);
-        if (m.isEmpty() && r != null) {
-            for (String[] g : r.glossary(l.query, l.source, 12)) m.senses.add(new Meaning.Sense("", g[0] + ": " + g[1], ""));
-            if (!m.isEmpty()) m.note = Meaning.NOTE_WORDS;
-        }
-        if (m.isEmpty()) {
-            for (Lookup.Result x : l.results) m.senses.add(new Meaning.Sense("", x.lang.label + ": " + x.summary(4), ""));
-            if (!m.isEmpty()) m.note = Meaning.NOTE_TRANSLATION;
-        }
+        // a sentence (or a word with no entry of its own): the meanings of its words, in its own language
+        if (m.isEmpty() && r != null) words(m, l, net, german, enWords, r);
+        // never the meaning of a translation: the meaning section is only in the word's own language
         if (w != null) picture(m, l, net, german, r);
         return m;
+    }
+
+    /** "Hund: Haustier, das …" for up to 5 words of the text, each from its own language's dictionary. */
+    private static void words(Meaning m, Lookup l, Fetch net, java.util.function.UnaryOperator<String> german,
+                              Words enWords, Resolver r) {
+        int found = 0;
+        List<String> words = new ArrayList<>();
+        for (String[] g : r.glossary(l.query, l.source, 8)) words.add(g[0]);
+        // then the words as they are, the common ones too (how are you): used when nothing above has a meaning
+        int fromGlossary = words.size();
+        for (String t : Text.clean(l.query).split("[\\s,.;:!?()\"„“”«»]+"))
+            if (t.length() >= 2 && words.size() < fromGlossary + 4 && !words.contains(t)) words.add(t);
+        for (int i = 0; i < words.size(); i++) {
+            if (i >= fromGlossary && found > 0) break;
+            String word = words.get(i);
+            if (found >= 5) break;
+            String[] g = {l.source == Lang.EN ? word.toLowerCase(Locale.ROOT) : word};
+            try {
+                Meaning x = own(l.source, g[0], net, german, enWords);
+                if (x.senses.isEmpty()) continue;
+                m.senses.add(new Meaning.Sense("", g[0] + ": " + x.senses.get(0).text, ""));
+                found++;
+            } catch (IOException | RuntimeException e) {
+                // the next word
+            }
+        }
+        if (!m.isEmpty()) m.note = Meaning.NOTE_WORDS;
     }
 
     /** A number without a dictionary entry (twenty-one): its value and the other languages' words. */
@@ -203,8 +259,13 @@ final class MeaningSource {
         if (Resolver.NUMBER.equals(l.service)) return;
         String de = germanWord(l);
         if (de != null && german != null) de = german.apply(de);
-        if (m.image.isEmpty() && de != null && l.source != Lang.DE) take(m, germanPage(de, net), "");
         boolean verb = isVerb(m, l) || (de != null && isGermanInfinitive(de));
+        // An action has no picture of its own. For a German verb its Wiktionary page has one chosen for that
+        // verb; for an English or Persian verb the German translation is only one of its meanings (پوشیدن →
+        // tragen, whose picture shows carrying), and a Wikipedia article on "Wear" is about worn-out gears:
+        // no picture is better than a wrong one.
+        if (verb && l.source != Lang.DE) return;
+        if (m.image.isEmpty() && de != null && l.source != Lang.DE) take(m, germanPage(de, net), "");
         if (m.image.isEmpty() && de != null && isGermanInfinitive(de)) {
             for (String p : PREFIXES) {
                 String base = de.startsWith(p) ? de.substring(p.length()) : "";
@@ -220,15 +281,6 @@ final class MeaningSource {
         List<String[]> tries = new ArrayList<>();                       // {wikipedia language, title}
         if (isNoun(m) || m.senses.isEmpty() && !verb) {
             if (en != null && !en.isEmpty() && en.split(" ").length <= 2) tries.add(new String[]{"en", capital(en)});
-        } else if (verb) {
-            if (de != null && isGermanInfinitive(de)) tries.add(new String[]{"de", capital(de)});
-            if (en != null && !en.isEmpty() && !en.contains(" ")) {
-                String base = EnglishVerbs.lemma(en.toLowerCase(Locale.ROOT));
-                if (base != null && !base.isEmpty()) {
-                    tries.add(new String[]{"en", capital(EnglishVerbs.ing(base))});
-                    tries.add(new String[]{"en", capital(base)});
-                }
-            }
         }
         // a German compound: its own Wikipedia article, then the picture of its last part (…lampe → Lampe)
         Compounds.Split split = r == null || de == null || r.compounds == null ? null : r.compounds.split(de, true);
@@ -296,7 +348,9 @@ final class MeaningSource {
     private static void take(Meaning m, Meaning from, String base) {
         if (from == null || from.image.isEmpty()) return;
         m.image = from.image;
-        m.imageCaption = base.isEmpty() ? from.imageCaption : base + (from.imageCaption.isEmpty() ? "" : ": " + from.imageCaption);
+        // the caption is in the language of the page it came from: only under a word of that language
+        if (from.lang != m.lang) m.imageCaption = "";
+        else m.imageCaption = base.isEmpty() ? from.imageCaption : base + (from.imageCaption.isEmpty() ? "" : ": " + from.imageCaption);
         m.imageSource = from.imageSource;
     }
 

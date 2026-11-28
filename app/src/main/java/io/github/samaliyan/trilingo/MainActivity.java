@@ -39,6 +39,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
@@ -51,6 +52,8 @@ import java.util.Set;
  */
 public final class MainActivity extends Activity implements TextToSpeech.OnInitListener, DetailSheets.Host {
     static final String ACTION_OPEN = "io.github.samaliyan.trilingo.OPEN";
+    /** From the widget's microphone: listen at once. */
+    static final String ACTION_VOICE = "io.github.samaliyan.trilingo.VOICE";
     static final String EXTRA_TEXT = "io.github.samaliyan.trilingo.TEXT";
 
     private static final long TYPE_DELAY = 400, SAVE_DELAY = 2000;
@@ -256,6 +259,10 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
             setInput(text);
             lookup(true);
             hideKeyboard();
+        } else if (it != null && ACTION_VOICE.equals(it.getAction())) {
+            wantKeyboard = false;
+            setInput("");
+            voiceSearch();
         } else if ((it != null && ACTION_OPEN.equals(it.getAction())) || wantKeyboard) {
             // From the widget or the quick-settings tile: a clean field, ready to type.
             forced = null;
@@ -516,7 +523,10 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         final String query = prep.text;
 
         long now0 = System.currentTimeMillis();
-        Lookup cached = history.find(query, prep.source != null ? prep.source : forced);
+        // Automatic: the language our word lists see (put on is English); a lookup kept from before under
+        // another language (a wrong guess of the service) is not taken for it.
+        Lang known = forced != null ? forced : prep.source != null ? prep.source : Lexicon.guessLatin(query);
+        Lookup cached = history.find(query, known);
         Lookup pre = cached == null ? prefetched.get(prefetchKey(query, forced)) : null;
         if (cached == null && pre != null) cached = pre;
         // Shown at once: the saved lookup, or what is known without the network (dictionary, number, a
@@ -535,9 +545,12 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         busy.setVisibility(View.VISIBLE);
         final Lang f = forced;
         // Automatic: a word only German (or only English) has is decided here; the rest by the service.
-        final Lang source = f != null ? f : prep.source != null ? prep.source : Lexicon.guessLatin(query);
         final int service = store.service();
         new Thread(() -> {
+            // right after the app starts the word lists may still be loading: wait a moment for them, so the
+            // language is decided by them and not guessed by the service
+            if (f == null && prep.source == null && Lexicon.words(Lang.EN) == null) Lexicon.await(4000);
+            final Lang source = f != null ? f : prep.source != null ? prep.source : Lexicon.guessLatin(query);
             Lookup res = null;
             Engine.Failure fail = null;
             boolean corrected = false;                       // the service's word was replaced by a corrected one
@@ -545,9 +558,23 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                 res = engine.translate(query, source, service, System.currentTimeMillis());
                 // No correction from the service for a word it does not know: the closest word of the built-in list.
                 if (!res.hasSuggestion() && echoes(res)) {
-                    String near = Lexicon.closest(query, res.source);
+                    // automatic and one word: English and German both (Termien is German, though the
+                    // service took it for English)
+                    String near = f == null && !query.contains(" ") ? Lexicon.closestAny(query) : Lexicon.closest(query, res.source);
                     if (near == null && res.source == Lang.DE && prep.split != null) near = prep.split.word;
                     if (near != null) res = res.withSuggestion(near);
+                }
+                // The service "translated" a word no list knows (hous → Haus): a very likely correction is
+                // still offered, without replacing the answer.
+                if (!res.hasSuggestion() && !echoes(res) && prep.split == null && !query.contains(" ")) {
+                    // automatic: English and German both (the service may take a German typo for English)
+                    Spelling.Candidate c = null;
+                    if (f == null) c = Lexicon.bestAny(query);
+                    else if (!(f == Lang.EN && Character.isUpperCase(query.charAt(0)))) {
+                        List<Spelling.Candidate> all = Lexicon.spellings(query, f, 1);
+                        c = all.isEmpty() ? null : all.get(0);
+                    }
+                    if (c != null && c.cost < 0.85) res = res.withSuggestion(c.word);
                 }
                 if (!res.hasSuggestion() && umlautHint != null) res = res.withSuggestion(umlautHint);
                 // Misspelled and the "translation" only repeats it: show the corrected word's translation instead.
@@ -563,6 +590,14 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
             } catch (Engine.Failure e) {
                 fail = e;
             }
+            // Without an answer (no internet) a misspelt word is not lost: the built-in dictionary's entry
+            // for the closest word, shown as "Showing results for".
+            Lookup nearOffline = null;
+            if (res == null && instant == null && prep.number < 0 && Lexicon.resolver().offline(prep, true, 0) == null) {
+                List<Spelling.Candidate> c = Lexicon.spellings(query, f, 1);
+                if (!c.isEmpty()) nearOffline = Lexicon.dictionary(c.get(0).word, f, true, System.currentTimeMillis());
+            }
+            final Lookup near = nearOffline;
             final Lookup r = res;
             final Engine.Failure x = fail;
             final boolean fixedWord = corrected;
@@ -583,6 +618,11 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
                 }
                 Lookup shownNow = r;
                 if (shownNow == null) shownNow = Lexicon.resolver().offline(prep, true, System.currentTimeMillis());
+                if (shownNow == null && near != null) {
+                    showLookup(near, f == null, true);
+                    shownFor = Text.key(q);
+                    return;
+                }
                 if (shownNow != null) {
                     showLookup(shownNow, f == null && prep.number < 0, umlautFixed || (r != null && fixedWord));
                     shownFor = Text.key(q);
@@ -723,8 +763,14 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         if (numRow != null) content.addView(numRow);
         View nounRow = typedNounRow(l);
         if (nounRow != null) content.addView(nounRow);
+        View senseRow = senseRow(l);
+        if (senseRow != null) content.addView(senseRow);
         if (corrected) content.addView(correctedRow(l.query));
         else if (l.hasSuggestion()) content.addView(suggestionRow(l.suggestion));
+        if (corrected || l.hasSuggestion()) {
+            View also = otherSpellings(corrected ? l.query : l.suggestion);
+            if (also != null) content.addView(also);
+        }
 
         boolean meaning = MeaningView.shows(l);
         LinearLayout picture = column(), meaningBox = column();
@@ -892,12 +938,13 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         List<Lookup> recent = store.reviewRecent() ? Notebook.reviewable(history.items(), Lexicon.resolver()::isWord) : null;
         int due = nb.due(null, recent, System.currentTimeMillis(), 99).size();
         String[] labels = {due > 0 ? getString(R.string.review_n, due) : getString(R.string.review), getString(R.string.saved_words),
+                getString(R.string.learn), getString(R.string.progress),
                 getString(R.string.listen_write), getString(R.string.text_words),
                 getString(R.string.scan_text), getString(R.string.check_sentence)};
-        Icons.Kind[] icons = {Icons.Kind.CARDS, Icons.Kind.STAR, Icons.Kind.EAR, Icons.Kind.LIST,
+        Icons.Kind[] icons = {Icons.Kind.CARDS, Icons.Kind.STAR, Icons.Kind.PEN, Icons.Kind.CHART, Icons.Kind.EAR, Icons.Kind.LIST,
                 Icons.Kind.CAMERA, Icons.Kind.CHECK};
-        Class<?>[] screens = {ReviewActivity.class, NotebookActivity.class, DictationActivity.class, TextWordsActivity.class,
-                ScanActivity.class, CheckActivity.class};
+        Class<?>[] screens = {ReviewActivity.class, NotebookActivity.class, LearnActivity.class, ProgressActivity.class,
+                DictationActivity.class, TextWordsActivity.class, ScanActivity.class, CheckActivity.class};
         int perRow = ui.wide() ? 3 : 2;
         LinearLayout box = column();
         box.setPadding(0, ui.dp(4), 0, ui.dp(8));
@@ -1134,6 +1181,65 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         return store.service();
     }
 
+    /**
+     * "Other spellings": the next best corrections of what was typed, under "Did you mean" or "Showing
+     * results for" — tap one to look it up.
+     */
+    private View otherSpellings(String shown) {
+        String typed = Text.clean(input.getText().toString());
+        if (typed.contains(" ") || typed.isEmpty()) return null;
+        // the search takes a moment on a slow phone: done in the background, the row appears when ready
+        LinearLayout holder = column();
+        int gen = generation;
+        new Thread(() -> {
+            List<String> words = new ArrayList<>();
+            for (Spelling.Candidate c : Lexicon.spellings(typed, forced, 6)) {
+                // not the word shown, nor just a form of it (Kühlschrank → Kühlschränke)
+                String k = c.word.toLowerCase(Locale.ROOT), sh = shown.toLowerCase(Locale.ROOT);
+                if (k.equals(sh) || sh.length() >= 4 && (k.startsWith(sh) || Words.fold(Lang.DE, k).startsWith(Words.fold(Lang.DE, sh)))) continue;
+                if (words.size() < 3) words.add(c.word);
+            }
+            runOnUiThread(() -> {
+                if (gen != generation || isDestroyed() || words.isEmpty()) return;
+                holder.addView(spellingRow(words));
+            });
+        }, "spellings").start();
+        return holder;
+    }
+
+    private View spellingRow(List<String> words) {
+        LinearLayout box = column();
+        TextView h = ui.line(12, ui.sub, Ui.MEDIUM);
+        h.setText(R.string.other_spellings);
+        box.addView(h);
+        HorizontalScrollView hs = new HorizontalScrollView(this);
+        hs.setHorizontalScrollBarEnabled(false);
+        LinearLayout row = new LinearLayout(this);
+        for (String w : words) {
+            TextView c = ui.line(15, ui.text, Ui.MEDIUM);
+            c.setText(w);
+            c.setGravity(Gravity.CENTER);
+            c.setMinHeight(ui.dp(44));
+            c.setPadding(ui.dp(16), 0, ui.dp(16), 0);
+            c.setBackground(ui.ripple(ui.outline(ui.bg, ui.line, 22), 22));
+            c.setContentDescription(getString(R.string.suggestion_desc, w));
+            c.setOnClickListener(v -> {
+                setInput(w);
+                lookup(true);
+                hideKeyboard();
+            });
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            lp.rightMargin = ui.dp(8);
+            row.addView(c, lp);
+        }
+        hs.addView(row);
+        box.addView(hs, Page.full(ui.dp(6), 0));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.bottomMargin = ui.dp(14);
+        box.setLayoutParams(lp);
+        return box;
+    }
+
     /** "Showing results for Schmetterling" — the typed word was misspelled and unknown. */
     private View correctedRow(String corrected) {
         LinearLayout row = new LinearLayout(this);
@@ -1335,11 +1441,98 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         return box;
     }
 
+    /**
+     * "Which meaning?" for a word with several (put on: wear · switch on · gain weight). The chosen one is
+     * translated again, so the German and Persian, the explanation and the picture follow it; it is kept, so
+     * the word opens with it next time and is saved with it.
+     */
+    private View senseRow(Lookup l) {
+        if (Resolver.NUMBER.equals(l.service)) return null;
+        Phrasal ph = Lexicon.phrasal();
+        String phrasal = ph == null || l.source != Lang.EN ? null : ph.meaning(Text.clean(l.query).toLowerCase(Locale.ROOT));
+        // the word kinds the built-in dictionary knows (noun, verb …); without an entry, no choice by kind
+        java.util.Set<String> kinds = new java.util.HashSet<>();
+        Dict d = Lexicon.dict(l.source);
+        Dict.Entry de = d == null ? null : d.find(Text.clean(l.query));
+        if (de != null && de.word.equalsIgnoreCase(Text.clean(l.query)))
+        {
+            // the kinds of the language the choices are in (Persian; English for a Persian word)
+            List<Lookup.Sense> ss = de.targets.get(l.source == Lang.FA ? Lang.EN : Lang.FA);
+            if (ss != null) for (Lookup.Sense x : ss) if (x.pos != null) kinds.add(x.pos.toLowerCase(Locale.ROOT));
+        }
+        List<Senses.Option> options = Senses.of(l, phrasal, kinds);
+        if (options.isEmpty()) return null;
+        LinearLayout box = column();
+        box.setPadding(0, 0, 0, ui.dp(12));
+        TextView h = ui.line(12, ui.sub, Ui.MEDIUM);
+        h.setText(R.string.which_meaning);
+        box.addView(h);
+        HorizontalScrollView hs = new HorizontalScrollView(this);
+        hs.setHorizontalScrollBarEnabled(false);
+        LinearLayout row = new LinearLayout(this);
+        for (int i = 0; i < options.size(); i++) {
+            Senses.Option o = options.get(i);
+            // the chosen one: the meaning kept for this word, else the first
+            // shown as chosen only when the translation on screen is that meaning (a phrasal verb's English
+            // meanings are not chosen until tapped: "put on" first shows قرار دادن, which is none of them)
+            boolean on = !l.sense.isEmpty() && o.label.equalsIgnoreCase(l.sense) || isChosen(l, o);
+            TextView c = ui.line(15, on ? ui.onAccent : ui.text, Ui.MEDIUM);
+            c.setText(o.label);
+            c.setGravity(Gravity.CENTER);
+            c.setMinHeight(ui.dp(44));
+            c.setPadding(ui.dp(16), 0, ui.dp(16), 0);
+            c.setBackground(on ? ui.ripple(ui.round(ui.accent, 22), 22) : ui.ripple(ui.outline(ui.bg, ui.line, 22), 22));
+            c.setContentDescription(getString(on ? R.string.meaning_chosen_desc : R.string.meaning_choose_desc, o.label));
+            c.setSelected(on);
+            if (!on) c.setOnClickListener(v -> chooseSense(l, o, c));
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            lp.rightMargin = ui.dp(8);
+            row.addView(c, lp);
+        }
+        hs.addView(row);
+        box.addView(hs, Page.full(ui.dp(6), 0));
+        return box;
+    }
+
+    /** A Persian (or English) chip is the chosen meaning when its word is the translation shown now. */
+    private static boolean isChosen(Lookup l, Senses.Option o) {
+        Lookup.Result r = l.result(o.lang);
+        return r != null && Text.clean(r.text).equalsIgnoreCase(o.label);
+    }
+
+    private void chooseSense(Lookup l, Senses.Option o, View chip) {
+        if (!online()) {
+            Toast.makeText(this, R.string.error_offline, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Feel.tick(chip);
+        busy.setVisibility(View.VISIBLE);
+        int gen = ++generation;
+        String q = Senses.query(o);
+        Net.run(() -> engine.translate(q, o.lang, store.service(), System.currentTimeMillis()), (res, err) -> {
+            if (gen != generation || isDestroyed()) return;
+            busy.setVisibility(View.INVISIBLE);
+            if (res == null) {
+                Toast.makeText(this, R.string.error_service, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            java.util.Map<Lang, String> by = new java.util.EnumMap<>(Lang.class);
+            for (Lookup.Result r : res.results) by.put(r.lang, r.text);
+            // the meaning in English: the chip itself (wear), or the English of a Persian chip (پوشیدن → wear)
+            String sense = o.lang == Lang.EN ? q : by.containsKey(Lang.EN) ? by.get(Lang.EN) : q;
+            Lookup chosen = Senses.choose(l, o, by, sense);
+            history.add(chosen);
+            WidgetProvider.updateAll(this);
+            showLookup(chosen, false, shownCorrected);
+        });
+    }
+
     /** "Number 8" above the translation of a number typed or spoken in digits. */
     private View numberRow(Lookup l) {
         String typed = Text.clean(input.getText().toString());
-        long n = Resolver.NUMBER.equals(l.service) ? Numbers.valueOfLookup(l) : -1;
-        if (n < 0 && Numbers.parse(typed) >= 0 && Numbers.valueOf(l.query) == Numbers.parse(typed)) n = Numbers.parse(typed);
+        // digits typed: always a number, whichever service answered; number words: the number lookup's value
+        long n = Numbers.parse(typed);
+        if (n < 0 && Resolver.NUMBER.equals(l.service)) n = Numbers.valueOfLookup(l);
         String shown;
         if (n >= 0 && Numbers.decimalWords(typed, Lang.EN) == null) shown = Numbers.digits(n, Lang.EN);
         else if (Numbers.decimalWords(typed, Lang.EN) != null) shown = typed;
@@ -1726,10 +1919,15 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
     }
 
     static void pinWidget(Context c) {
+        pinWidget(c, WidgetProvider.class);
+    }
+
+    /** Asks the launcher to place a widget of the app (the search bar, or the Word card). */
+    static void pinWidget(Context c, Class<?> widget) {
         AppWidgetManager m = AppWidgetManager.getInstance(c);
         boolean ok = false;
         try {
-            ok = m != null && m.requestPinAppWidget(new ComponentName(c, WidgetProvider.class), null, null);
+            ok = m != null && m.requestPinAppWidget(new ComponentName(c, widget), null, null);
         } catch (RuntimeException ignored) {
             ok = false;
         }
@@ -1787,35 +1985,49 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         else wantKeyboard = true;
     }
 
+    /** Which request to open the keyboard is the current one; an older one's retries stop. */
+    private int keyboardRequest;
+    /** The keyboard of the current request came up: no more retries (the user may close it again). */
+    private boolean keyboardCameUp;
+
     private void openKeyboardNow() {
         input.requestFocus();
-        // Right after the app starts the keyboard service may not be connected yet: ask again a little later.
-        input.post(this::askKeyboard);
-        input.postDelayed(() -> {
-            if (!keyboardVisible()) askKeyboard();
-        }, 450);
-        // a slow first start (cold process) can take longer: keep asking for a few seconds until it is up
-        for (int ms : new int[]{1200, 2000, 3000}) {
-            input.postDelayed(() -> {
-                if (!keyboardVisible()) askKeyboard();
-            }, ms);
-        }
+        int req = ++keyboardRequest;
+        keyboardCameUp = false;
+        // Right after the app starts the keyboard service may not be connected yet: ask again a little
+        // later, for a few seconds on a slow first start — but only until it has come up once. Once it was
+        // up, closing it (the Back or hide-keyboard button) is the user's choice and it stays closed.
+        input.post(() -> askKeyboard(req));
+        for (int ms : new int[]{450, 1200, 2000, 3000}) input.postDelayed(() -> askKeyboard(req), ms);
     }
 
-    private void askKeyboard() {
-        if (isFinishing() || !input.hasFocus()) return;
+    private void askKeyboard(int req) {
+        if (isFinishing() || !input.hasFocus() || req != keyboardRequest) return;
+        if (keyboardVisible()) keyboardCameUp = true;
+        if (keyboardCameUp) return;
         if (Build.VERSION.SDK_INT >= 30) {
             WindowInsetsController c = getWindow().getInsetsController();
             if (c != null) c.show(WindowInsets.Type.ime());
         }
         InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (im != null) im.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT);
+        // seen up a moment later: the later retries are not needed
+        input.postDelayed(() -> {
+            if (req == keyboardRequest && keyboardVisible()) keyboardCameUp = true;
+        }, 300);
     }
 
     private boolean keyboardVisible() {
-        if (Build.VERSION.SDK_INT < 30) return false;      // unknown: asking again does no harm
-        WindowInsets wi = input.getRootWindowInsets();
-        return wi != null && wi.isVisible(WindowInsets.Type.ime());
+        if (Build.VERSION.SDK_INT >= 30) {
+            WindowInsets wi = input.getRootWindowInsets();
+            return wi != null && wi.isVisible(WindowInsets.Type.ime());
+        }
+        // Android 8–10: the keyboard is up when it covers a good part of the window
+        View root = getWindow().getDecorView();
+        android.graphics.Rect r = new android.graphics.Rect();
+        root.getWindowVisibleDisplayFrame(r);
+        int h = root.getRootView().getHeight();
+        return h > 0 && h - r.bottom > h / 5;
     }
 
     private void hideKeyboard() {

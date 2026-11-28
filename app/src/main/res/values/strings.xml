@@ -81,7 +81,9 @@
         <item quantity="other">%d words saved</item>
     </plurals>
     <string name="widget_add_home">Add widget to home screen</string>
-    <string name="widget_add_hint">A search bar on your home screen. Make it taller to see your recent words.</string>
+    <string name="widget_add_hint">A search bar on your home screen with voice, review and scan. Translations open in a small window right there. Make it taller to see your recent words.</string>
+    <string name="widget_card_add">Add Word card to home screen</string>
+    <string name="widget_card_add_hint">Review your saved words right on the home screen: Show, then Again or Got it.</string>
     <string name="widget_add_manual">Long-press your home screen, choose Widgets and find Trilingo.</string>
     <string name="auto_update">Check for updates</string>
     <string name="auto_update_hint">When the app opens</string>
@@ -108,9 +110,8 @@
 
     <!-- Widget -->
     <string name="widget_name">Translate</string>
-    <string name="widget_description">Search bar for quick translation, with your recent words</string>
-    <string name="widget_hint">Translate a word</string>
-    <string name="widget_langs">EN · DE · FA</string>
+    <string name="widget_description">Search bar with voice, copied text and scan, and your recent words</string>
+    <string name="widget_hint">Translate</string>
     <string name="grammar">Grammar</string>
     <string name="grammar_open">Grammar lessons</string>
     <string name="grammar_search_hint">Search a topic or a word</string>
@@ -264,7 +265,6 @@
     <string name="scan_reading">Reading the text…</string>
     <string name="scan_failed">Could not read the picture</string>
     <string name="scan_no_text">No text found in this picture.</string>
-    <string name="scan_tap_word">Tap a word to translate it.</string>
     <string name="scan_again">New photo</string>
     <string name="copy_all_text">Copy all text</string>
     <string name="scan_photo_desc">Photo with %1$d words. Tap a word to translate it</string>
@@ -421,4 +421,166 @@
     <string name="meaning_translation_only">No dictionary explains this. Its translations:</string>
     <string name="meaning_source_wikipedia">Source: Wikipedia (CC BY-SA)</string>
     <string name="meaning_source_dictionary">Source: built-in dictionary</string>
+
+    <!-- 1.9 -->
+    <string name="other_spellings">Other spellings</string>
+    <string name="scan_copy">Copy</string>
+    <string name="read_aloud">Read aloud</string>
+    <string name="scan_saved">Saved “%1$s”</string>
+    <string name="scan_languages_note">Reads English and German text (Latin letters). Works with screenshots too: share a picture to “Scan text”.</string>
+    <string name="scan_tap_or_drag">Tap a word to translate it. Drag over the photo to choose some lines.</string>
+    <string name="scan_legend">Orange: above your level (%1$s) · Green: saved</string>
+    <string name="scan_rotate">Turn photo</string>
+    <string name="scan_the_text">The text · %1$s</string>
+    <string name="scan_text_desc">The text read from the photo. You can correct it</string>
+    <string name="scan_fix_hint">A word read wrongly? Correct it here before you translate.</string>
+    <string name="scan_translate_text">Translate the text</string>
+    <string name="scan_chosen_text">Chosen lines</string>
+    <string name="widget_voice">Speak a word</string>
+    <string name="widget_daily">%1$s · %2$s</string>
+    <string name="widget_daily_desc">Word of the day: %1$s, %2$s</string>
+    <string name="widget_review">Review saved words</string>
+    <string name="widget_scan">Scan text</string>
+    <string name="widget_card_name">Word card</string>
+    <string name="widget_card_description">Review your saved words on the home screen</string>
+    <string name="widget_card_show">Show</string>
+    <string name="widget_card_again">Again</string>
+    <string name="widget_card_good">Got it</string>
+    <string name="widget_card_next">Next word</string>
+    <string name="widget_card_due">Review · %1$d due</string>
+    <string name="widget_card_practice">Practice · all done for now</string>
+    <string name="widget_card_recent">Your recent words</string>
+    <string name="widget_card_empty">Save words with the star to review them here.</string>
+    <string name="widget_card_open">Open Trilingo</string>
+    <string name="widget_card_preview_title">Review · 5 due</string>
+    <string name="widget_card_preview_word">der Schmetterling</string>
+    <string name="tense_examples">Examples</string>
+    <string name="tense_examples_desc">Example sentences in the %1$s of %2$s</string>
+    <string name="tense_examples_none">No sentences found with this tense yet.</string>
+
+    <!-- 1.12: practice words, say it, progress -->
+    <string name="practice_write">Write the word</string>
+    <string name="practice_article">der · die · das</string>
+    <string name="practice_verbs">Verb forms</string>
+    <string name="practice_say">Say it</string>
+    <string name="practice_no_nouns">Save some German nouns first (for example “der Tisch”).</string>
+    <string name="practice_no_verbs">Save some verbs first (for example “gehen” or “go”).</string>
+    <string name="practice_count">%1$d / %2$d</string>
+    <string name="practice_write_task">Write it in %1$s</string>
+    <string name="practice_article_task">Which article?</string>
+    <string name="practice_verb_task">Write the right form</string>
+    <string name="practice_say_task">Say it aloud</string>
+    <string name="practice_type_word">The %1$s word</string>
+    <string name="practice_type_form">The verb form</string>
+    <string name="practice_answer">Your answer</string>
+    <string name="practice_say_now">Speak</string>
+    <string name="practice_say_prompt">Say: %1$s</string>
+    <string name="practice_almost">Almost. Written: %1$s</string>
+    <string name="practice_say_almost">Almost. Heard “%1$s” for “%2$s”</string>
+    <string name="practice_say_wrong">Heard “%1$s”. The word: %2$s</string>
+    <string name="practice_say_try">Heard “%1$s”. Listen and try again.</string>
+    <plurals name="streak_days">
+        <item quantity="one">%d day in a row</item>
+        <item quantity="other">%d days in a row</item>
+    </plurals>
+    <plurals name="streak_label">
+        <item quantity="one">day in a row</item>
+        <item quantity="other">days in a row</item>
+    </plurals>
+    <string name="progress">Progress</string>
+    <string name="progress_best">Best: %1$d</string>
+    <string name="progress_this_week">This week</string>
+    <string name="progress_answers">answers</string>
+    <string name="progress_right">right</string>
+    <string name="progress_saved">words saved</string>
+    <string name="progress_learned_week">words learned</string>
+    <string name="progress_total">Learned so far: %1$d words (not asked again for 3 weeks or more). Saved: %2$d.</string>
+    <string name="progress_chart_learned">Words learned per week</string>
+    <string name="progress_chart_answers">Answers per week (review and practice)</string>
+    <string name="progress_8_weeks_ago">8 weeks ago</string>
+    <string name="progress_weeks_oldest_first">week by week, oldest first</string>
+    <string name="progress_empty">Review or practise a few words: your days and weeks show up here.</string>
+
+    <!-- 1.13: the meaning meant -->
+    <string name="which_meaning">Which meaning?</string>
+    <string name="meaning_chosen_desc">%1$s, the meaning shown</string>
+    <string name="meaning_choose_desc">Show the meaning %1$s</string>
+
+    <!-- 1.13: Learn, the learning plan -->
+    <string name="learn">Learn</string>
+    <string name="learn_language_desc">Learn %1$s</string>
+    <string name="learn_today">Today\'s lesson</string>
+    <string name="learn_today_done">Today\'s lesson · done</string>
+    <string name="learn_today_title">%1$s · Unit %2$d</string>
+    <string name="learn_today_done_title">Well done. Practise more?</string>
+    <string name="learn_today_plan">%1$d new words · %2$d to review · %3$d weak words</string>
+    <string name="learn_start">Start</string>
+    <string name="learn_more">Another lesson</string>
+    <string name="learn_nothing_now">Nothing to practise right now. New words come tomorrow; reviews when they are due.</string>
+    <string name="learn_new_per_day">%1$d new words a day</string>
+    <string name="learn_level">%1$s %2$s · %3$s</string>
+    <string name="learn_change_level">Change level</string>
+    <string name="learn_level_progress">%1$d of %2$d words of this level met</string>
+    <string name="learn_units_done">%1$d units done before these</string>
+    <string name="learn_units_more">%1$d more units</string>
+    <string name="learn_unit">Unit %1$d</string>
+    <string name="learn_unit_count">%1$d/%2$d</string>
+    <string name="learn_unit_locked">Finish unit %1$d first.</string>
+    <string name="learn_unit_locked_short">Not open yet</string>
+    <string name="learn_grammar">Grammar of your level</string>
+    <string name="learn_grammar_note">Next lesson · %1$s</string>
+    <string name="learn_weak_spots">Your weak spots</string>
+    <string name="learn_weak_words">Weak words (%1$d)</string>
+    <string name="learn_weak_none">No mistakes yet. They show up here, with what went wrong.</string>
+    <string name="learn_drill_articles">Your nouns: der, die or das?</string>
+    <string name="learn_drill_verbs">Your verbs in the right form.</string>
+    <string name="learn_drill_speaking">Say your words; the phone listens.</string>
+    <string name="learn_progress_note">Streak, weeks, words learned.</string>
+    <string name="learn_title_drill">Practice</string>
+    <string name="learn_reminder">Daily reminder</string>
+    <string name="learn_reminder_off">Off. Tap to choose a time.</string>
+    <string name="learn_reminder_at">Every day at %1$02d:%2$02d, when today\'s lesson is not done.</string>
+    <string name="learn_reminder_pick">Choose a time</string>
+    <string name="learn_reminder_turn_off">Turn off</string>
+    <string name="learn_reminder_title">Your %1$s lesson for today</string>
+    <string name="learn_reminder_text">%1$d words are waiting for review. A few minutes is enough.</string>
+    <plurals name="learn_reminder_streak">
+        <item quantity="one">%d day in a row. Keep it going with a short lesson.</item>
+        <item quantity="other">%d days in a row. Keep it going with a short lesson.</item>
+    </plurals>
+    <string name="learn_skill_meaning">meaning</string>
+    <string name="learn_skill_spelling">spelling</string>
+    <string name="learn_skill_article">article</string>
+    <string name="learn_skill_form">verb form</string>
+    <string name="learn_skill_speaking">saying it</string>
+    <string name="learn_quit_question">Stop this lesson? Your answers so far are kept.</string>
+    <string name="learn_quit">Stop</string>
+    <string name="learn_keep_going">Keep going</string>
+    <string name="learn_new_word">New word</string>
+    <string name="learn_ask_meaning">What does it mean?</string>
+    <string name="learn_ask_word">Which %1$s word?</string>
+    <string name="learn_with_article">With its article (der, die, das).</string>
+    <string name="learn_again_prefix">Once more · %1$s</string>
+    <string name="learn_got_it">Got it</string>
+    <string name="learn_cant_speak">I can\'t speak now</string>
+    <string name="learn_continue">Continue</string>
+    <string name="learn_plural">Plural: %1$s</string>
+    <string name="learn_folder">%1$s %2$s</string>
+    <string name="learn_right">Right. %1$s</string>
+    <string-array name="learn_praise">
+        <item>Well done.</item>
+        <item>Exactly.</item>
+        <item>Good.</item>
+        <item>Nice.</item>
+        <item>That\'s it.</item>
+    </string-array>
+    <string name="learn_wrong">The answer: %1$s (%2$s). It comes again at the end.</string>
+    <string name="learn_lesson_done">Lesson done</string>
+    <string name="learn_score">%1$d of %2$d right · %3$d%%</string>
+    <string name="learn_new_words">New words (%1$d)</string>
+    <string name="learn_practise_again">To practise again</string>
+    <string name="learn_tomorrow">Tomorrow</string>
+    <string name="learn_tomorrow_plan">%1$d words to review and up to %2$d new ones.</string>
+    <string name="learn_move_up">This looks easy. Move up to %1$s?</string>
+    <string name="learn_done">Done</string>
 </resources>

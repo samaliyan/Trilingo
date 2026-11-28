@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Search bar on top; three recent-word slots that WidgetProvider shows when the widget is tall enough. -->
+<!-- Search bar and three buttons on top; three recent-word slots that WidgetProvider shows when the widget is tall enough. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/background"
     android:layout_width="match_parent"
@@ -9,45 +9,87 @@
     android:orientation="vertical"
     android:padding="6dp">
 
+    <!-- Search bar (a small translate window, with Paste), then voice, review and scan. -->
     <LinearLayout
-        android:id="@+id/bar"
+        android:id="@+id/top"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@drawable/widget_field"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="14dp"
-        android:paddingEnd="14dp">
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/bar"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@drawable/widget_field"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="10dp">
+
+            <ImageView
+                android:id="@+id/search_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_search" />
+
+            <!-- "Translate", and under it the word of the day with its translation -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/hint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/widget_hint"
+                    android:textColor="@color/widget_sub"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/daily"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/widget_accent"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+        </LinearLayout>
 
         <ImageView
-            android:id="@+id/search_icon"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_search" />
+            android:id="@+id/btn_voice"
+            android:layout_width="38dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="2dp"
+            android:contentDescription="@string/widget_voice"
+            android:padding="8dp"
+            android:src="@drawable/ic_w_mic" />
 
-        <TextView
-            android:id="@+id/hint"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/widget_hint"
-            android:textColor="@color/widget_sub"
-            android:textSize="16sp" />
+        <ImageView
+            android:id="@+id/btn_review"
+            android:layout_width="38dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/widget_review"
+            android:padding="8dp"
+            android:src="@drawable/ic_w_cards" />
 
-        <TextView
-            android:id="@+id/langs"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:fontFamily="sans-serif-medium"
-            android:maxLines="1"
-            android:text="@string/widget_langs"
-            android:textColor="@color/widget_accent"
-            android:textSize="12sp" />
+        <ImageView
+            android:id="@+id/btn_scan"
+            android:layout_width="38dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/widget_scan"
+            android:padding="8dp"
+            android:src="@drawable/ic_w_camera" />
     </LinearLayout>
 
     <!-- Spacer (FrameLayout: plain View is not allowed in widgets before Android 12). -->

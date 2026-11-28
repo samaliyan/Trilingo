@@ -63,7 +63,7 @@ final class MeaningView {
     }
 
     private static String key(Lookup l) {
-        return l.source.code + "|" + Text.key(l.query);
+        return l.source.code + "|" + Text.key(l.query) + "|" + l.sense;
     }
 
     /**

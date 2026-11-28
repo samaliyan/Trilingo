@@ -240,7 +240,8 @@ final class Numbers {
 
     /** "8" in the script of the language: Persian digits for Persian. */
     static String digits(long n, Lang l) {
-        String s = String.format(Locale.ROOT, "%,d", n);
+        // Locale.US: older Android writes no thousands separator for Locale.ROOT
+        String s = String.format(Locale.US, "%,d", n);
         if (l != Lang.FA) return l == Lang.DE ? s.replace(',', '.') : s;
         StringBuilder b = new StringBuilder();
         for (char c : s.toCharArray()) b.append(c >= '0' && c <= '9' ? (char) ('۰' + c - '0') : c == ',' ? '٬' : c);

@@ -265,6 +265,10 @@ public final class SettingsActivity extends Activity {
             if (MainActivity.canPinWidget(this)) MainActivity.pinWidget(this);
             else Toast.makeText(this, R.string.widget_add_manual, Toast.LENGTH_LONG).show();
         });
+        item(getString(R.string.widget_card_add), getString(R.string.widget_card_add_hint), v -> {
+            if (MainActivity.canPinWidget(this)) MainActivity.pinWidget(this, WordWidget.class);
+            else Toast.makeText(this, R.string.widget_add_manual, Toast.LENGTH_LONG).show();
+        });
 
         section(R.string.section_updates);
         toggle(getString(R.string.auto_update), getString(R.string.auto_update_hint), store.autoUpdate(), store::setAutoUpdate);

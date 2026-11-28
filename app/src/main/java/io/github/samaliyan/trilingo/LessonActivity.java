@@ -112,6 +112,7 @@ public final class LessonActivity extends Activity implements TextToSpeech.OnIni
             finish();
             return;
         }
+        store.markLessonRead(lesson.id);
         int y = scroll.getScrollY();
         content.removeAllViews();
         Lang ex = store.explainLang();

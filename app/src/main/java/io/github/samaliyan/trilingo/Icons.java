@@ -15,7 +15,7 @@ import android.graphics.drawable.Drawable;
 final class Icons {
     private Icons() { }
 
-    enum Kind { BACK, CLOSE, SETTINGS, COPY, SPEAK, PASTE, SEARCH, SHARE, EXAMPLES, TABLE, FAMILY, BOOK, CHEVRON, MIC, PLAY, STAR, STAR_ON, CAMERA, CHECK, CARDS, FOLDER, PLUS, PEN, EAR, LIST, SORT, BUBBLE }
+    enum Kind { BACK, CLOSE, SETTINGS, COPY, SPEAK, PASTE, SEARCH, SHARE, EXAMPLES, TABLE, FAMILY, BOOK, CHEVRON, MIC, PLAY, STAR, STAR_ON, CAMERA, CHECK, CARDS, FOLDER, PLUS, PEN, EAR, LIST, SORT, BUBBLE, CHART, BELL }
 
     static Drawable of(Kind kind, int color) {
         return new IconDrawable(kind, color);
@@ -226,6 +226,30 @@ final class Icons {
                     line(c, 4, 19.5f, 9, 19.5f);
                     c.drawCircle(16.5f, 16.5f, 3, stroke);
                     line(c, 18.7f, 18.7f, 21, 21);
+                    break;
+                case BELL:
+                    // a bell: a reminder
+                    path.reset();
+                    path.moveTo(6, 17);
+                    path.lineTo(6, 11);
+                    path.cubicTo(6, 7.5f, 8.7f, 5, 12, 5);
+                    path.cubicTo(15.3f, 5, 18, 7.5f, 18, 11);
+                    path.lineTo(18, 17);
+                    path.close();
+                    c.drawPath(path, stroke);
+                    line(c, 4.5f, 17, 19.5f, 17);
+                    line(c, 12, 3, 12, 5);
+                    line(c, 10.5f, 20, 13.5f, 20);
+                    break;
+                case CHART:
+                    // three bars rising: progress
+                    line(c, 4, 20, 20, 20);
+                    r.set(5.5f, 13, 9, 20);
+                    c.drawRoundRect(r, 1, 1, stroke);
+                    r.set(10.25f, 9, 13.75f, 20);
+                    c.drawRoundRect(r, 1, 1, stroke);
+                    r.set(15, 4.5f, 18.5f, 20);
+                    c.drawRoundRect(r, 1, 1, stroke);
                     break;
                 case SORT:
                     line(c, 4, 7, 20, 7);

@@ -26,6 +26,19 @@ final class Lexicon {
     private static volatile Resolver resolver;
     private static boolean started;
     private static final List<Runnable> waiting = new ArrayList<>();
+    private static final java.util.concurrent.CountDownLatch LOADED = new java.util.concurrent.CountDownLatch(1);
+
+    /**
+     * Waits (on a worker thread) until the lists are loaded, at most {@code ms}: the language of a search is
+     * decided with them, not left to the service (which took "put on" for German).
+     */
+    static void await(long ms) {
+        try {
+            LOADED.await(ms, java.util.concurrent.TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 
     /** Starts loading (once); {@code done} runs on the loading thread when everything is there. */
     static synchronized void load(Context c, Runnable done) {
@@ -61,6 +74,7 @@ final class Lexicon {
             }
             resolver = new Resolver(en, de, nouns, enDict, deDict);
             grammar = readGrammar(am);
+            LOADED.countDown();
             List<Runnable> run;
             synchronized (Lexicon.class) {
                 run = new ArrayList<>(waiting);
@@ -225,12 +239,76 @@ final class Lexicon {
         return Umlauts.fix(text, de, forced == Lang.DE ? null : en);
     }
 
-    /** The closest known word for a typo in this language, or null. */
+    /**
+     * The closest known word (or sentence with its misspelt words fixed) for a typo in this language, or
+     * null.
+     */
     static String closest(String typed, Lang lang) {
         String t = Text.clean(typed);
         // An English word written with a capital is usually a name: no guessing.
-        if (t.isEmpty() || (lang == Lang.EN && Character.isUpperCase(t.charAt(0)))) return null;
-        Words w = words(lang);
-        return w == null ? null : w.closest(typed);
+        if (t.isEmpty() || (lang == Lang.EN && Character.isUpperCase(t.charAt(0)) && !t.contains(" "))) return null;
+        return Spelling.phrase(words(lang), t);
+    }
+
+    /** Whether the built-in dictionary lists the word first as a verb (go: yes; house: no). */
+    static boolean mainlyVerb(Lang l, String word) {
+        Dict d = dict(l);
+        Dict.Entry e = d == null ? null : d.find(word);
+        if (e == null) return l == Lang.DE && word.endsWith("n");
+        for (List<Lookup.Sense> senses : e.targets.values())
+            if (!senses.isEmpty()) return "verb".equalsIgnoreCase(senses.get(0).pos);
+        return false;
+    }
+
+    /** The best correction of one word in English or German (or Persian for Persian letters), or null. */
+    static String closestAny(String typed) {
+        Spelling.Candidate c = bestAny(typed);
+        return c == null ? null : c.word;
+    }
+
+    /**
+     * As {@link #closestAny}, with how sure it is. A capitalised word is only corrected to a German word
+     * (Termien → Termin); otherwise it is taken for a name.
+     */
+    static Spelling.Candidate bestAny(String typed) {
+        String t = Text.clean(typed);
+        if (t.isEmpty() || t.contains(" ")) return null;
+        if (Character.isUpperCase(t.charAt(0)) && !Text.hasPersian(t)) {
+            List<Spelling.Candidate> d = Spelling.candidates(de, t, 1);
+            return d.isEmpty() || en != null && en.known(t) ? null : d.get(0);
+        }
+        List<Spelling.Candidate> c = spellings(t, null, 1);
+        return c.isEmpty() ? null : c.get(0);
+    }
+
+    /**
+     * Up to {@code max} spelling suggestions for one typed word, best first: in the given language, or (null)
+     * in English and German together, or Persian for Persian letters.
+     */
+    static List<Spelling.Candidate> spellings(String typed, Lang lang, int max) {
+        String t = Text.clean(typed);
+        List<Spelling.Candidate> out = new ArrayList<>();
+        if (t.isEmpty() || t.contains(" ")) return out;
+        List<Lang> langs = new ArrayList<>();
+        if (lang != null) langs.add(lang);
+        else if (Text.hasPersian(t)) langs.add(Lang.FA);
+        else {
+            langs.add(Lang.EN);
+            langs.add(Lang.DE);
+        }
+        for (Lang l : langs) {
+            Words w = words(l);
+            // known in one of the languages: no typo
+            if (w != null && w.known(t)) return new ArrayList<>();
+        }
+        for (Lang l : langs) out.addAll(Spelling.candidates(words(l), t, max));
+        out.sort((a, b) -> Double.compare(a.cost, b.cost));
+        List<Spelling.Candidate> best = new ArrayList<>();
+        for (Spelling.Candidate c : out) {
+            boolean dup = false;
+            for (Spelling.Candidate b : best) dup |= b.word.equalsIgnoreCase(c.word);
+            if (!dup && best.size() < max) best.add(c);
+        }
+        return best;
     }
 }

@@ -17,9 +17,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Home-screen widget: a search bar that opens the app ready to type. When the widget is taller,
- * the last looked-up words are listed under it (tap one to see it again). Redrawn only when the
- * history or the widget size changes, so it uses no battery.
+ * Home-screen widget: a search bar that opens a small translate window right on the home screen (with the
+ * word of the day under its hint), and three buttons beside it — speak a
+ * word, review the saved words, scan text with the camera. When
+ * the widget is taller, the last looked-up words are listed under it (tap one to see it again). Redrawn
+ * only when the history or the widget size changes, so it uses no battery.
  */
 public final class WidgetProvider extends AppWidgetProvider {
     private static final int[] ROWS = {R.id.row1, R.id.row2, R.id.row3};
@@ -34,11 +36,13 @@ public final class WidgetProvider extends AppWidgetProvider {
         update(c, m, id);
     }
 
+    /** Redraws every widget of the app: the search widgets and the Word cards (saved words changed too). */
     static void updateAll(Context c) {
         AppWidgetManager m = AppWidgetManager.getInstance(c);
         if (m == null) return;
         int[] ids = m.getAppWidgetIds(new ComponentName(c, WidgetProvider.class));
         for (int id : ids) update(c, m, id);
+        WordWidget.updateAll(c);
     }
 
     /** How many recent words fit: none in a one-row widget, up to three when it is taller. */
@@ -70,7 +74,31 @@ public final class WidgetProvider extends AppWidgetProvider {
 
     static RemoteViews views(Context c, int rows) {
         RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.widget);
-        v.setOnClickPendingIntent(R.id.bar, open(c, null, 0));
+        // the search bar: type a word in a small window right here, without leaving the home screen
+        Intent type = new Intent(c, BubbleActivity.class).putExtra(BubbleActivity.EXTRA_TYPE, true)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        v.setOnClickPendingIntent(R.id.bar, PendingIntent.getActivity(c, 13, type, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));
+        // the word of the day under it: one of your saved words with its translation
+        Notebook.Card day = WordCards.ofTheDay(Store.notebook(c),
+                new Store(c).saveHistory() ? Store.history(c).items() : null, System.currentTimeMillis());
+        if (day != null) {
+            String back = day.back.split("\n")[0];
+            v.setTextViewText(R.id.daily, c.getString(R.string.widget_daily, day.word, back));
+            v.setContentDescription(R.id.daily, c.getString(R.string.widget_daily_desc, day.word, back));
+            v.setViewVisibility(R.id.daily, View.VISIBLE);
+            // (not a tap target of its own: on some launchers it took the taps meant for the search bar)
+        } else {
+            v.setViewVisibility(R.id.daily, View.GONE);
+        }
+        Intent voice = new Intent(c, MainActivity.class).setAction(MainActivity.ACTION_VOICE)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        v.setOnClickPendingIntent(R.id.btn_voice, PendingIntent.getActivity(c, 10, voice, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));
+        // review the saved words (the translate window of the search bar already has Paste)
+        Intent review = new Intent(c, ReviewActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        v.setOnClickPendingIntent(R.id.btn_review, PendingIntent.getActivity(c, 11, review, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));
+        Intent scan = new Intent(c, ScanActivity.class).putExtra(ScanActivity.EXTRA_CAMERA, true)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        v.setOnClickPendingIntent(R.id.btn_scan, PendingIntent.getActivity(c, 12, scan, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));
         List<Lookup> items = new Store(c).saveHistory() ? Store.history(c).items() : java.util.Collections.emptyList();
         int shown = Math.min(rows, items.size());
         for (int k = 0; k < ROWS.length; k++) {
@@ -79,7 +107,7 @@ public final class WidgetProvider extends AppWidgetProvider {
                 v.setViewVisibility(ROWS[k], View.VISIBLE);
                 v.setTextViewText(WORDS[k], l.query);
                 v.setTextViewText(MEANINGS[k], l.results.get(0).text);
-                v.setOnClickPendingIntent(ROWS[k], open(c, l.query, k + 1));
+                v.setOnClickPendingIntent(ROWS[k], quick(c, l.query, k + 1));
             } else {
                 v.setViewVisibility(ROWS[k], View.GONE);
             }
@@ -99,7 +127,8 @@ public final class WidgetProvider extends AppWidgetProvider {
         v.setInt(R.id.bar, "setBackgroundResource", dark ? R.drawable.widget_field_dark : R.drawable.widget_field_light);
         v.setImageViewResource(R.id.search_icon, dark ? R.drawable.ic_search_dark : R.drawable.ic_search_light);
         v.setTextColor(R.id.hint, sub);
-        v.setTextColor(R.id.langs, accent);
+        v.setTextColor(R.id.daily, accent);
+        for (int b : new int[]{R.id.btn_voice, R.id.btn_review, R.id.btn_scan}) v.setInt(b, "setColorFilter", accent);
         for (int k = 0; k < ROWS.length; k++) {
             v.setTextColor(WORDS[k], text);
             v.setTextColor(MEANINGS[k], sub);
@@ -107,6 +136,16 @@ public final class WidgetProvider extends AppWidgetProvider {
     }
 
     /** Opens the app with a clean field (text == null) or with a word shown. */
+    /**
+     * A word on the widget: its translation in the small window over the home screen (Open in Trilingo
+     * there shows everything about it).
+     */
+    static PendingIntent quick(Context c, String word, int requestCode) {
+        Intent it = new Intent(c, BubbleActivity.class).putExtra(BubbleActivity.EXTRA_WORD, word)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        return PendingIntent.getActivity(c, 100 + requestCode, it, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    }
+
     static PendingIntent open(Context c, String text, int requestCode) {
         Intent it = new Intent(c, MainActivity.class).setAction(MainActivity.ACTION_OPEN)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);

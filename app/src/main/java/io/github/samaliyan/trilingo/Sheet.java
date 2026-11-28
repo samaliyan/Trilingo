@@ -106,6 +106,10 @@ final class Sheet {
         dialog.show();
     }
 
+    void dismiss() {
+        dialog.dismiss();
+    }
+
     boolean isShowing() {
         return dialog.isShowing();
     }
