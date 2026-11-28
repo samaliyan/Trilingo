@@ -561,7 +561,8 @@ type_text "put%son"
 wait_for "meanings" "^Which meaning\?$" 25
 expect "wear" "^wear$"
 tap "wear" "^wear$"
-wait_for "wear in Persian" ".*پوشیدن.*" 25
+wait_for "wear in Persian" "^پوشیدن$" 25
+expect "German follows" "(?i)^(tragen|anziehen|anhaben)$"
 shot 03z15f_put_on_wear 1
 
 # 3z16. Words from a text (shared text → the new words at your level → save them)
@@ -838,6 +839,8 @@ back
 # 12. Widget on the home screen
 open_app; back; tap "Settings"
 if scroll_to "Add widget to home screen" "" quiet; then
+  # the last item may sit at the very bottom edge: a little further, then tap
+  adb shell input swipe 540 1500 540 1100 300; sleep 1
   tap "Add widget to home screen"
   shot 21_pin_widget_dialog 2
   tap_any "Add automatically" "ADD AUTOMATICALLY" "Add to home screen" "ADD TO HOME SCREEN" "Add" "ADD"

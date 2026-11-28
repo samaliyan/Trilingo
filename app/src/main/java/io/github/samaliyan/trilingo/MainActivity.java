@@ -1467,7 +1467,9 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         for (int i = 0; i < options.size(); i++) {
             Senses.Option o = options.get(i);
             // the chosen one: the meaning kept for this word, else the first
-            boolean on = l.sense.isEmpty() ? i == 0 : o.label.equalsIgnoreCase(l.sense) || isChosen(l, o);
+            // shown as chosen only when the translation on screen is that meaning (a phrasal verb's English
+            // meanings are not chosen until tapped: "put on" first shows قرار دادن, which is none of them)
+            boolean on = !l.sense.isEmpty() && o.label.equalsIgnoreCase(l.sense) || isChosen(l, o);
             TextView c = ui.line(15, on ? ui.onAccent : ui.text, Ui.MEDIUM);
             c.setText(o.label);
             c.setGravity(Gravity.CENTER);
