@@ -65,6 +65,7 @@ final class MeaningSource {
         Meaning m = loadAll(l, net, german, enWords, r);
         if (!l.sense.isEmpty() && l.source == Lang.EN) {
             forSense(m, l.sense, net, german, enWords);
+            mainKindFirst(m, l);
             // the picture of the chosen meaning (anziehen for "put on" as wear), not of the word's first one
             Meaning p = new Meaning(m.lang, m.word);
             picture(p, l, net, german, r);
@@ -462,7 +463,11 @@ final class MeaningSource {
 
     /** The explanations of the word's main kind first (beautiful: "pleasing to the eye" before "a beautiful person"). */
     static void mainKindFirst(Meaning m, Lookup l) {
-        String k = mainKind(l);
+        // a phrasal verb (put on) and its chosen meaning (wear) are actions: the verb's explanations first
+        kindFirst(m, phrasalVerb(l) ? "verb" : mainKind(l));
+    }
+
+    private static void kindFirst(Meaning m, String k) {
         if (k.isEmpty() || m.senses.isEmpty()) return;
         List<Meaning.Sense> yes = new ArrayList<>(), no = new ArrayList<>();
         for (Meaning.Sense x : m.senses) (x.pos != null && x.pos.toLowerCase(Locale.ROOT).equals(k) ? yes : no).add(x);
