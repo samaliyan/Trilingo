@@ -472,7 +472,25 @@ final class MeaningSource {
         m.senses.addAll(no);
     }
 
+    /**
+     * A Persian infinitive (پوشیدن, رفتن, روشن کردن) whose English is an action ("wearing", "to go", a verb
+     * among its meanings) — not a noun that only ends the same way (بدن, گردن).
+     */
+    static boolean persianVerb(Lookup l) {
+        if (l.source != Lang.FA) return false;
+        String w = Text.clean(l.query);
+        if (w.length() < 3 || !(w.endsWith("دن") || w.endsWith("تن"))) return false;
+        for (Lookup.Result r : l.results) {
+            if (r.lang != Lang.EN) continue;
+            String e = Text.clean(r.text).toLowerCase(Locale.ROOT);
+            if (e.startsWith("to ") || e.endsWith("ing") && !e.contains(" ")) return true;
+            for (Lookup.Sense s : r.senses) if (s.pos != null && s.pos.toLowerCase(Locale.ROOT).startsWith("verb")) return true;
+        }
+        return false;
+    }
+
     private static boolean isVerb(Meaning m, Lookup l) {
+        if (persianVerb(l)) return true;
         if (!m.senses.isEmpty()) return "Verb".equals(m.senses.get(0).pos);
         for (Lookup.Result r : l.results)
             if (!r.senses.isEmpty() && r.senses.get(0).pos.toLowerCase(Locale.ROOT).startsWith("verb")) return true;
