@@ -571,6 +571,10 @@ tap "Meaning tab" "^Meaning$"
 wait_for "drawing" "^Drawing: Sergio Palao.*" 25
 expect_not "German caption" ".*(trägt|Pavian).*"
 shot 03z15g_put_on_drawing 1
+# the app keeps the chosen tab: back to Translation for the next steps
+scroll_to "Translation tab" "^Translation$"
+tap "Translation tab" "^Translation$"
+sleep 0.6
 
 # 3z16. Words from a text (shared text → the new words at your level → save them)
 adb shell "am start -a android.intent.action.SEND -t text/plain --es android.intent.extra.TEXT 'Die Verwaltung hat die Genehmigung verweigert, obwohl die Anwohner sich beschwert hatten.' -n $PKG/.TextWordsActivity" > /dev/null
