@@ -1,0 +1,23 @@
+name: Probe ARASAAC
+on:
+  push:
+    branches: [probe-arasaac]
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          mkdir -p probe/out
+          q() { f="probe/out/$1_$2_$(echo "$3" | tr ' /' '__').json"; curl -sS -m 30 -w "\nHTTP %{http_code} %{time_total}s\n" "https://api.arasaac.org/v1/pictograms/$1/$2/$(python3 -c "import urllib.parse,sys;print(urllib.parse.quote(sys.argv[1]))" "$3")" > "$f" || echo "curl failed" >> "$f"; }
+          for w in "put on" "wear" "take off" "switch on" "gain weight" "eat" "run" "go" "apple" "house" "table" "beautiful" "sleep" "read" "carry" "light" "happy" "quickly" "the" "dictionary"; do q en bestsearch "$w"; q en search "$w"; done
+          for w in anziehen tragen gehen Apfel schön einschalten; do q de bestsearch "$w"; q de search "$w"; done
+          for w in "پوشیدن" "سیب"; do q fa bestsearch "$w"; done
+          curl -sS -m 30 -o probe/out/img_300.png -w "img %{http_code} %{size_download}B %{time_total}s\n" https://static.arasaac.org/pictograms/2349/2349_300.png > probe/out/img.txt
+          curl -sS -m 30 -o /dev/null -w "img500 %{http_code} %{size_download}B\n" https://static.arasaac.org/pictograms/2349/2349_500.png >> probe/out/img.txt
+          curl -sS -m 30 -o /dev/null -w "apiimg %{http_code} %{size_download}B %{content_type}\n" "https://api.arasaac.org/v1/pictograms/2349?resolution=500&download=false" >> probe/out/img.txt
+          curl -sS -m 30 "https://api.arasaac.org/v1/languages" -o probe/out/languages.json -w "\nHTTP %{http_code}\n" || true
+          git config user.name probe; git config user.email probe@users.noreply.github.com
+          git add probe/out; git commit -m "probe results"; git push
