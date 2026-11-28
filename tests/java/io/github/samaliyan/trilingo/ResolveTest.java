@@ -47,6 +47,8 @@ public final class ResolveTest {
         tenseExamples();
         quiz(nouns);
         progress();
+        senses();
+        course(nouns);
         System.out.println(checks + " checks, " + failures + " failures");
         if (failures > 0) System.exit(1);
     }
@@ -451,6 +453,132 @@ public final class ResolveTest {
         eq(WordQuiz.ALMOST, WordQuiz.heard(sayTisch, java.util.Arrays.asList("Tasch")), "a sound off");
         eq(WordQuiz.WRONG, WordQuiz.heard(sayTisch, java.util.Arrays.asList("Kühlschrank")), "another word");
         eq(WordQuiz.WRONG, WordQuiz.heard(sayTisch, new ArrayList<>()), "nothing heard");
+    }
+
+    static void course(Nouns nouns) throws IOException {
+        Levels lv = Levels.read(new FileInputStream(A + "levels_de.txt"));
+        Words de = Words.read(Lang.DE, new FileInputStream(A + "words_de.txt"));
+        Dict dd = Dict.read(Lang.DE, new FileInputStream(A + "dict_de.txt"));
+        List<Course.Entry> a1 = Course.entries(Lang.DE, "A1", lv, de, dd, nouns, null);
+        ok(a1.size() > 250, "German A1 words to teach: " + a1.size());
+        boolean article = false, verb = false;
+        for (Course.Entry e : a1.subList(0, 40)) {
+            article |= e.noun && e.display.matches("(der|die|das) .*");
+            verb |= e.verb;
+            ok(Text.hasPersian(e.back), "a Persian translation for " + e.word);
+        }
+        ok(article && verb, "nouns with their article and verbs among the first words");
+        for (Course.Entry e : a1) {
+            ok(!e.display.equals("die Habe") && !e.display.equals("das Oder"), "no verb form or conjunction as a noun: " + e.display);
+        }
+        List<List<Course.Entry>> units = Course.units(a1);
+        eq(Course.UNIT, units.get(0).size(), "units of " + Course.UNIT);
+
+        java.io.File f = java.io.File.createTempFile("course", ".json");
+        f.delete();
+        Course c = new Course(f);
+        long now = 1_800_000_000_000L;
+        java.util.Random rnd = new java.util.Random(3);
+        eq(0, c.currentUnit(Lang.DE, units), "the first unit to start");
+        List<Course.Exercise> lesson = c.lesson(Lang.DE, units.get(0), new ArrayList<>(), a1, now, rnd);
+        int intros = 0, meanings = 0;
+        for (Course.Exercise e : lesson) {
+            if (e.kind == Course.INTRO) intros++;
+            if (e.kind == Course.CHOOSE_MEANING) {
+                meanings++;
+                eq(4, e.choices.size(), "four meanings to choose from");
+                ok(e.choices.contains(Course.meaning(e.word)), "the right one among them");
+            }
+        }
+        eq(5, intros, "five new words on the first day");
+        eq(5, meanings, "each practised");
+        eq(Course.INTRO, lesson.get(0).kind, "a lesson starts with a new word");
+
+        // go through it: all right
+        java.util.Set<String> seen = new java.util.HashSet<>();
+        for (Course.Exercise e : lesson) {
+            if (e.kind == Course.INTRO) {
+                c.met(e.word, now);
+                continue;
+            }
+            c.answer(e, WordQuiz.RIGHT, seen.add(e.word.key()), now);
+        }
+        Course.WordState w0 = c.state(Lang.DE, units.get(0).get(0).word);
+        eq(1, w0.stage, "one stage up per lesson, not two");
+        eq(5, c.track(Lang.DE).newToday, "five new today");
+        List<Course.Exercise> again = c.lesson(Lang.DE, units.get(0), new ArrayList<>(), a1, now, rnd);
+        int more = 0;
+        for (Course.Exercise e : again) if (e.kind == Course.INTRO) more++;
+        eq(0, more, "no more new words the same day");
+        again = c.lesson(Lang.DE, units.get(0), new ArrayList<>(), a1, now + Progress.DAY, rnd);
+        more = 0;
+        for (Course.Exercise e : again) if (e.kind == Course.INTRO) more++;
+        eq(3, more, "the next day the rest of the unit (8 words)");
+
+        // a noun answered with the wrong article: a stage back, and it comes back as an article question
+        Course.WordState noun = c.adopt(Lang.DE, "Tisch", "der Tisch", "table\nمیز", true, false);
+        noun.stage = 3;
+        Course.Exercise q = new Course.Exercise(Course.ARTICLE_Q, noun, Course.ARTICLES, "", "", "", false);
+        c.answer(q, WordQuiz.WRONG, true, now);
+        eq(2, noun.stage, "a stage back");
+        eq(1, noun.mistakes[Course.ARTICLE], "an article mistake");
+        eq(Course.ARTICLE_Q, c.practise(noun, a1, rnd).kind, "practised as an article question");
+        ok(c.weak(Lang.DE).contains(noun), "among the weak words");
+        List<Course.Exercise> drill = c.drill(Lang.DE, Course.ARTICLE, null, a1, rnd, 10);
+        eq(noun, drill.get(0).word, "the article drill starts with it");
+        c.answer(drill.get(0), WordQuiz.RIGHT, true, now);
+        eq(0, noun.mistakes[Course.ARTICLE], "a right answer forgives it");
+
+        // tomorrow's new words follow how it went
+        int before = c.track(Lang.DE).dailyNew;
+        c.finished(Lang.DE, 50, now);
+        c.finished(Lang.DE, 40, now);
+        eq(before - 2, c.track(Lang.DE).dailyNew, "two hard lessons: fewer new words");
+        c.finished(Lang.DE, 100, now);
+        ok(!c.finished(Lang.DE, 100, now), "not yet too easy");
+        eq(before - 1, c.track(Lang.DE).dailyNew, "two easy ones: one more");
+        ok(c.finished(Lang.DE, 100, now), "three perfect lessons: time to move up");
+
+        c.save();
+        Course back = new Course(f);
+        eq(c.toJson(), back.toJson(), "saved and read back the same");
+        eq(3, back.state(Lang.DE, noun.word).stage, "a word's stage is kept");
+        f.delete();
+    }
+
+    static void senses() {
+        Lookup putOn = lookup("put on", Lang.EN, "گذاشتن", "auflegen");
+        List<Senses.Option> o = Senses.of(putOn, "wear; switch on; gain (weight)");
+        eq(3, o.size(), "a phrasal verb's meanings");
+        eq("wear", o.get(0).label, "first meaning");
+        eq("gain weight", Senses.query(o.get(2)), "brackets dropped for translating");
+        java.util.Map<Lang, String> by = new java.util.EnumMap<>(Lang.class);
+        by.put(Lang.FA, "پوشیدن");
+        by.put(Lang.DE, "anziehen");
+        Lookup chosen = Senses.choose(putOn, o.get(0), by, "wear");
+        eq("پوشیدن", chosen.result(Lang.FA).text, "Persian follows the meaning");
+        eq("anziehen", chosen.result(Lang.DE).text, "German follows the meaning");
+        eq("wear", chosen.sense, "the meaning is kept");
+        eq("put on", chosen.query, "the word stays");
+        ok(chosen.result(Lang.FA).summary(5).contains("گذاشتن"), "the first translation is not lost");
+        Lookup back = Lookup.fromJson(Json.parse(chosen.toJson()));
+        eq("wear", back.sense, "kept in the history");
+        ok(Senses.matches("To don (clothing); to wear.", "wear"), "a definition of the meaning");
+        ok(!Senses.matches("To switch on a device.", "wear"), "not another meaning");
+        ok(Senses.matches("To increase in weight.", "gain weight"), "weight");
+        eq(0, Senses.of(lookup("house", Lang.EN, "خانه", "Haus"), null).size(), "one meaning: no choice");
+
+        List<Lookup.Result> rs = new ArrayList<>();
+        List<Lookup.Sense> fa = new ArrayList<>();
+        fa.add(new Lookup.Sense("noun", java.util.Arrays.asList("نور", "روشنایی")));
+        fa.add(new Lookup.Sense("adjective", java.util.Arrays.asList("سبک", "روشن")));
+        fa.add(new Lookup.Sense("verb", java.util.Arrays.asList("روشن کردن")));
+        rs.add(new Lookup.Result(Lang.FA, "نور", fa));
+        rs.add(new Lookup.Result(Lang.DE, "Licht", new ArrayList<>()));
+        List<Senses.Option> light = Senses.of(new Lookup("light", Lang.EN, rs, "t", 1), null);
+        eq(3, light.size(), "one meaning per word kind");
+        eq("نور", light.get(0).label, "the translation shown first");
+        eq("سبک", light.get(1).label, "the adjective");
     }
 
     static void progress() {

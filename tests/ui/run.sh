@@ -517,29 +517,27 @@ else
 fi
 back
 
-# 3z15b. Practice words (1.12): der · die · das, one answer, then Progress
+# 3z15b. Learn (1.13): today's lesson starts with a new word; stopping keeps the answers; then Progress
 open_app
 back
-scroll_to "Practice words" "^Practice words$"
-tap "Practice words" "^Practice words$"
-wait_for "practice menu" "^Write the word$" 15
-shot 03z15b_practice_menu 1
-tap "der die das" "^der · die · das$"
-wait_for "article question" "^Which article\?$" 10
-tap "der" "^der$"
-wait_for "article feedback" "^(Right: .*|The answer: .*)$" 5
-shot 03z15c_practice_article 1
-tap "Next" "^Next$"
-expect "second question" "^2 / [0-9]+$"
+scroll_to "Learn" "^Learn$"
+tap "Learn" "^Learn$"
+wait_for "today's lesson" "^Today's lesson$" 20
+expect "units" "^Unit 1$"
+expect "weak spots" "^Your weak spots$"
+shot 03z15b_learn 1
+tap "Start" "^Start$"
+wait_for "lesson exercise" "^(New word|What does it mean\?|Which (German|English) word\?|Write it in .*|Which article\?|Write the right form|Say it aloud)$" 15
+shot 03z15c_lesson 1
+if [ -n "$(nfind "Got it" "^Got it$")" ]; then
+  tap "Got it" "^Got it$"
+  wait_for "next exercise" "^(New word|What does it mean\?|Which (German|English) word\?|Write it in .*|Which article\?|Write the right form|Say it aloud)$" 10
+fi
 back
-wait_for "practice menu again" "^Write the word$" 5
-tap "write the word" "^Write the word$"
-wait_for "write question" "^Write it in (German|English)$" 10
-type_text "xyz"
-tap "Check" "^Check$"
-wait_for "write feedback" "^The answer: .*$" 5
-shot 03z15d_practice_write 1
-back
+wait_for "stop question" "^Stop this lesson\? Your answers so far are kept\.$" 5
+tap "Stop" "^Stop$"
+wait_for "learn home again" "^Today's lesson$" 10
+expect "a word met" "^[1-9][0-9]* of [0-9]+ words of this level met$"
 back
 open_app
 back
@@ -550,6 +548,15 @@ expect "answers this week" "^answers$"
 expect "chart" "^Words learned per week$"
 shot 03z15e_progress 1
 back
+
+# 3z15f. Which meaning (1.13): put on as wear, not as put
+open_app
+type_text "put on"
+wait_for "meanings" "^Which meaning\?$" 25
+expect "wear" "^wear$"
+tap "wear" "^wear$"
+wait_for "wear in Persian" ".*پوشیدن.*" 25
+shot 03z15f_put_on_wear 1
 
 # 3z16. Words from a text (shared text → the new words at your level → save them)
 adb shell "am start -a android.intent.action.SEND -t text/plain --es android.intent.extra.TEXT 'Die Verwaltung hat die Genehmigung verweigert, obwohl die Anwohner sich beschwert hatten.' -n $PKG/.TextWordsActivity" > /dev/null

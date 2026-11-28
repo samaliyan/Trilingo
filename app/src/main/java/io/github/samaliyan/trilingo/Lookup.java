@@ -58,6 +58,11 @@ final class Lookup {
     final String suggestion;
     /** Dictionary form of the query from the service (may be ""). */
     final String baseForm;
+    /**
+     * The meaning the user chose for a word with several ("put on": wear, not switch on), in English; "" when
+     * none was chosen. The translations, the picture and the explanation follow it.
+     */
+    final String sense;
 
     Lookup(String query, Lang source, List<Result> results, String service, long time) {
         this(query, source, results, service, time, "");
@@ -71,6 +76,12 @@ final class Lookup {
      * @param baseForm dictionary form of the query given by the service (habe → haben, went → go), or ""
      */
     Lookup(String query, Lang source, List<Result> results, String service, long time, String suggestion, String baseForm) {
+        this(query, source, results, service, time, suggestion, baseForm, "");
+    }
+
+    Lookup(String query, Lang source, List<Result> results, String service, long time, String suggestion, String baseForm,
+           String sense) {
+        this.sense = sense == null ? "" : Text.clean(sense);
         this.query = query;
         this.source = source;
         this.results = Collections.unmodifiableList(new ArrayList<>(results));
@@ -88,11 +99,11 @@ final class Lookup {
 
     /** The same lookup with a "Did you mean" suggestion. */
     Lookup withSuggestion(String s) {
-        return new Lookup(query, source, results, service, time, s, baseForm);
+        return new Lookup(query, source, results, service, time, s, baseForm, sense);
     }
 
     Lookup withTime(long t) {
-        return new Lookup(query, source, results, service, t, suggestion, baseForm);
+        return new Lookup(query, source, results, service, t, suggestion, baseForm, sense);
     }
 
     Result result(Lang l) {
@@ -115,6 +126,7 @@ final class Lookup {
                 .append(",\"t\":").append(time)
                 .append(",\"sg\":").append(Json.quote(suggestion))
                 .append(",\"bf\":").append(Json.quote(baseForm))
+                .append(",\"m\":").append(Json.quote(sense))
                 .append(",\"r\":[");
         for (int k = 0; k < results.size(); k++) {
             Result r = results.get(k);
@@ -162,6 +174,7 @@ final class Lookup {
             results.add(new Result(l, x, senses));
         }
         if (results.size() != 2) return null;
-        return new Lookup(q, src, results, Json.str(m, "svc"), (long) Json.num(m, "t", 0), Json.str(m, "sg"), Json.str(m, "bf"));
+        return new Lookup(q, src, results, Json.str(m, "svc"), (long) Json.num(m, "t", 0), Json.str(m, "sg"), Json.str(m, "bf"),
+                Json.str(m, "m"));
     }
 }

@@ -62,6 +62,51 @@ final class MeaningSource {
 
     private static Meaning load(Lookup l, Fetch net, java.util.function.UnaryOperator<String> german, Words enWords, Resolver r)
             throws IOException {
+        Meaning m = loadAll(l, net, german, enWords, r);
+        if (!l.sense.isEmpty() && l.source == Lang.EN) {
+            forSense(m, l.sense, net, german, enWords);
+            // the picture of the chosen meaning (anziehen for "put on" as wear), not of the word's first one
+            Meaning p = new Meaning(m.lang, m.word);
+            picture(p, l, net, german, r);
+            if (!p.image.isEmpty()) {
+                m.image = p.image;
+                m.imageCaption = p.imageCaption;
+                m.imageSource = p.imageSource;
+            }
+        }
+        return m;
+    }
+
+    /**
+     * A meaning was chosen ("put on" as wear): its explanations first. When the dictionary has none for it,
+     * the explanation of the meaning's own word (wear) is shown instead, saying so.
+     */
+    private static void forSense(Meaning m, String sense, Fetch net, java.util.function.UnaryOperator<String> german,
+                                 Words enWords) {
+        List<Meaning.Sense> yes = new ArrayList<>(), no = new ArrayList<>();
+        for (Meaning.Sense x : m.senses) (Senses.matches(x.text, sense) ? yes : no).add(x);
+        if (!yes.isEmpty()) {
+            m.senses.clear();
+            m.senses.addAll(yes);
+            m.senses.addAll(no);
+            return;
+        }
+        String head = Text.clean(sense.replaceAll("\\(.*?\\)", " "));
+        try {
+            Meaning x = own(Lang.EN, head, net, german, enWords);
+            if (x.isEmpty() && head.contains(" ")) x = own(Lang.EN, head.substring(0, head.indexOf(' ')), net, german, enWords);
+            if (x.isEmpty()) return;
+            m.senses.clear();
+            m.senses.addAll(x.senses);
+            m.note = Meaning.NOTE_BASE;
+            m.noteWord = head;
+        } catch (IOException | RuntimeException e) {
+            // keep the word's own explanations
+        }
+    }
+
+    private static Meaning loadAll(Lookup l, Fetch net, java.util.function.UnaryOperator<String> german, Words enWords, Resolver r)
+            throws IOException {
         String w = word(l);
         Meaning m;
         if (w == null) {

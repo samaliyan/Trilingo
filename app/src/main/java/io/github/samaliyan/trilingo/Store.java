@@ -19,6 +19,7 @@ final class Store {
     private static final String K_VOICE = "voiceLang", K_REVIEW_RECENT = "reviewRecent";
     static final float[] SCALES = {0.9f, 1f, 1.15f, 1.3f};
     private static Notebook notebook;
+    private static Course course;
     private static final String K_EXPLAIN = "grammarExplain", K_GRAMMAR_LANG = "grammarLang";
 
     private static final String K_HAPTICS = "haptics", K_ONBOARDED = "onboarded", K_BUBBLE = "bubble";
@@ -38,6 +39,12 @@ final class Store {
     static synchronized History history(Context c) {
         if (history == null) history = new History(new File(c.getApplicationContext().getFilesDir(), "history.json"));
         return history;
+    }
+
+    /** The learning plan (Learn): one per app, kept in course.json. */
+    static synchronized Course course(Context c) {
+        if (course == null) course = new Course(new File(c.getApplicationContext().getFilesDir(), "course.json"));
+        return course;
     }
 
     /** Saved words and review progress, one object per process. */
@@ -132,6 +139,25 @@ final class Store {
 
     void setNotebookSort(int s) {
         p.edit().putInt(K_SORT, s).apply();
+    }
+
+    /** Grammar lessons opened (their ids), for "the next lesson" in Learn. */
+    java.util.Set<String> readLessons() {
+        return new java.util.HashSet<>(p.getStringSet("readLessons", new java.util.HashSet<>()));
+    }
+
+    void markLessonRead(String id) {
+        java.util.Set<String> s = readLessons();
+        if (s.add(id)) p.edit().putStringSet("readLessons", s).apply();
+    }
+
+    /** Daily reminder for the lesson: minutes after midnight, or -1 (off). */
+    int reminder() {
+        return p.getInt("reminder", -1);
+    }
+
+    void setReminder(int minutes) {
+        p.edit().putInt("reminder", minutes).apply();
     }
 
     /** The learner's level in a language ("A2"), used to pick new words from a text. */

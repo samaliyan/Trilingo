@@ -114,8 +114,8 @@ public final class ProgressActivity extends Activity {
             none.setLineSpacing(0, 1.25f);
             c.addView(none, Page.full(ui.dp(4), ui.dp(12)));
         }
-        TextView practise = ui.pill(getString(R.string.practice_words), true);
-        practise.setOnClickListener(v -> startActivity(new Intent(this, WordPracticeActivity.class)));
+        TextView practise = ui.pill(getString(R.string.learn), true);
+        practise.setOnClickListener(v -> startActivity(new Intent(this, LearnActivity.class)));
         c.addView(practise, Page.full(ui.dp(4), ui.dp(20)));
         practise.getLayoutParams().height = ui.dp(48);
     }

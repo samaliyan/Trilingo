@@ -459,18 +459,10 @@
     <string name="tense_examples_none">No sentences found with this tense yet.</string>
 
     <!-- 1.12: practice words, say it, progress -->
-    <string name="practice_words">Practice words</string>
-    <string name="practice_from_saved">Ten questions with your %1$d saved words.</string>
-    <string name="practice_from_level">Ten questions with your saved words and common words of your level. Save more words to practise your own.</string>
     <string name="practice_write">Write the word</string>
-    <string name="practice_write_note">See the translation, write the word.</string>
     <string name="practice_article">der · die · das</string>
-    <string name="practice_article_note">Choose the article of a German noun.</string>
     <string name="practice_verbs">Verb forms</string>
-    <string name="practice_verbs_note">Write the right form: ich ___ (gehen · Perfect).</string>
     <string name="practice_say">Say it</string>
-    <string name="practice_say_note">Say the word aloud; the phone tells you if it understood.</string>
-    <string name="practice_no_words">Save some English or German words first.</string>
     <string name="practice_no_nouns">Save some German nouns first (for example “der Tisch”).</string>
     <string name="practice_no_verbs">Save some verbs first (for example “gehen” or “go”).</string>
     <string name="practice_count">%1$d / %2$d</string>
@@ -483,17 +475,10 @@
     <string name="practice_answer">Your answer</string>
     <string name="practice_say_now">Speak</string>
     <string name="practice_say_prompt">Say: %1$s</string>
-    <string name="practice_skip">Skip</string>
-    <string name="practice_right">Right: %1$s</string>
     <string name="practice_almost">Almost. Written: %1$s</string>
-    <string name="practice_wrong">The answer: %1$s</string>
     <string name="practice_say_almost">Almost. Heard “%1$s” for “%2$s”</string>
     <string name="practice_say_wrong">Heard “%1$s”. The word: %2$s</string>
     <string name="practice_say_try">Heard “%1$s”. Listen and try again.</string>
-    <string name="practice_finish">See the result</string>
-    <string name="practice_score">%1$d of %2$d right</string>
-    <string name="practice_again">Ten more</string>
-    <string name="practice_other">Other practice</string>
     <plurals name="streak_days">
         <item quantity="one">%d day in a row</item>
         <item quantity="other">%d days in a row</item>
@@ -515,4 +500,87 @@
     <string name="progress_8_weeks_ago">8 weeks ago</string>
     <string name="progress_weeks_oldest_first">week by week, oldest first</string>
     <string name="progress_empty">Review or practise a few words: your days and weeks show up here.</string>
+
+    <!-- 1.13: the meaning meant -->
+    <string name="which_meaning">Which meaning?</string>
+    <string name="meaning_chosen_desc">%1$s, the meaning shown</string>
+    <string name="meaning_choose_desc">Show the meaning %1$s</string>
+
+    <!-- 1.13: Learn, the learning plan -->
+    <string name="learn">Learn</string>
+    <string name="learn_language_desc">Learn %1$s</string>
+    <string name="learn_today">Today\'s lesson</string>
+    <string name="learn_today_done">Today\'s lesson · done</string>
+    <string name="learn_today_title">%1$s · Unit %2$d</string>
+    <string name="learn_today_done_title">Well done. Practise more?</string>
+    <string name="learn_today_plan">%1$d new words · %2$d to review · %3$d weak words</string>
+    <string name="learn_start">Start</string>
+    <string name="learn_more">Another lesson</string>
+    <string name="learn_nothing_now">Nothing to practise right now. New words come tomorrow; reviews when they are due.</string>
+    <string name="learn_new_per_day">%1$d new words a day</string>
+    <string name="learn_level">%1$s %2$s · %3$s</string>
+    <string name="learn_change_level">Change level</string>
+    <string name="learn_level_progress">%1$d of %2$d words of this level met</string>
+    <string name="learn_units_done">%1$d units done before these</string>
+    <string name="learn_units_more">%1$d more units</string>
+    <string name="learn_unit">Unit %1$d</string>
+    <string name="learn_unit_count">%1$d/%2$d</string>
+    <string name="learn_unit_locked">Finish unit %1$d first.</string>
+    <string name="learn_unit_locked_short">Not open yet</string>
+    <string name="learn_grammar">Grammar of your level</string>
+    <string name="learn_grammar_note">Next lesson · %1$s</string>
+    <string name="learn_weak_spots">Your weak spots</string>
+    <string name="learn_weak_words">Weak words (%1$d)</string>
+    <string name="learn_weak_none">No mistakes yet. They show up here, with what went wrong.</string>
+    <string name="learn_drill_articles">Your nouns: der, die or das?</string>
+    <string name="learn_drill_verbs">Your verbs in the right form.</string>
+    <string name="learn_drill_speaking">Say your words; the phone listens.</string>
+    <string name="learn_progress_note">Streak, weeks, words learned.</string>
+    <string name="learn_title_drill">Practice</string>
+    <string name="learn_reminder">Daily reminder</string>
+    <string name="learn_reminder_off">Off. Tap to choose a time.</string>
+    <string name="learn_reminder_at">Every day at %1$02d:%2$02d, when today\'s lesson is not done.</string>
+    <string name="learn_reminder_pick">Choose a time</string>
+    <string name="learn_reminder_turn_off">Turn off</string>
+    <string name="learn_reminder_title">Your %1$s lesson for today</string>
+    <string name="learn_reminder_text">%1$d words are waiting for review. A few minutes is enough.</string>
+    <plurals name="learn_reminder_streak">
+        <item quantity="one">%d day in a row. Keep it going with a short lesson.</item>
+        <item quantity="other">%d days in a row. Keep it going with a short lesson.</item>
+    </plurals>
+    <string name="learn_skill_meaning">meaning</string>
+    <string name="learn_skill_spelling">spelling</string>
+    <string name="learn_skill_article">article</string>
+    <string name="learn_skill_form">verb form</string>
+    <string name="learn_skill_speaking">saying it</string>
+    <string name="learn_quit_question">Stop this lesson? Your answers so far are kept.</string>
+    <string name="learn_quit">Stop</string>
+    <string name="learn_keep_going">Keep going</string>
+    <string name="learn_new_word">New word</string>
+    <string name="learn_ask_meaning">What does it mean?</string>
+    <string name="learn_ask_word">Which %1$s word?</string>
+    <string name="learn_with_article">With its article (der, die, das).</string>
+    <string name="learn_again_prefix">Once more · %1$s</string>
+    <string name="learn_got_it">Got it</string>
+    <string name="learn_cant_speak">I can\'t speak now</string>
+    <string name="learn_continue">Continue</string>
+    <string name="learn_plural">Plural: %1$s</string>
+    <string name="learn_folder">%1$s %2$s</string>
+    <string name="learn_right">Right. %1$s</string>
+    <string-array name="learn_praise">
+        <item>Well done.</item>
+        <item>Exactly.</item>
+        <item>Good.</item>
+        <item>Nice.</item>
+        <item>That\'s it.</item>
+    </string-array>
+    <string name="learn_wrong">The answer: %1$s (%2$s). It comes again at the end.</string>
+    <string name="learn_lesson_done">Lesson done</string>
+    <string name="learn_score">%1$d of %2$d right · %3$d%%</string>
+    <string name="learn_new_words">New words (%1$d)</string>
+    <string name="learn_practise_again">To practise again</string>
+    <string name="learn_tomorrow">Tomorrow</string>
+    <string name="learn_tomorrow_plan">%1$d words to review and up to %2$d new ones.</string>
+    <string name="learn_move_up">This looks easy. Move up to %1$s?</string>
+    <string name="learn_done">Done</string>
 </resources>

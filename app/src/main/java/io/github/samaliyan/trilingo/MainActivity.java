@@ -757,6 +757,8 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         if (numRow != null) content.addView(numRow);
         View nounRow = typedNounRow(l);
         if (nounRow != null) content.addView(nounRow);
+        View senseRow = senseRow(l);
+        if (senseRow != null) content.addView(senseRow);
         if (corrected) content.addView(correctedRow(l.query));
         else if (l.hasSuggestion()) content.addView(suggestionRow(l.suggestion));
         if (corrected || l.hasSuggestion()) {
@@ -930,12 +932,12 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
         List<Lookup> recent = store.reviewRecent() ? Notebook.reviewable(history.items(), Lexicon.resolver()::isWord) : null;
         int due = nb.due(null, recent, System.currentTimeMillis(), 99).size();
         String[] labels = {due > 0 ? getString(R.string.review_n, due) : getString(R.string.review), getString(R.string.saved_words),
-                getString(R.string.practice_words), getString(R.string.progress),
+                getString(R.string.learn), getString(R.string.progress),
                 getString(R.string.listen_write), getString(R.string.text_words),
                 getString(R.string.scan_text), getString(R.string.check_sentence)};
         Icons.Kind[] icons = {Icons.Kind.CARDS, Icons.Kind.STAR, Icons.Kind.PEN, Icons.Kind.CHART, Icons.Kind.EAR, Icons.Kind.LIST,
                 Icons.Kind.CAMERA, Icons.Kind.CHECK};
-        Class<?>[] screens = {ReviewActivity.class, NotebookActivity.class, WordPracticeActivity.class, ProgressActivity.class,
+        Class<?>[] screens = {ReviewActivity.class, NotebookActivity.class, LearnActivity.class, ProgressActivity.class,
                 DictationActivity.class, TextWordsActivity.class, ScanActivity.class, CheckActivity.class};
         int perRow = ui.wide() ? 3 : 2;
         LinearLayout box = column();
@@ -1431,6 +1433,79 @@ public final class MainActivity extends Activity implements TextToSpeech.OnInitL
             box.addView(f, Page.full(ui.dp(8), 0));
         }
         return box;
+    }
+
+    /**
+     * "Which meaning?" for a word with several (put on: wear · switch on · gain weight). The chosen one is
+     * translated again, so the German and Persian, the explanation and the picture follow it; it is kept, so
+     * the word opens with it next time and is saved with it.
+     */
+    private View senseRow(Lookup l) {
+        Phrasal ph = Lexicon.phrasal();
+        String phrasal = ph == null || l.source != Lang.EN ? null : ph.meaning(Text.clean(l.query).toLowerCase(Locale.ROOT));
+        List<Senses.Option> options = Senses.of(l, phrasal);
+        if (options.isEmpty()) return null;
+        LinearLayout box = column();
+        box.setPadding(0, 0, 0, ui.dp(12));
+        TextView h = ui.line(12, ui.sub, Ui.MEDIUM);
+        h.setText(R.string.which_meaning);
+        box.addView(h);
+        HorizontalScrollView hs = new HorizontalScrollView(this);
+        hs.setHorizontalScrollBarEnabled(false);
+        LinearLayout row = new LinearLayout(this);
+        for (int i = 0; i < options.size(); i++) {
+            Senses.Option o = options.get(i);
+            // the chosen one: the meaning kept for this word, else the first
+            boolean on = l.sense.isEmpty() ? i == 0 : o.label.equalsIgnoreCase(l.sense) || isChosen(l, o);
+            TextView c = ui.line(15, on ? ui.onAccent : ui.text, Ui.MEDIUM);
+            c.setText(o.label);
+            c.setGravity(Gravity.CENTER);
+            c.setMinHeight(ui.dp(44));
+            c.setPadding(ui.dp(16), 0, ui.dp(16), 0);
+            c.setBackground(on ? ui.ripple(ui.round(ui.accent, 22), 22) : ui.ripple(ui.outline(ui.bg, ui.line, 22), 22));
+            c.setContentDescription(getString(on ? R.string.meaning_chosen_desc : R.string.meaning_choose_desc, o.label));
+            c.setSelected(on);
+            if (!on) c.setOnClickListener(v -> chooseSense(l, o, c));
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            lp.rightMargin = ui.dp(8);
+            row.addView(c, lp);
+        }
+        hs.addView(row);
+        box.addView(hs, Page.full(ui.dp(6), 0));
+        return box;
+    }
+
+    /** A Persian (or English) chip is the chosen meaning when its word is the translation shown now. */
+    private static boolean isChosen(Lookup l, Senses.Option o) {
+        Lookup.Result r = l.result(o.lang);
+        return r != null && Text.clean(r.text).equalsIgnoreCase(o.label);
+    }
+
+    private void chooseSense(Lookup l, Senses.Option o, View chip) {
+        if (!online()) {
+            Toast.makeText(this, R.string.error_offline, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Feel.tick(chip);
+        busy.setVisibility(View.VISIBLE);
+        int gen = ++generation;
+        String q = Senses.query(o);
+        Net.run(() -> engine.translate(q, o.lang, store.service(), System.currentTimeMillis()), (res, err) -> {
+            if (gen != generation || isDestroyed()) return;
+            busy.setVisibility(View.INVISIBLE);
+            if (res == null) {
+                Toast.makeText(this, R.string.error_service, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            java.util.Map<Lang, String> by = new java.util.EnumMap<>(Lang.class);
+            for (Lookup.Result r : res.results) by.put(r.lang, r.text);
+            // the meaning in English: the chip itself (wear), or the English of a Persian chip (پوشیدن → wear)
+            String sense = o.lang == Lang.EN ? q : by.containsKey(Lang.EN) ? by.get(Lang.EN) : q;
+            Lookup chosen = Senses.choose(l, o, by, sense);
+            history.add(chosen);
+            WidgetProvider.updateAll(this);
+            showLookup(chosen, false, shownCorrected);
+        });
     }
 
     /** "Number 8" above the translation of a number typed or spoken in digits. */

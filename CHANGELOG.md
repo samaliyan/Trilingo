@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.13 — 2026-11-28
+
+- **Which meaning?** A word with several meanings shows them to choose from — *put on*: wear · switch on · gain weight; *light*: نور · سبک · روشن کردن. The chosen one is translated again, so the German and Persian, the explanation and the picture all follow it (put on → پوشیدن · anziehen). It is kept: the word opens with it next time and is saved with it.
+- **Learn — a real learning plan** (replaces *Practice words*):
+  - a course through the words of your level (German or English, A1 to C1), most useful first, in units of 8 words — a path with the units done, the current one and the next;
+  - **today's lesson**, built for you every day: words due for review (the course's and your own saved words), your weak words, and a few new words — introduced with their article, plural or verb forms and pronunciation, then practised;
+  - each word climbs stages: choose its meaning → choose the word → write it → its article or verb form → say it. A mistake takes it a stage back, is noted with what went wrong (meaning, spelling, article, verb form, saying it) and the question comes again at the end of the lesson;
+  - **your weak spots**: weak words with what went wrong, and practice of articles, verb forms and speaking with your own words;
+  - the number of new words a day follows how your last lessons went (fewer after hard ones, more after easy ones); after three perfect lessons it offers the next level;
+  - the next grammar lesson of your level;
+  - new words join your saved words (a folder for the level), so Review, the Word card widget and Progress follow them;
+  - a **daily reminder** at a time you choose, only when today's lesson is not done.
+
 ## 1.12 — 2026-11-28
 
 - **Practice words** (new, on the home screen): active practice with your own words, ten questions at a time — *Write the word* (the translation is shown, you write the word; one small typing mistake is shown but counts), *der · die · das*, *Verb forms* (ich ___ · gehen · Perfect → bin gegangen), and *Say it*: say the word aloud and the phone tells you whether it understood it (what it heard is shown; listen and try again). With few saved words, common words of your level fill in.

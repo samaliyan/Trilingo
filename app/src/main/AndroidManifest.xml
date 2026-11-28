@@ -102,7 +102,7 @@
             android:theme="@style/BubbleTheme" />
         <activity android:name=".ReviewActivity" android:exported="false" />
         <activity android:name=".PracticeActivity" android:exported="false" />
-        <activity android:name=".WordPracticeActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".LearnActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ProgressActivity" android:exported="false" />
         <activity
             android:name=".CheckActivity"
@@ -161,6 +161,9 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info" />
         </receiver>
+
+        <!-- The daily reminder of Learn. -->
+        <receiver android:name=".Reminder" android:exported="false" />
 
         <!-- Word card: review saved words on the home screen. -->
         <receiver
