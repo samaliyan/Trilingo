@@ -183,6 +183,16 @@ public final class LearnTest {
         eq(Arrays.asList("remove clothes", "remove", "take off"), Pictograms.terms("remove (clothes)", "take off"), "terms of a chosen meaning");
         eq("clothes", Pictograms.hint("remove (clothes)"), "what the meaning is about");
         eq(Arrays.asList("wear"), Pictograms.terms("", "to wear"), "to wear → wear");
+        eq(Arrays.asList("wearing", "wear", "weare"), Pictograms.terms("", "wearing"), "wearing → wear");
+        eq(Arrays.asList("running", "runn", "runne", "run"), Pictograms.terms("", "running"), "running → run");
+        // beautiful: the service says adjective, the dictionary starts with the noun (a beautiful person)
+        Lookup bl = new Lookup("beautiful", Lang.EN, Arrays.asList(new Lookup.Result(Lang.FA, "زیبا",
+                Collections.singletonList(new Lookup.Sense("adjective", Arrays.asList("زیبا", "قشنگ"))))), "Google", 0);
+        Meaning bm = new Meaning(Lang.EN, "beautiful");
+        bm.senses.add(new Meaning.Sense("Noun", "Someone who is beautiful.", ""));
+        bm.senses.add(new Meaning.Sense("Adjective", "Pleasing to the eye.", ""));
+        MeaningSource.mainKindFirst(bm, bl);
+        eq("Adjective", bm.senses.get(0).pos, "the main kind first");
         // put on, chosen as wear: the drawing of wear
         pages.put(Pictograms.searchUrl("wear"), wear);
         pages.put(Pictograms.searchUrl("put on"), putOn);

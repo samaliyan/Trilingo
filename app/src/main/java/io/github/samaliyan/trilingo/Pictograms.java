@@ -120,7 +120,16 @@ final class Pictograms {
             add(out, joined);
             add(out, head);
         }
-        add(out, english == null ? "" : norm(english));
+        String en = english == null ? "" : norm(english);
+        add(out, en);
+        // پوشیدن comes back as "wearing", رانندگی as "driving": the verb itself (wear, drive, run)
+        if (en.endsWith("ing") && en.length() > 5 && !en.contains(" ")) {
+            String stem = en.substring(0, en.length() - 3);
+            add(out, stem);
+            add(out, stem + "e");
+            int n = stem.length();
+            if (n >= 3 && stem.charAt(n - 1) == stem.charAt(n - 2)) add(out, stem.substring(0, n - 1));
+        }
         return out;
     }
 

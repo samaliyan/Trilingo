@@ -135,6 +135,7 @@ final class MeaningSource {
                 wikipedia(m, l.source, w, net);
         }
         if (m.isEmpty() && Resolver.NUMBER.equals(l.service)) number(m, l);
+        if (l.source == Lang.EN) mainKindFirst(m, l);
         // a sentence (or a word with no entry of its own): the meanings of its words, in its own language
         if (m.isEmpty() && r != null) words(m, l, net, german, enWords, r);
         // never the meaning of a translation: the meaning section is only in the word's own language
@@ -260,10 +261,9 @@ final class MeaningSource {
     }
 
     private static boolean isNounLookup(Meaning m, Lookup l) {
-        if (!m.senses.isEmpty()) return "Noun".equals(m.senses.get(0).pos);
-        for (Lookup.Result r : l.results)
-            if (!r.senses.isEmpty()) return r.senses.get(0).pos.toLowerCase(Locale.ROOT).startsWith("noun");
-        return false;
+        String k = mainKind(l);
+        if (!k.isEmpty()) return k.startsWith("noun");
+        return !m.senses.isEmpty() && "Noun".equals(m.senses.get(0).pos);
     }
 
     private static void photo(Meaning m, Lookup l, Fetch net, java.util.function.UnaryOperator<String> german, Resolver r) {
@@ -443,11 +443,33 @@ final class MeaningSource {
                 && (w.endsWith("en") || w.endsWith("ern") || w.endsWith("eln"));
     }
 
-    private static boolean isAdjective(Meaning m, Lookup l) {
-        if (!m.senses.isEmpty()) return "Adjective".equals(m.senses.get(0).pos);
+    /**
+     * The word's main kind as the translation service gives it ("adjective" for beautiful), or "". It comes
+     * before the dictionary's order, which may start with a rare use ("beautiful" as a noun: a beautiful person).
+     */
+    static String mainKind(Lookup l) {
         for (Lookup.Result r : l.results)
-            if (!r.senses.isEmpty()) return r.senses.get(0).pos.toLowerCase(Locale.ROOT).startsWith("adj");
-        return false;
+            if (!r.senses.isEmpty() && r.senses.get(0).pos != null && !r.senses.get(0).pos.isEmpty())
+                return r.senses.get(0).pos.toLowerCase(Locale.ROOT);
+        return "";
+    }
+
+    private static boolean isAdjective(Meaning m, Lookup l) {
+        String k = mainKind(l);
+        if (!k.isEmpty()) return k.startsWith("adj");
+        return !m.senses.isEmpty() && "Adjective".equals(m.senses.get(0).pos);
+    }
+
+    /** The explanations of the word's main kind first (beautiful: "pleasing to the eye" before "a beautiful person"). */
+    static void mainKindFirst(Meaning m, Lookup l) {
+        String k = mainKind(l);
+        if (k.isEmpty() || m.senses.isEmpty()) return;
+        List<Meaning.Sense> yes = new ArrayList<>(), no = new ArrayList<>();
+        for (Meaning.Sense x : m.senses) (x.pos != null && x.pos.toLowerCase(Locale.ROOT).equals(k) ? yes : no).add(x);
+        if (yes.isEmpty() || no.isEmpty() || m.senses.get(0) == yes.get(0)) return;
+        m.senses.clear();
+        m.senses.addAll(yes);
+        m.senses.addAll(no);
     }
 
     private static boolean isVerb(Meaning m, Lookup l) {
