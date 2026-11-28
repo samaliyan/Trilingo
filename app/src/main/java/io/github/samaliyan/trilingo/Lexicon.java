@@ -73,6 +73,7 @@ final class Lexicon {
                 // no offline dictionary: answers come from the translation service only
             }
             resolver = new Resolver(en, de, nouns, enDict, deDict);
+            Engine.polish = new Polish(enDict, deDict, en, de, nouns);
             grammar = readGrammar(am);
             LOADED.countDown();
             List<Runnable> run;

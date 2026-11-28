@@ -264,8 +264,23 @@ final class MeaningSource {
         // verb; for an English or Persian verb the German translation is only one of its meanings (پوشیدن →
         // tragen, whose picture shows carrying), and a Wikipedia article on "Wear" is about worn-out gears:
         // no picture is better than a wrong one.
-        if (verb && l.source != Lang.DE) return;
-        if (m.image.isEmpty() && de != null && l.source != Lang.DE) take(m, germanPage(de, net), "");
+        if (verb && l.source != Lang.DE) {
+            // only when the German verb has one meaning or two (fall asleep → einschlafen → a sleeping boy);
+            // a verb of many meanings (tragen: carry, wear, bear …) may show another one
+            if (de == null || !isGermanInfinitive(de)) return;
+            Meaning page = germanPage(de, net);
+            if (page != null && page.senses.size() <= 2) take(m, page, "");
+            if (m.image.isEmpty() && (page == null || page.senses.size() <= 2)) {
+                for (String p : PREFIXES) {
+                    String base = de.startsWith(p) ? de.substring(p.length()) : "";
+                    if (base.length() >= 4 && isGermanInfinitive(base)) {
+                        take(m, germanPage(base, net), base);
+                        if (!m.image.isEmpty()) break;
+                    }
+                }
+            }
+            return;
+        }
         if (m.image.isEmpty() && de != null && isGermanInfinitive(de)) {
             for (String p : PREFIXES) {
                 String base = de.startsWith(p) ? de.substring(p.length()) : "";
@@ -292,6 +307,10 @@ final class MeaningSource {
                 return;
             }
         }
+        // then the picture of the German translation's Wiktionary page (its first meaning: for an English
+        // word the Wikipedia article above is more often the meaning meant — Bank as a bank, not a bench)
+        if (m.image.isEmpty() && de != null && l.source != Lang.DE) take(m, germanPage(de, net), "");
+        if (!m.image.isEmpty()) return;
         if (split != null) {
             String last = split.parts.get(split.parts.size() - 1).base;
             take(m, germanPage(last, net), last);

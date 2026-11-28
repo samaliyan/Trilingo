@@ -133,11 +133,16 @@ final class Engine {
 
     // ------------------------------------------------------------------ helpers
 
+    /** Tidies answers with the built-in dictionaries ({@link Polish}); set once they are loaded. */
+    static volatile Polish polish;
+
     private static Lookup make(String q, Lang src, Lookup.Result a, Lookup.Result b, int service, long now, String spell, String base) {
         List<Lookup.Result> rs = new ArrayList<>();
         rs.add(a);
         rs.add(b);
-        return new Lookup(q, src, rs, Services.NAMES[service], now, spell, base);
+        Lookup l = new Lookup(q, src, rs, Services.NAMES[service], now, spell, base);
+        Polish p = polish;
+        return p == null ? l : p.apply(l);
     }
 
     /** The first dictionary form any of the answers gives. */

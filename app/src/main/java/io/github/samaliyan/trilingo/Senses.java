@@ -20,10 +20,17 @@ final class Senses {
         final String label;
         /** The language of the label (and of what is translated to find the other languages). */
         final Lang lang;
+        /** A meaning of an English phrasal verb (a verb: translated as "to wear"). */
+        final boolean verb;
 
         Option(String label, Lang lang) {
+            this(label, lang, false);
+        }
+
+        Option(String label, Lang lang, boolean verb) {
             this.label = label;
             this.lang = lang;
+            this.verb = verb;
         }
     }
 
@@ -44,7 +51,7 @@ final class Senses {
         String q = Text.clean(l.query);
         if (q.isEmpty() || q.split(" ").length > 3 || l.results.isEmpty()) return out;
         if (l.source == Lang.EN && phrasalMeanings != null && !phrasalMeanings.isEmpty()) {
-            for (String m : phrasalMeanings.split(";")) add(out, Text.clean(m), Lang.EN);
+            for (String m : phrasalMeanings.split(";")) add(out, Text.clean(m), Lang.EN, true);
         }
         if (out.size() < 2) {
             out.clear();
@@ -76,9 +83,13 @@ final class Senses {
     }
 
     private static void add(List<Option> out, String label, Lang lang) {
+        add(out, label, lang, false);
+    }
+
+    private static void add(List<Option> out, String label, Lang lang, boolean verb) {
         if (label.isEmpty() || out.size() >= MAX || label.length() > 40) return;
         for (Option o : out) if (o.label.equalsIgnoreCase(label)) return;
-        out.add(new Option(label, lang));
+        out.add(new Option(label, lang, verb));
     }
 
     /**
@@ -86,7 +97,14 @@ final class Senses {
      * a Persian or English word as it is.
      */
     static String query(Option o) {
-        return Text.clean(o.label.replace("(", " ").replace(")", " "));
+        String q = Text.clean(o.label.replace("(", " ").replace(")", " "));
+        // a verb meaning with "to": the service then gives the infinitive (پوشیدن), not an order (بپوش)
+        return o.verb && !q.startsWith("to ") ? "to " + q : q;
+    }
+
+    /** The meaning in English as kept with the word ("wear", "gain weight"), without "to". */
+    static String gloss(Option o) {
+        return Text.clean(o.label.replace("(", " ").replace(")", " ")).replaceFirst("^to ", "");
     }
 
     /**
@@ -99,6 +117,8 @@ final class Senses {
         for (Lookup.Result r : l.results) {
             String main = r.lang == o.lang ? o.label : byLang.get(r.lang);
             if (main == null || Text.clean(main).isEmpty()) main = r.text;
+            // "to wear" was asked: the German "zu tragen" is tragen
+            main = Text.clean(main).replaceFirst("^(zu|to) ", "");
             List<Lookup.Sense> senses = new ArrayList<>();
             List<String> first = new ArrayList<>();
             first.add(main);
